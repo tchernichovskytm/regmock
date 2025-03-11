@@ -20,6 +20,7 @@ public class Service
     static List<Favorite> helperFavorites = new List<Favorite>();
     public static void InitFakeData()
     {
+        //This is fake data, later on data will come from Firbase
         //grades.Add(new Grade() { Name = "מורה", Order = 70, Id = 7 });
         grades.Add(new Grade() { Name = "ז'", Order = 10, Id = 1 });
         grades.Add(new Grade() { Name = "ח'", Order = 20, Id = 2 });
