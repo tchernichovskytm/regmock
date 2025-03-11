@@ -1,0 +1,49 @@
+﻿<?xml version = "1.0" encoding = "UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:regmock"
+             x:Class="regmock.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="errLabel" TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="Red" />
+                <Setter Property="Text" Value="" />
+            </Style>
+
+            <Style x:Key="fieldBlock" TargetType="VerticalStackLayout">
+                <Setter Property="HeightRequest" Value="26" />
+            </Style>
+
+            <Style x:Key="MainGridStyle" TargetType="Grid">
+                <Setter Property="RowDefinitions" Value="35,*,75" />
+                <Setter Property="Margin" Value="18" />
+            </Style>
+
+            <Style x:Key="TitleLabel" TargetType="Label">
+                <Setter Property="FontSize" Value="26" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="MainStack" TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="16" />
+            </Style>
+
+            <Style x:Key="ConfirmButton" TargetType="Button">
+                <Setter Property="Margin" Value="8" />
+            </Style>
+
+            <Style x:Key="RoleButton" TargetType="Button">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="HorizontalOptions" Value="Fill" />
+                <Setter Property="HeightRequest" Value="200" />
+                <Setter Property="WidthRequest" Value="170" />
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

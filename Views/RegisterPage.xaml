@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="regmock.Views.RegisterPage"
+             Title="RegisterPage">
+    <Grid Style="{StaticResource MainGridStyle}">
+        <!--<Label Grid.Row="0" Text="Register" Style="{StaticResource TitleLabel}" />-->
+        <!--TODO: remove later-->
+
+        <ScrollView Grid.Row="1">
+
+            <VerticalStackLayout Style="{StaticResource MainStack}">
+                <VerticalStackLayout>
+                    <Label Text="Full Name:" />
+                    <Grid>
+                        <Entry Text="{Binding FullnameEntry}" />
+
+                        <Button
+                            Command="{Binding FullnameReset_Cmd}"
+                            HorizontalOptions="End" 
+                            BackgroundColor="Transparent"
+                            BorderColor="Transparent"
+                            TextColor="Gray"
+                            Text="x" />
+                    </Grid>
+
+                    <Label Text="{Binding FullnameErr}" Style="{StaticResource errLabel}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout>
+                    <Label Text="Phone Number:" />
+
+                    <Grid>
+                        <Entry Text="{Binding PhonenumberEntry}" Placeholder="+972"/>
+
+                        <Button
+                            Command="{Binding PhoneReset_Cmd}"
+                            HorizontalOptions="End" 
+                            BackgroundColor="Transparent"
+                            BorderColor="Transparent"
+                            TextColor="Gray"
+                            Text="x" />
+                    </Grid>
+
+                    <Label Text="{Binding PhonenumberErr}" Style="{StaticResource errLabel}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout>
+                    <Label Text="Email:" />
+                    <Grid>
+                        <Entry Text="{Binding EmailEntry}"/>
+
+                        <Button
+                            Command="{Binding EmailReset_Cmd}"
+                            HorizontalOptions="End" 
+                            BackgroundColor="Transparent"
+                            BorderColor="Transparent"
+                            TextColor="Gray"
+                            Text="x"
+                            />
+                    </Grid>
+                    <Label Text="{Binding EmailErr}" Style="{StaticResource errLabel}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout>
+                    <Label Text="Password:" />
+                    <Grid ColumnDefinitions="*, 30, 30">
+                        <Entry Text="{Binding PasswordEntry}" IsPassword="{Binding IsPassVisible}" Grid.ColumnSpan="3"/>
+
+                        <Button
+                            Command="{Binding PassReset_Cmd}"
+                            BackgroundColor="Transparent"
+                            BorderColor="Transparent"
+                            TextColor="Gray"
+                            Text="x"
+                            HorizontalOptions="Start" 
+                            Grid.Column="1" />
+                        <Button
+                            Command="{Binding ShowPass_Cmd}"
+                            HorizontalOptions="End" 
+                            BackgroundColor="Transparent"
+                            BorderColor="Transparent"
+                            Padding ="0,0,20,0"
+                            Text="👁️"
+                            Grid.Column="2" />
+                    </Grid>
+
+                    <Label Text="{Binding PasswordErr}" Style="{StaticResource errLabel}" />
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <VerticalStackLayout Grid.Row="2">
+            <Label Text="{Binding RegisterErr}" TextColor="Red" HorizontalOptions="Center" />
+            <Button Command="{Binding Register_Cmd}" IsEnabled="{Binding CanRegister}" Text="Register" Style="{StaticResource ConfirmButton}" />
+        </VerticalStackLayout>
+    </Grid>
+
+</ContentPage>

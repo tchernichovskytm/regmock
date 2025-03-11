@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="regmock.Views.RolePageTeacher"
+             Title="RolePageTeacher">
+    <ScrollView>
+        <Grid Style="{StaticResource MainGridStyle}">
+            <Label Grid.Row="0" Text="Select School" Style="{StaticResource TitleLabel}" />
+
+            <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
+
+                <VerticalStackLayout>
+                    <Label Text="Select School:" />
+                    <Grid>
+                        <Picker
+                         ItemsSource="{Binding SchoolList}"
+                         ItemDisplayBinding="{Binding Name}"
+                     />
+                    </Grid>
+
+                    <Label Text="{Binding SchoolErr}" Style="{StaticResource errLabel}" />
+                </VerticalStackLayout>
+
+
+            </VerticalStackLayout>
+
+            <Button
+             Grid.Row="2"
+             Text="Send Request"
+             Style="{StaticResource ConfirmButton}" />
+        </Grid>
+    </ScrollView>
+</ContentPage>

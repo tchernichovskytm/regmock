@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:helper="clr-namespace:regmock.Helper"
+             x:Class="regmock.Views.GiveHelpPage"
+             Title="GiveHelpPage">
+    <Grid RowSpacing="8" RowDefinitions="45,*" Margin="18">
+        <Button Command="{Binding FavButtonCmd}" Grid.Row="0" VerticalOptions="Start" FontFamily="MaterialIcons" FontSize="20" Text="{Binding FavButtonIcon}" TextColor="Black" BorderColor="Black" Padding="0" BorderWidth="1" Background="Transparent" HorizontalOptions="End" Margin="0,0,7,0"/>
+
+        <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
+            <VerticalStackLayout>
+                <CollectionView ItemsSource="{Binding Tickets}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <VerticalStackLayout>
+                                <Grid Padding="6" BackgroundColor="WhiteSmoke" RowDefinitions="*,*" ColumnDefinitions="*, 45">
+                                    <HorizontalStackLayout Spacing="8" VerticalOptions="Center" Grid.Row="0" Grid.Column="0">
+                                        <Label VerticalOptions="Center" TextColor="Black" FontAttributes="Bold" Text="{Binding Subject.Name}"/>
+                                        <Label VerticalOptions="Center" TextColor="DarkGray" Text="{Binding Topics[0]}"/>
+                                    </HorizontalStackLayout>
+                                    
+                                    <HorizontalStackLayout Spacing="8" VerticalOptions="Center" Grid.Row="1" Grid.Column="0">
+                                        <Label VerticalOptions="Center" TextColor="Black" Text="{Binding Sender.Fullname}"/>
+                                        <Button VerticalOptions="Center" FontFamily="MaterialIcons" FontSize="16" Text="{x:Static helper:IconFont.Messenger}" Background="Transparent" TextColor="Green" MinimumHeightRequest="28" MinimumWidthRequest="28" Padding="0" HeightRequest="0" WidthRequest="0"/>
+                                    </HorizontalStackLayout>
+                                    <Label HorizontalOptions="Center" FontFamily="MaterialIcons" FontSize="16" Text="{x:Static helper:IconFont.Favorite}" Grid.Row="0" Grid.Column="1"/>
+                                    
+                                    <Label HorizontalOptions="Center" Text="יא" Grid.Row="1" Grid.Column="1"/>
+                                </Grid>
+                                <BoxView BackgroundColor="Transparent" HeightRequest="5"></BoxView>
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>
