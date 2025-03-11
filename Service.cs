@@ -16,6 +16,8 @@ public class Service
     static List<School> schools = new List<School>();
 
     static List<Message> msgs = new List<Message>();
+
+    static List<Favorite> helperFavorites = new List<Favorite>();
     public static void InitFakeData()
     {
         //grades.Add(new Grade() { Name = "מורה", Order = 70, Id = 7 });
@@ -46,10 +48,10 @@ public class Service
         DateTime hourAgo = DateTime.Now.AddHours(-1);
         DateTime twothousandandeight = new DateTime(2008, 1, 1);
 
-        Dictionary<Subject, List<Grade>> fav = new Dictionary<Subject, List<Grade>>();
-        fav.Add(subjects[0], new List<Grade>() { grades[0], grades[1] });
+        //Dictionary<Subject, List<Grade>> fav = new Dictionary<Subject, List<Grade>>();
+        //fav.Add(subjects[0], new List<Grade>() { grades[0], grades[1] });
 
-        users.Add(new User() { Fullname = "Eldan", Email = "eldan@gmail", PhoneNumber = "0583", Password = "123", UserType = Role.None, Grade = grades[0], RegistrationDate = yearAgo, HelperFavorites = fav });
+        users.Add(new User() { Fullname = "Eldan", Email = "eldan@gmail", PhoneNumber = "0583", Password = "123", UserType = Role.None, Grade = grades[0], RegistrationDate = yearAgo, HelperFavorites = helperFavorites });
         users.Add(new User() { Fullname = "Ido Sweed", Email = "ido@gmail.com", PhoneNumber = "0583", Password = "058ASDf@#", UserType = Role.Pupil, Grade = grades[5], RegistrationDate = DateTime.Now });
         users.Add(new User() { Fullname = "Ariel", Email = "ariel@gmail", PhoneNumber = "0583", Password = "123", UserType = Role.Pupil, Grade = grades[5], RegistrationDate = hourAgo });
         users.Add(new User() { Fullname = "Polina", Email = "polina@gmail", PhoneNumber = "0583", Password = "123", UserType = Role.Pupil, Grade = grades[5], RegistrationDate = weekAgo });
@@ -90,6 +92,13 @@ public class Service
                 ticket.ServerActiveTime = $"{(ActiveTime.Days * 24 + ActiveTime.Hours).ToString("00")}:{ActiveTime.Minutes.ToString("00")}:{ActiveTime.Seconds.ToString("00")}";
             }
         }
+
+        //helperFavorites.Add(subjects[0], new List<Grade> { grades[0], grades[1] });
+        //helperFavorites.Add(subjects[1], new List<Grade> { grades[2] });
+        Favorite f1 = new Favorite() { Subject = subjects[0], Grades = new List<Grade>() { grades[0], grades[1] } };
+        Favorite f2 = new Favorite() { Subject = subjects[1], Grades = new List<Grade>() { grades[2] } };
+        helperFavorites.Add(f1);
+        helperFavorites.Add(f2);
     }
 
     public static bool AddTicket(Ticket ticket)
@@ -123,6 +132,11 @@ public class Service
     public static List<School> GetSchools()
     {
         return schools;
+    }
+
+    public static List<Favorite> GetFavorites()
+    {
+        return helperFavorites;
     }
 
 

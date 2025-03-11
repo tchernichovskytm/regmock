@@ -10,6 +10,6 @@ namespace regmock.Models
         public Role? UserType{ get; set; }
         public Grade? Grade{ get; set; }
         public DateTime? RegistrationDate{ get; set; }
-        public Dictionary<Subject, List<Grade>>? HelperFavorites{ get; set; } // Helper Preferences
+        public List<Favorite>? HelperFavorites{ get; set; } // Helper Preferences
     }
 }

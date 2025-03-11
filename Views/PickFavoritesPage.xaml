@@ -3,5 +3,28 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="regmock.Views.PickFavoritesPage"
              Title="PickFavoritesPage">
-    
+    <Grid Style="{StaticResource MainGridStyle}">
+
+        <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
+
+            <CollectionView ItemsSource="{Binding HelperFavorites}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <VerticalStackLayout>
+                            <Label Text="{Binding Subject.Name}" />
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+
+        <Button Grid.Row="2"
+            Text="New Preference"
+            TextColor="Blue"
+            BackgroundColor="Transparent"
+            FontSize="Header"
+            Command="{Binding AddTicketCmd}"/>
+
+    </Grid>
 </ContentPage>
