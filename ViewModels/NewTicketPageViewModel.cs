@@ -93,7 +93,7 @@ namespace regmock.ViewModels
         #region Functions
         public async void CloseClick()
         {
-            await Shell.Current.Navigation.PopAsync(true);
+            await Shell.Current.Navigation.PopModalAsync(true);
         }
         public async void AddTicketClick()
         {
@@ -104,10 +104,15 @@ namespace regmock.ViewModels
                 IsActive = false,
             };
 
-            await Shell.Current.Navigation.PopAsync(true);
-
-            Service.AddTicket(NewTicket);
-            TicketCmd.Execute(NewTicket);
+            if (Service.AddTicket(NewTicket))
+            {
+                TicketCmd.Execute(NewTicket);
+                await Shell.Current.Navigation.PopModalAsync(true);
+            }
+            else
+            {
+                // TODO: handle error
+            }
         }
 
         public void CheckValidTicket()

@@ -107,6 +107,11 @@ public class Service
         tickets.Add(ticket);
         return true;
     }
+    public static bool AddFavorite(Favorite favorite)
+    {
+        helperFavorites.Add(favorite);
+        return true;
+    }
 
     // For toggling tickets
     public static bool HandleTicket(Ticket ticket)

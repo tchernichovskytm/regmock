@@ -73,7 +73,9 @@ namespace regmock.ViewModels
                     Tickets.Add((Ticket)newTicket);
                 Monitor.Exit(this);
             });
-            await Shell.Current.Navigation.PushAsync(new NewTicketPage((Command)ticketCmd), true);
+            await Shell.Current.Navigation.PushModalAsync(new NewTicketPage((Command)ticketCmd), true);
+
+            // DONT: send ticket back to service
         }
         public void TicketToggled(Ticket ticket)
         {

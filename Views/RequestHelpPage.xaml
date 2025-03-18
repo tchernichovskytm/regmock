@@ -16,32 +16,28 @@
 
             <VerticalStackLayout>
                 <CollectionView ItemsSource="{Binding Tickets}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="5" />
+                    </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <VerticalStackLayout>
                                 <Grid Padding="6" BackgroundColor="WhiteSmoke" ColumnDefinitions="*,*" >
                                     <VerticalStackLayout HorizontalOptions="Start" Grid.Column="0">
-                                        <Label
-                                                FontSize="24"
-                                                Text="{Binding Subject.Name}" />
-                                        <Label
-                                                FontSize="14"
-                                                Text="{Binding Topics[0]}" />
+                                        <Label FontSize="24"
+                                               Text="{Binding Subject.Name}" />
+                                        <Label FontSize="14"
+                                               Text="{Binding Topics[0]}" />
                                     </VerticalStackLayout>
                                     <HorizontalStackLayout HorizontalOptions="End" Grid.Column="1">
                                         <Label VerticalOptions="Center"
-                                                FontSize="18"
-                                                Text="{Binding ServerActiveTime}" />
-                                        <Switch
-                                                Margin="6,0,0,0"
+                                               FontSize="18"
+                                               Text="{Binding ServerActiveTime}" />
+                                        <Switch Margin="6,0,0,0"
                                                 IsToggled="{Binding IsActive}">
-                                            <!--<Switch.Behaviors>
-                                                    <behaviors:SwitchBehavior Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.TicketToggleCmd}" />
-                                                </Switch.Behaviors>-->
                                         </Switch>
                                     </HorizontalStackLayout>
                                 </Grid>
-                                <BoxView BackgroundColor="Transparent" HeightRequest="5"></BoxView>
                             </VerticalStackLayout>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

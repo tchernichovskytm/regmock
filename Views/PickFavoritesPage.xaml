@@ -8,10 +8,33 @@
         <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
 
             <CollectionView ItemsSource="{Binding HelperFavorites}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="5"/>
+                </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <VerticalStackLayout>
-                            <Label Text="{Binding Subject.Name}" />
+                        <VerticalStackLayout HorizontalOptions="Start" Padding="6" BackgroundColor="WhiteSmoke">
+                            <HorizontalStackLayout>
+                                <Label FontSize="20" Text="{Binding Subject.Name}" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout>
+                                <Label Text="Classes:" />
+                                <CollectionView HeightRequest="20" ItemsSource="{Binding Grades}">
+
+                                    <CollectionView.ItemsLayout>
+                                        <LinearItemsLayout Orientation="Horizontal"/>
+                                    </CollectionView.ItemsLayout>
+
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <HorizontalStackLayout Padding="5,0,0,0">
+                                                <Label FontAttributes="Bold" Text="{Binding Name}"/>
+                                            </HorizontalStackLayout>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+
+                                </CollectionView>
+                            </HorizontalStackLayout>
                         </VerticalStackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
@@ -24,7 +47,7 @@
             TextColor="Blue"
             BackgroundColor="Transparent"
             FontSize="Header"
-            Command="{Binding AddTicketCmd}"/>
+            Command="{Binding AddPreferenceCmd}"/>
 
     </Grid>
 </ContentPage>

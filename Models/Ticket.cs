@@ -3,11 +3,11 @@ namespace regmock.Models
 {
     public class Ticket : INotifyPropertyChanged
     {
-        public List<DateTime>? OpenTimes { get; set; }
-        public Subject? Subject { get; set; }
+        public List<DateTime>? OpenTimes { get; set; } //
+        public Subject? Subject { get; set; } //
         public List<string>? Topics { get; set; }
         public User? Sender { get; set; }
-        public List<User>? Helpers { get; set; }
+        public List<User>? Helpers { get; set; } //
 
         private bool? isActive;
         public bool? IsActive
