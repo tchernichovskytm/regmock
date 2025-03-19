@@ -3,6 +3,7 @@ using regmock.Models;
 using System.Windows.Input;
 
 using regmock.Views;
+using System.Collections.ObjectModel;
 
 namespace regmock.ViewModels
 {
@@ -10,9 +11,9 @@ namespace regmock.ViewModels
     {
         #region Properties
 
-        private List<Favorite> helperFavorites;
+        private ObservableCollection<Favorite> helperFavorites;
 
-        public List<Favorite> HelperFavorites
+        public ObservableCollection<Favorite> HelperFavorites
         {
             get { return helperFavorites; }
             set
@@ -21,32 +22,70 @@ namespace regmock.ViewModels
                 OnPropertyChanged(nameof(helperFavorites));
             }
         }
-
-
         #endregion
 
         #region Commands
-       public ICommand AddPreferenceCmd { get; set; }
+        public ICommand AddFavoriteCmd { get; set; }
+        public ICommand EditFavoriteCmd { get; set; }
         #endregion
 
         #region Constructor
         public PickFavoritesPageViewModel()
         {
-            HelperFavorites = Service.GetFavorites();
+            HelperFavorites = new ObservableCollection<Favorite>(Service.GetFavorites());
 
-            AddPreferenceCmd = new Command(AddPreference);
+            AddFavoriteCmd = new Command(AddFavoriteClick);
+            EditFavoriteCmd = new Command((object favorite) =>
+            {
+                if (favorite is Favorite)
+                {
+                    EditFavoriteClick((Favorite)favorite);
+                }
+            });
         }
         #endregion
 
         #region Functions
-        private async void AddPreference()
+        private async void AddFavoriteClick()
         {
-            ICommand preferenceCmd = new Command((newPreference) =>
+            ICommand favoriteCmd = new Command((newFavorite) =>
             {
-                if (newPreference is Favorite)
-                    HelperFavorites.Add((Favorite)newPreference);
+                if (newFavorite is Favorite)
+                {
+                    HelperFavorites.Add((Favorite)newFavorite);
+                }
             });
-            await Shell.Current.Navigation.PushAsync(new NewPreferencePage((Command)preferenceCmd), true);
+            await Shell.Current.Navigation.PushModalAsync(new NewPreferencePage((Command)favoriteCmd), true);
+        }
+        private async void EditFavoriteClick(Favorite favorite)
+        {
+            ICommand modifyFavoriteCmd = new Command((modifyFavList) =>
+            {
+                if (modifyFavList is List<Favorite> && ((List<Favorite>)modifyFavList).Count == 2)
+                {
+                    Favorite oldFavorite = ((List<Favorite>)modifyFavList)[0];
+                    Favorite newFavorite = ((List<Favorite>)modifyFavList)[1];
+
+                    foreach (Favorite fav in HelperFavorites)
+                    {
+                        if (fav.Equals(oldFavorite))
+                        {
+                            if (newFavorite == null)
+                            {
+                                HelperFavorites.Remove(fav);
+                                return;
+                            }
+                            else
+                            {
+                                fav.Subject = newFavorite.Subject;
+                                fav.Grades = newFavorite.Grades;
+                                return;
+                            }
+                        }
+                    }
+                }
+            });
+            await Shell.Current.Navigation.PushModalAsync(new EditPreferencePage(favorite, (Command)modifyFavoriteCmd), true);
         }
         #endregion
     }

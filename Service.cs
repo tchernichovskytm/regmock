@@ -29,6 +29,8 @@ public class Service
         grades.Add(new Grade() { Name = "י\"א", Order = 50, Id = 5 });
         grades.Add(new Grade() { Name = "י\"ב", Order = 60, Id = 6 });
 
+        grades.Sort((a, b) => (int)a.Order - (int)b.Order);
+
         subjects.Add(new Subject() { Name = "Math", Order = 10, Id = 1 });
         subjects.Add(new Subject() { Name = "English", Order = 20, Id = 2 });
         subjects.Add(new Subject() { Name = "Hebrew", Order = 30, Id = 3 });
@@ -107,6 +109,24 @@ public class Service
         tickets.Add(ticket);
         return true;
     }
+    public static bool RemoveFavorite(Favorite favorite)
+    {
+        helperFavorites.Remove(favorite);
+        return true;
+    }
+    public static bool EditFavorite(Favorite oldFavorite, Favorite newFavorite)
+    {
+        foreach (Favorite f in helperFavorites)
+        {
+            if (f == oldFavorite)
+            {
+                oldFavorite.Subject = newFavorite.Subject;
+                oldFavorite.Grades = newFavorite.Grades;
+                break;
+            }
+        }
+        return true;
+    }
     public static bool AddFavorite(Favorite favorite)
     {
         helperFavorites.Add(favorite);
@@ -116,7 +136,7 @@ public class Service
     // For toggling tickets
     public static bool HandleTicket(Ticket ticket)
     {
-        JsonSerializer.Serialize(ticket);
+        //JsonSerializer.Serialize(ticket);
         return true;
     }
 

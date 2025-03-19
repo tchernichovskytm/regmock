@@ -78,6 +78,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Views\EditPreferencePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\GiveHelpPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

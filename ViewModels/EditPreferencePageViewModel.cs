@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace regmock.ViewModels
 {
-    public class NewPreferencePageViewModel : ViewModelBase
+    public class EditPreferencePageViewModel : ViewModelBase
     {
         #region Properties
         private ObservableCollection<Subject> subjects;
@@ -17,18 +17,6 @@ namespace regmock.ViewModels
             {
                 subjects = value;
                 OnPropertyChanged(nameof(Subjects));
-            }
-        }
-
-        private ObservableCollection<ToggleGrade> toggleGrades;
-
-        public ObservableCollection<ToggleGrade> ToggleGrades
-        {
-            get { return toggleGrades; }
-            set
-            {
-                toggleGrades = value;
-                OnPropertyChanged(nameof(ToggleGrades));
             }
         }
 
@@ -44,29 +32,45 @@ namespace regmock.ViewModels
             }
         }
 
-        private bool canAdd;
+        private ObservableCollection<ToggleGrade> toggleGrades;
 
-        public bool CanAdd
+        public ObservableCollection<ToggleGrade> ToggleGrades
         {
-            get { return canAdd; }
+            get { return toggleGrades; }
             set
             {
-                canAdd = value;
-                OnPropertyChanged(nameof(CanAdd));
+                toggleGrades = value;
+                OnPropertyChanged(nameof(ToggleGrades));
             }
         }
+
+        private bool canApply;
+
+        public bool CanApply
+        {
+            get { return canApply; }
+            set
+            {
+                canApply = value;
+                OnPropertyChanged(nameof(CanApply));
+            }
+        }
+
+        private Favorite OldFavorite;
         #endregion
 
         #region Commands
+        public ICommand ApplyCmd { get; set; }
+        public ICommand DeleteCmd { get; set; }
         public ICommand GradeToggleCmd { get; set; }
         public ICommand CloseCmd { get; set; }
-        public ICommand AddFavoriteCmd { get; set; }
         public ICommand FavoriteCmd { get; set; }
         #endregion
 
         #region Constructor
-        public NewPreferencePageViewModel(Command favoriteCmd)
+        public EditPreferencePageViewModel(Favorite favorite, Command favoriteCmd)
         {
+            OldFavorite = favorite;
             Subjects = new ObservableCollection<Subject>(Service.GetSubjects());
             ToggleGrades = new ObservableCollection<ToggleGrade>();
             List<Grade> Grades = Service.GetGrades();
@@ -76,19 +80,39 @@ namespace regmock.ViewModels
             {
                 ToggleGrade newTG = new ToggleGrade();
                 newTG.Grade = grade;
-                newTG.Toggled = false;
+
+                bool found = false;
+                foreach (Grade g in favorite.Grades)
+                {
+                    if (g.Id == grade.Id)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                newTG.Toggled = found;
+
                 newTG.OnToggleChangedCommand = (Command)GradeToggleCmd;
                 ToggleGrades.Add(newTG);
             }
 
-            SelectedSubjectIndex = 0;
-            CanAdd = false;
+            int foundIdx = -1;
+            for (int i = 0; i < Subjects.Count; i++)
+            {
+                if (Subjects[i].Id == favorite.Subject.Id)
+                {
+                    foundIdx = i;
+                    break;
+                }
+            }
+
+            SelectedSubjectIndex = foundIdx;
 
             FavoriteCmd = favoriteCmd;
 
             CloseCmd = new Command(CloseClick);
-            AddFavoriteCmd = new Command(AddFavorite);
-
+            ApplyCmd = new Command(ApplyClick);
+            DeleteCmd = new Command(DeleteClick);
         }
         #endregion
 
@@ -99,17 +123,17 @@ namespace regmock.ViewModels
             {
                 if (tg.Toggled == true)
                 {
-                    CanAdd = true;
+                    CanApply = true;
                     return;
                 }
             }
-            CanAdd = false;
+            CanApply = false;
         }
         private async void CloseClick()
         {
             await Shell.Current.Navigation.PopModalAsync(true);
         }
-        private async void AddFavorite()
+        private async void ApplyClick()
         {
             List<Grade> toggledGrades = new List<Grade>();
             foreach (ToggleGrade tg in ToggleGrades)
@@ -126,9 +150,21 @@ namespace regmock.ViewModels
                 Grades = toggledGrades,
             };
 
-            if (Service.AddFavorite(NewFavorite) == true)
+            if (Service.EditFavorite(OldFavorite, NewFavorite) == true)
             {
-                FavoriteCmd.Execute(NewFavorite);
+                FavoriteCmd.Execute(new List<Favorite>() { OldFavorite, NewFavorite });
+                await Shell.Current.Navigation.PopModalAsync(true);
+            }
+            else
+            {
+                // TODO: handle error
+            }
+        }
+        private async void DeleteClick()
+        {
+            if (Service.RemoveFavorite(OldFavorite) == true)
+            {
+                FavoriteCmd.Execute(new List<Favorite>() { OldFavorite, null });
                 await Shell.Current.Navigation.PopModalAsync(true);
             }
             else

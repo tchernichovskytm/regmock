@@ -2,7 +2,6 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:behaviors="clr-namespace:regmock.Behaviors"
-             xmlns:viewmodels="clr-namespace:regmock.ViewModels"
              x:Class="regmock.Views.RequestHelpPage"
              Title="RequestHelpPage">
     <Grid Style="{StaticResource MainGridStyle}">
@@ -14,35 +13,33 @@
 
         <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
 
-            <VerticalStackLayout>
-                <CollectionView ItemsSource="{Binding Tickets}">
-                    <CollectionView.ItemsLayout>
-                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="5" />
-                    </CollectionView.ItemsLayout>
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <VerticalStackLayout>
-                                <Grid Padding="6" BackgroundColor="WhiteSmoke" ColumnDefinitions="*,*" >
-                                    <VerticalStackLayout HorizontalOptions="Start" Grid.Column="0">
-                                        <Label FontSize="24"
+            <CollectionView ItemsSource="{Binding Tickets}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout  Orientation="Vertical" ItemSpacing="5" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <VerticalStackLayout>
+                            <Grid Padding="6" BackgroundColor="WhiteSmoke" ColumnDefinitions="*,*" >
+                                <VerticalStackLayout HorizontalOptions="Start" Grid.Column="0">
+                                    <Label FontSize="24"
                                                Text="{Binding Subject.Name}" />
-                                        <Label FontSize="14"
+                                    <Label FontSize="14"
                                                Text="{Binding Topics[0]}" />
-                                    </VerticalStackLayout>
-                                    <HorizontalStackLayout HorizontalOptions="End" Grid.Column="1">
-                                        <Label VerticalOptions="Center"
+                                </VerticalStackLayout>
+                                <HorizontalStackLayout HorizontalOptions="End" Grid.Column="1">
+                                    <Label VerticalOptions="Center"
                                                FontSize="18"
                                                Text="{Binding ServerActiveTime}" />
-                                        <Switch Margin="6,0,0,0"
+                                    <Switch Margin="6,0,0,0"
                                                 IsToggled="{Binding IsActive}">
-                                        </Switch>
-                                    </HorizontalStackLayout>
-                                </Grid>
-                            </VerticalStackLayout>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </VerticalStackLayout>
+                                    </Switch>
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
         </VerticalStackLayout>
 

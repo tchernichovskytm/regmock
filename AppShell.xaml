@@ -10,8 +10,5 @@
     <ShellContent
         ContentTemplate="{DataTemplate local:PickFavoritesPage}"
         Route="PickFavoritesPage" />
-    <!--<ShellContent
-        ContentTemplate="{DataTemplate local:NewPreferencePage}"
-        Route="NewPreferencePage" />-->
 
 </Shell>

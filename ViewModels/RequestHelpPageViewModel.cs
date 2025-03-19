@@ -47,7 +47,7 @@ namespace regmock.ViewModels
         {
             Tickets = new ObservableCollection<Ticket>(Service.GetTickets());
             BringTopicsToFirst();
-
+            
             TicketToggleCmd = new Command((object ticket) =>
             {
                 if (ticket is Ticket)
@@ -55,6 +55,10 @@ namespace regmock.ViewModels
                     TicketToggled((Ticket)ticket);
                 }
             });
+            foreach (Ticket ticket in Tickets)
+            {
+                ticket.IsActiveToggleCmd = (Command)TicketToggleCmd;
+            }
 
             Thread clock = new Thread(TimerDecrease);
             clock.Start();
@@ -85,7 +89,7 @@ namespace regmock.ViewModels
                 if (ticket.IsActive == true)
                 {
                     ticket.ActiveTimeSpan = TimeSpan.FromHours(24);
-                    ticket.ServerActiveTime = ticket.ActiveTimeSpan.ToString(@"hh\:mm\:ss");
+                    ticket.ServerActiveTime = $"{(ticket.ActiveTimeSpan.Days * 24 + ticket.ActiveTimeSpan.Hours).ToString("00")}:{ticket.ActiveTimeSpan.Minutes.ToString("00")}:{ticket.ActiveTimeSpan.Seconds.ToString("00")}";
                 }
                 else if (ticket.IsActive == false)
                 {
