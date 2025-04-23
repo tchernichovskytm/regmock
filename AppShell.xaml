@@ -8,7 +8,31 @@
     Title="Mockflow Beta 1.0">
 
     <ShellContent
+        ContentTemplate="{DataTemplate local:LoginPage}"
+        Route="LoginPage" Title="Login" IsVisible="{Binding IsNotLoggedIn}" />
+    <ShellContent
+        ContentTemplate="{DataTemplate local:RegisterPage}"
+        Route="RegisterPage" Title="Register" IsVisible="{Binding IsNotLoggedIn}" />
+
+    <ShellContent
+        ContentTemplate="{DataTemplate local:GiveHelpPage}"
+        Route="GiveHelpPage" Title="Give Help" IsVisible="{Binding IsLoggedIn}" />
+    <ShellContent
+        ContentTemplate="{DataTemplate local:RequestHelpPage}"
+        Route="RequestHelpPage" Title="Request Help" IsVisible="{Binding IsLoggedIn}" />
+    
+    <ShellContent
         ContentTemplate="{DataTemplate local:PickFavoritesPage}"
-        Route="PickFavoritesPage" />
+        Route="PickFavoritesPage" Title="Pick Favorites" IsVisible="{Binding IsLoggedIn}" />
+    
+    <ShellContent
+        ContentTemplate="{DataTemplate local:NewPreferencePage}"
+        Route="NewPreferencePage" Title="New Preference" IsVisible="False" />
+    <ShellContent
+        ContentTemplate="{DataTemplate local:EditPreferencePage}"
+        Route="EditPreferencePage" Title="Edit Preference" IsVisible="False" />
+    <ShellContent
+        ContentTemplate="{DataTemplate local:NewTicketPage}"
+        Route="NewTicketPage" Title="New Ticket" IsVisible="False" />
 
 </Shell>

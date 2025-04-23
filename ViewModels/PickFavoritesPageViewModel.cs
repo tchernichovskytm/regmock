@@ -55,7 +55,11 @@ namespace regmock.ViewModels
                     HelperFavorites.Add((Favorite)newFavorite);
                 }
             });
-            await Shell.Current.Navigation.PushModalAsync(new NewPreferencePage((Command)favoriteCmd), true);
+            List<Subject> ExistingSubjects = new List<Subject>();
+            foreach (Favorite f in helperFavorites) {
+                ExistingSubjects.Add(f.Subject);
+            }
+            await Shell.Current.Navigation.PushModalAsync(new NewPreferencePage(ExistingSubjects, (Command)favoriteCmd), true);
         }
         private async void EditFavoriteClick(Favorite favorite)
         {

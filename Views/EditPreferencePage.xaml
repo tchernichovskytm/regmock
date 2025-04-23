@@ -19,14 +19,17 @@
             Command="{Binding CloseCmd}" />
 
             <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
-                <VerticalStackLayout>
+                <!--<VerticalStackLayout>
                     <Label Text="Select a subject" />
                     <Picker ItemsSource="{Binding Subjects}" ItemDisplayBinding="{Binding Name}" SelectedIndex="{Binding SelectedSubjectIndex}">
                         <Picker.Items>
 
                         </Picker.Items>
                     </Picker>
-                </VerticalStackLayout>
+                </VerticalStackLayout>-->
+                <Label Text="{Binding EditSubjectName}">
+                    
+                </Label>
 
                 <CollectionView ItemsSource="{Binding ToggleGrades}">
                     <CollectionView.ItemTemplate>

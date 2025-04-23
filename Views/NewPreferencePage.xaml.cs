@@ -1,13 +1,14 @@
+using regmock.Models;
 using regmock.ViewModels;
 
 namespace regmock.Views;
 
 public partial class NewPreferencePage : ContentPage
 {
-	public NewPreferencePage(Command preferenceCmd)
+	public NewPreferencePage(List<Subject> ExistingSubjects,Command preferenceCmd)
 	{
 		InitializeComponent();
 
-		BindingContext = new NewPreferencePageViewModel(preferenceCmd);
+		BindingContext = new NewPreferencePageViewModel(ExistingSubjects, preferenceCmd);
 	}
 }

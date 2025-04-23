@@ -65,9 +65,18 @@ namespace regmock.ViewModels
         #endregion
 
         #region Constructor
-        public NewPreferencePageViewModel(Command favoriteCmd)
+        public NewPreferencePageViewModel(List<Subject> existingSubjects, Command favoriteCmd)
         {
             Subjects = new ObservableCollection<Subject>(Service.GetSubjects());
+
+            foreach (Subject existingSubject in existingSubjects)
+            {
+                if (Subjects.Contains(existingSubject))
+                {
+                    Subjects.Remove(existingSubject);
+                }
+            }
+
             ToggleGrades = new ObservableCollection<ToggleGrade>();
             List<Grade> Grades = Service.GetGrades();
 
