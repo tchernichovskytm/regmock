@@ -10,24 +10,76 @@
         <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
             <VerticalStackLayout>
                 <CollectionView ItemsSource="{Binding Tickets}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="5"/>
+                    </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <VerticalStackLayout>
-                                <Grid Padding="6" BackgroundColor="WhiteSmoke" RowDefinitions="*,*" ColumnDefinitions="*, 45">
+                                <Grid Padding="6" BackgroundColor="WhiteSmoke" RowDefinitions="*,*" ColumnDefinitions="*, Auto">
                                     <HorizontalStackLayout Spacing="8" VerticalOptions="Center" Grid.Row="0" Grid.Column="0">
-                                        <Label VerticalOptions="Center" TextColor="Black" FontAttributes="Bold" Text="{Binding Subject.Name}"/>
-                                        <Label VerticalOptions="Center" TextColor="DarkGray" Text="{Binding Topics[0]}"/>
+                                        <Label
+                                            HorizontalOptions="Center" 
+                                            VerticalOptions="Center"
+                                            TextColor="Black"
+                                            FontAttributes="Bold"
+                                            Text="{Binding Subject.Name}"
+                                        />
+                                        <Label
+                                            HorizontalOptions="Center" 
+                                            VerticalOptions="Center"
+                                            TextColor="DarkGray"
+                                            Text="{Binding Topics[0]}"
+                                        />
                                     </HorizontalStackLayout>
-                                    
+
                                     <HorizontalStackLayout Spacing="8" VerticalOptions="Center" Grid.Row="1" Grid.Column="0">
-                                        <Label VerticalOptions="Center" TextColor="Black" Text="{Binding Sender.Fullname}"/>
-                                        <Button VerticalOptions="Center" FontFamily="MaterialIcons" FontSize="16" Text="{x:Static helper:IconFont.Messenger}" Background="Transparent" TextColor="Green" MinimumHeightRequest="28" MinimumWidthRequest="28" Padding="0" HeightRequest="0" WidthRequest="0"/>
+                                        <Label
+                                            HorizontalOptions="Center" 
+                                            VerticalOptions="Center"
+                                            TextColor="Black"
+                                            Text="{Binding Sender.Fullname}"
+                                        />
+                                        <Button
+                                            HorizontalOptions="Center" 
+                                            VerticalOptions="Center"
+                                            FontFamily="MaterialIcons"
+                                            FontSize="20"
+                                            Text="{x:Static helper:IconFont.Messenger}"
+                                            Background="Transparent"
+                                            TextColor="Green" 
+                                            Padding="0" 
+                                            MinimumHeightRequest="28" 
+                                            MinimumWidthRequest="28" 
+                                            HeightRequest="28" 
+                                            WidthRequest="28"
+                                        />
                                     </HorizontalStackLayout>
-                                    <Label HorizontalOptions="Center" FontFamily="MaterialIcons" FontSize="16" Text="{x:Static helper:IconFont.Favorite}" Grid.Row="0" Grid.Column="1"/>
-                                    
-                                    <Label HorizontalOptions="Center" Text="יא" Grid.Row="1" Grid.Column="1"/>
+                                    <Label 
+                                        HorizontalOptions="Center" 
+                                        VerticalOptions="Center"
+                                        Padding="0,0,13,0"
+                                        
+                                        FontSize="20" 
+                                        FontFamily="MaterialIcons" 
+                                        Text="{x:Static helper:IconFont.Favorite}" 
+                                        
+                                        Grid.Row="0" 
+                                        Grid.Column="1"
+                                    />
+
+                                    <Label
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"
+                                        Padding="0,0,13,0"
+                                        
+                                        FontSize="16"
+                                        Text="{Binding Sender.Grade.Name}"
+                                        
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                    />
                                 </Grid>
-                                <BoxView BackgroundColor="Transparent" HeightRequest="5"></BoxView>
                             </VerticalStackLayout>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

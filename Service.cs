@@ -165,6 +165,11 @@ public class Service
         return helperFavorites;
     }
 
+    public static void SetFavorites(List<Favorite> favorites)
+    {
+        helperFavorites = favorites;
+    }
+
 
     public static bool RequestLogin(string email, string password)
     {

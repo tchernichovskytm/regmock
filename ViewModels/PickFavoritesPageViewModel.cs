@@ -34,12 +34,17 @@ namespace regmock.ViewModels
         {
             HelperFavorites = new ObservableCollection<Favorite>(Service.GetFavorites());
 
-            AddFavoriteCmd = new Command(AddFavoriteClick);
+            AddFavoriteCmd = new Command(() =>
+            {
+                AddFavoriteClick();
+                Service.SetFavorites(new List<Favorite>(HelperFavorites));
+            });
             EditFavoriteCmd = new Command((object favorite) =>
             {
                 if (favorite is Favorite)
                 {
                     EditFavoriteClick((Favorite)favorite);
+                    Service.SetFavorites(new List<Favorite>(HelperFavorites));
                 }
             });
         }
