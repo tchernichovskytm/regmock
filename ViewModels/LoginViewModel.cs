@@ -41,55 +41,95 @@ namespace regmock.ViewModels
             }
         }
 
-        private string usernameEntry;
-        public string UsernameEntry
+        private string emailEntry;
+        public string EmailEntry
         {
-            get { return usernameEntry; }
+            get { return emailEntry; }
             set
             {
-                usernameEntry = value;
+                emailEntry = value;
                 checkValidLogin();
-                OnPropertyChanged(nameof(UsernameEntry));
+                OnPropertyChanged(nameof(EmailEntry));
             }
         }
 
-        private string usernameErr;
-        public string UsernameErr
+        private string emailErr;
+        public string EmailErr
         {
-            get { return usernameErr; }
+            get { return emailErr; }
             set
             {
-                usernameErr = value;
-                OnPropertyChanged(nameof(UsernameErr));
+                emailErr = value;
+                OnPropertyChanged(nameof(EmailErr));
             }
         }
+
+        private bool canLogin;
+
+        public bool CanLogin
+        {
+            get { return canLogin; }
+            set
+            {
+                canLogin = value;
+                OnPropertyChanged(nameof(CanLogin));
+            }
+        }
+
+        private string loginErr;
+
+        public string LoginErr
+        {
+            get { return loginErr; }
+            set
+            {
+                loginErr = value;
+                OnPropertyChanged(nameof(LoginErr));
+            }
+        }
+
 
         #endregion
 
         #region Commands
         public ICommand ShowPass_Cmd { get; set; }
         public ICommand PassReset_Cmd { get; set; }
-        public ICommand UserReset_Cmd { get; set; }
+        public ICommand EmailReset_Cmd { get; set; }
+        public ICommand Login_Cmd { get; set; }
         #endregion
 
         #region Constructor
         public LoginViewModel()
         {
-            usernameErr = "";
+            emailErr = "";
             passwordErr = "";
 
             IsPassVisible = true;
 
             ShowPass_Cmd = new Command(ShowPass);
             PassReset_Cmd = new Command(ResetPass);
-            UserReset_Cmd = new Command(ResetUser);
+            EmailReset_Cmd = new Command(ResetEmail);
+
+            Login_Cmd = new Command(async () =>
+            {
+                bool success = await Login();
+                if (success)
+                {
+                    LoginErr = "Logged in";
+                    await Shell.Current.GoToAsync("//RequestHelpPage");
+                }
+                else
+                {
+                    LoginErr = "Failed to Login";
+                }
+            });
         }
         #endregion
 
         #region Functions
-        private void ResetUser()
+        private void ResetEmail()
         {
-            UsernameEntry = "";
+            EmailEntry = "";
         }
 
         private void ResetPass()
@@ -104,36 +144,45 @@ namespace regmock.ViewModels
 
         private void checkValidLogin()
         {
-            bool validUsername = false;
-            if (UsernameEntry == null) UsernameErr = "";
-            else if (UsernameEntry.Length == 0) UsernameErr = "Please enter a user name";
-            else if (UsernameEntry.Length < 3) UsernameErr = "Too short";
-            else if (UsernameEntry.Length > 12) UsernameErr = "Too long";
-            else { UsernameErr = ""; validUsername = true; }
+            // TODO: verify email regex
+            bool validEmail = false;
+            if (EmailEntry != null)
+            {
+                Regex validateEmailRegex = new Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
+                bool validRegex = validateEmailRegex.IsMatch(EmailEntry);
+                if (EmailEntry.Length == 0) EmailErr = "Please enter an email";
+                else if (!validRegex) EmailErr = "Invalid Email";
+                else { EmailErr = ""; validEmail = true; }
+            }
 
-            Regex validateGuidRegex = new Regex("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
             bool validPassword = false;
             if (PasswordEntry != null)
             {
-                validPassword = validateGuidRegex.IsMatch(PasswordEntry);
+                // Regex validateGuidRegex = new Regex("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
+                Regex validateGuidRegexCapital = new Regex("^(?=.*?[A-Z]).{1,}$");
+                bool validRegexCapital = validateGuidRegexCapital.IsMatch(PasswordEntry);
+
+                Regex validateGuidRegexLower = new Regex("^(?=.*?[a-z]).{1,}$");
+                bool validRegexLower = validateGuidRegexLower.IsMatch(PasswordEntry);
+
+                Regex validateGuidRegexDigits = new Regex("^(?=.*?[0-9]).{1,}$");
+                bool validRegexDigits = validateGuidRegexDigits.IsMatch(PasswordEntry);
+
                 if (PasswordEntry.Length == 0) PasswordErr = "Please enter a password";
-                else if (!validPassword) PasswordErr = "Password not legal";
-                else { PasswordErr = ""; }
+                else if (!validRegexCapital) { PasswordErr = "Password must have capital letters"; }
+                else if (!validRegexLower) { PasswordErr = "Password must have lowercase letters"; }
+                else if (!validRegexDigits) { PasswordErr = "Password must have digits"; }
+                else { PasswordErr = ""; validPassword = true; }
             }
 
-            if (validUsername && validPassword)
-            {
-                // TODO: valid login, check if user exists and log in
-                bool success = Service.RequestLogin(UsernameEntry, PasswordEntry);
-                if (success)
-                {
+            CanLogin = validEmail && validPassword;
+            LoginErr = "";
+        }
 
-                }
-                else
-                {
-
-                }
-            }
+        private async Task<bool> Login()
+        {
+            bool success = await Service.RequestLoginAsync(EmailEntry, PasswordEntry);
+            return success;
         }
         #endregion
     }

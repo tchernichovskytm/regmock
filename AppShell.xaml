@@ -8,12 +8,12 @@
     Title="Mockflow Beta 1.0">
 
     <!-- DEBUG -->
-    <ShellContent
+    <!--<ShellContent
         ContentTemplate="{DataTemplate local:PickFavoritesPage}"
         Route="PickFavoritesPage" Title="Pick Favorites" />
     <ShellContent
         ContentTemplate="{DataTemplate local:GiveHelpPage}"
-        Route="GiveHelpPage" Title="Give Help" />
+        Route="GiveHelpPage" Title="Give Help" />-->
     <!-- DEBUG -->
 
 

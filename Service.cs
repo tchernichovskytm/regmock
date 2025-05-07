@@ -2,10 +2,22 @@
 using System;
 using System.Text.Json;
 
+using Firebase.Auth;
+using Firebase.Auth.Providers;
+using Firebase.Auth.Repository;
+using Firebase.Database;
+using Firebase.Database.Query;
+
+using UserModel = regmock.Models.User;
+using regmock.ViewModels;
+
 public class Service
 {
-    static User currentUser = null;
-    static List<User> users = new List<User>();
+    static UserCredential currentAuthUser = null;
+
+    static UserModel currentUser = null;
+
+    static List<UserModel> users = new List<UserModel>();
 
     static List<Grade> grades = new List<Grade>();
 
@@ -18,8 +30,41 @@ public class Service
     static List<Message> msgs = new List<Message>();
 
     static List<Favorite> helperFavorites = new List<Favorite>();
+
+    static FirebaseAuthClient auth;
+    static FirebaseClient client;
+
+    static public void InitAuth()
+    {
+        var config = new FirebaseAuthConfig()
+        {
+            ApiKey = "AIzaSyDtvfgkLT5rlAvvtaDbbvl5-G5rKSvMLWY",
+            AuthDomain = "regmock-3fc47.firebaseapp.com",
+            Providers = new FirebaseAuthProvider[]
+            {
+                new EmailProvider()
+            },
+        };
+        auth = new FirebaseAuthClient(config);
+
+        client = new FirebaseClient(
+            @"https://regmock-3fc47-default-rtdb.europe-west1.firebasedatabase.app/",
+            new FirebaseOptions
+            {
+                AuthTokenAsyncFactory = () => Task.FromResult(auth.User.Credential.IdToken)
+            });
+    }
+
+    public static void InitRealData()
+    {
+        InitAuth();
+
+    }
+
     public static void InitFakeData()
     {
+        InitAuth();
+
         //This is fake data, later on data will come from Firbase
         //grades.Add(new Grade() { Name = "מורה", Order = 70, Id = 7 });
         grades.Add(new Grade() { Name = "ז'", Order = 10, Id = 1 });
@@ -54,10 +99,10 @@ public class Service
         //Dictionary<Subject, List<Grade>> fav = new Dictionary<Subject, List<Grade>>();
         //fav.Add(subjects[0], new List<Grade>() { grades[0], grades[1] });
 
-        users.Add(new User() { Fullname = "Eldan", Email = "eldan@gmail", PhoneNumber = "0583", Password = "123", UserType = Role.None, Grade = grades[0], RegistrationDate = yearAgo, HelperFavorites = helperFavorites });
-        users.Add(new User() { Fullname = "Ido Sweed", Email = "ido@gmail.com", PhoneNumber = "0583", Password = "058ASDf@#", UserType = Role.Pupil, Grade = grades[5], RegistrationDate = DateTime.Now });
-        users.Add(new User() { Fullname = "Ariel", Email = "ariel@gmail", PhoneNumber = "0583", Password = "123", UserType = Role.Pupil, Grade = grades[5], RegistrationDate = hourAgo });
-        users.Add(new User() { Fullname = "Polina", Email = "polina@gmail", PhoneNumber = "0583", Password = "123", UserType = Role.Pupil, Grade = grades[5], RegistrationDate = weekAgo });
+        users.Add(new UserModel() { Fullname = "Eldan", Email = "eldan@gmail", PhoneNumber = "0583", Password = "123", UserType = Role.None, Grade = grades[0], RegistrationDate = yearAgo, HelperFavorites = helperFavorites });
+        users.Add(new UserModel() { Fullname = "Ido Sweed", Email = "ido@gmail.com", PhoneNumber = "0583", Password = "058ASDf@#", UserType = Role.Pupil, Grade = grades[5], RegistrationDate = DateTime.Now });
+        users.Add(new UserModel() { Fullname = "Ariel", Email = "ariel@gmail", PhoneNumber = "0583", Password = "123", UserType = Role.Pupil, Grade = grades[5], RegistrationDate = hourAgo });
+        users.Add(new UserModel() { Fullname = "Polina", Email = "polina@gmail", PhoneNumber = "0583", Password = "123", UserType = Role.Pupil, Grade = grades[5], RegistrationDate = weekAgo });
 
 
         DateTime ServerCurrent = DateTime.Now; // This Will Be Taken From The Database
@@ -67,7 +112,7 @@ public class Service
             Subject = subjects[0],
             Topics = new List<string>() { "Multiplication", "Division" },
             Sender = users[1],
-            Helpers = new List<User> { users[0] },
+            Helpers = new List<UserModel> { users[0] },
             IsActive = true,
 
         });
@@ -77,7 +122,7 @@ public class Service
             Subject = subjects[1],
             Topics = new List<string>() { "Grammar" },
             Sender = users[1],
-            Helpers = new List<User> { users[0] },
+            Helpers = new List<UserModel> { users[0] },
             IsActive = true,
         });
         foreach (Ticket ticket in tickets)
@@ -171,10 +216,10 @@ public class Service
     }
 
 
-    public static bool RequestLogin(string email, string password)
+    public static bool RequestFakeLogin(string email, string password)
     {
-        User foundUser = null;
-        foreach (User p in users)
+        UserModel foundUser = null;
+        foreach (UserModel p in users)
         {
             if (p.Email == email)
             {
@@ -194,9 +239,28 @@ public class Service
         return true;
     }
 
+    public static async Task<bool> RequestLoginAsync(string email, string password)
+    {
+        if (email == null || password == null) return false;
+        if (email == "" || password == "") return false;
+
+        try
+        {
+            var authUser = await auth.SignInWithEmailAndPasswordAsync(email, password);
+            currentAuthUser = authUser;
+
+            
+            return true;
+        }
+        catch (FirebaseAuthException e)
+        {
+            return false;
+        }
+    }
+
     public static bool RequestRegister(string fullname, string phonenumber, string email, string password)
     {
-        foreach (User p in users)
+        foreach (UserModel p in users)
         {
             if (p.Email == email)
             {
@@ -205,7 +269,7 @@ public class Service
         }
 
         // a generic user from the first step of registration
-        users.Add(new User() { Fullname = fullname, PhoneNumber = phonenumber, Email = email, Password = password });
+        users.Add(new UserModel() { Fullname = fullname, PhoneNumber = phonenumber, Email = email, Password = password });
 
         return true;
     }

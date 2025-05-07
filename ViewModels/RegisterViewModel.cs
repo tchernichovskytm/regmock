@@ -183,24 +183,27 @@ namespace regmock.ViewModels
             EmailReset_Cmd = new Command(ResetEmail);
             PassReset_Cmd = new Command(ResetPass);
             PhoneReset_Cmd = new Command(ResetPhone);
-            Register_Cmd = new Command(RegisterClicked);
+            Register_Cmd = new Command(() => {
+                bool success = RegisterClicked();
+                if (success)
+                {
+                    RegisterErr = "Success";
+                }
+                else
+                {
+                    RegisterErr = "Failed to Register";
+                }
+            });
 
             GradeList = Service.GetGrades();
         }
         #endregion
 
         #region Functions
-        private void RegisterClicked()
+        private bool RegisterClicked()
         {
             bool success = Service.RequestRegister(FullnameEntry, PhonenumberEntry, EmailEntry, PasswordEntry);
-            if (success)
-            {
-                RegisterErr = "Success";
-            }
-            else
-            {
-                RegisterErr = "Failed to Register";
-            }
+            return success;
         }
         private void ResetFullname()
         {
@@ -243,33 +246,36 @@ namespace regmock.ViewModels
             }
 
             bool validEmail = false;
-            Regex validateEmailRegex = new Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
             if (EmailEntry != null)
             {
-                validEmail = validateEmailRegex.IsMatch(EmailEntry);
-                if (EmailEntry.Length == 0) EmailErr = "Please enter a valid email";
-                else if (!validEmail) EmailErr = "Email not legal";
-                else { EmailErr = ""; }
+                Regex validateEmailRegex = new Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
+                bool validRegex = validateEmailRegex.IsMatch(EmailEntry);
+                if (EmailEntry.Length == 0) EmailErr = "Please enter an email";
+                else if (!validRegex) EmailErr = "Invalid Email";
+                else { EmailErr = ""; validEmail = true; }
             }
 
-            Regex validatePasswordRegex = new Regex("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
             bool validPassword = false;
             if (PasswordEntry != null)
             {
-                validPassword = validatePasswordRegex.IsMatch(PasswordEntry);
+                // Regex validateGuidRegex = new Regex("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
+                Regex validateGuidRegexCapital = new Regex("^(?=.*?[A-Z]).{1,}$");
+                bool validRegexCapital = validateGuidRegexCapital.IsMatch(PasswordEntry);
+
+                Regex validateGuidRegexLower = new Regex("^(?=.*?[a-z]).{1,}$");
+                bool validRegexLower = validateGuidRegexLower.IsMatch(PasswordEntry);
+
+                Regex validateGuidRegexDigits = new Regex("^(?=.*?[0-9]).{1,}$");
+                bool validRegexDigits = validateGuidRegexDigits.IsMatch(PasswordEntry);
+
                 if (PasswordEntry.Length == 0) PasswordErr = "Please enter a password";
-                else if (!validPassword) PasswordErr = "Password not legal";
-                else { PasswordErr = ""; }
+                else if (!validRegexCapital) { PasswordErr = "Password must have capital letters"; }
+                else if (!validRegexLower) { PasswordErr = "Password must have lowercase letters"; }
+                else if (!validRegexDigits) { PasswordErr = "Password must have digits"; }
+                else { PasswordErr = ""; validPassword = true; }
             }
 
-            if (validFullname && validPhone && validEmail && validPassword)
-            {
-                CanRegister = true;
-            }
-            else
-            {
-                CanRegister = false;
-            }
+            CanRegister = validFullname && validPhone && validEmail && validPassword;
         }
         #endregion
     }
