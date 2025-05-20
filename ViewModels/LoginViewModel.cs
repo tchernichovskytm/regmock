@@ -88,7 +88,6 @@ namespace regmock.ViewModels
             }
         }
 
-
         #endregion
 
         #region Commands
@@ -116,7 +115,7 @@ namespace regmock.ViewModels
                 if (success)
                 {
                     LoginErr = "Logged in";
-                    await Shell.Current.GoToAsync("//RequestHelpPage");
+                    await Shell.Current.GoToAsync("\\\\RequestHelpPage");
                 }
                 else
                 {
@@ -169,9 +168,9 @@ namespace regmock.ViewModels
                 bool validRegexDigits = validateGuidRegexDigits.IsMatch(PasswordEntry);
 
                 if (PasswordEntry.Length == 0) PasswordErr = "Please enter a password";
-                else if (!validRegexCapital) { PasswordErr = "Password must have capital letters"; }
-                else if (!validRegexLower) { PasswordErr = "Password must have lowercase letters"; }
-                else if (!validRegexDigits) { PasswordErr = "Password must have digits"; }
+                //else if (!validRegexCapital) { PasswordErr = "Password must have capital letters"; }
+                //else if (!validRegexLower) { PasswordErr = "Password must have lowercase letters"; }
+                //else if (!validRegexDigits) { PasswordErr = "Password must have digits"; }
                 else { PasswordErr = ""; validPassword = true; }
             }
 

@@ -55,7 +55,8 @@ namespace regmock.ViewModels
         #region Constructor
         public GiveHelpPageViewModel()
         {
-            Tickets = new ObservableCollection<Ticket>(Service.GetTickets());
+            GetServiceTickets();
+
             BringTopicsToFirst();
 
             FavButtonIcon = IconFont.Favorite_outline;
@@ -65,6 +66,11 @@ namespace regmock.ViewModels
         #endregion
 
         #region Functions
+        public async void GetServiceTickets()
+        {
+            List<Ticket> ticketsList = await Service.GetAllTickets();
+            Tickets = new ObservableCollection<Ticket>(ticketsList);
+        }
         public void FavButtonClick()
         {
             if (IsFav == false)

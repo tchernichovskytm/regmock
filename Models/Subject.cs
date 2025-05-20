@@ -5,6 +5,6 @@ namespace regmock.Models
     {
         public string? Name { get; set; }
         public int? Order { get; set; }
-        public int? Id { get; set; }
+        public string? Id { get; set; }
     }
 }

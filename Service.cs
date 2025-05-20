@@ -10,6 +10,7 @@ using Firebase.Database.Query;
 
 using UserModel = regmock.Models.User;
 using regmock.ViewModels;
+using System.ComponentModel;
 
 public class Service
 {
@@ -55,10 +56,88 @@ public class Service
             });
     }
 
+    class TempTicket
+    {
+        public string SenderId { get; set; }
+        public string Subject { get; set; }
+        public string[] Helpers { get; set; }
+        public string[] Topics { get; set; }
+        public DateTime[] OpenTimes { get; set; }
+        public bool isActive { get; set; }
+    }
+
+    class TempSubject
+    {
+        public string Name { get; set; }
+        public int Order { get; set; }
+    }
+
+    public static async void GetAllSubjects()
+    {
+        List<Subject> fbSubjects = new List<Subject>();
+
+        var subjectsFromFB = await client.Child("Subjects").OnceAsync<Subject>();
+
+        foreach (var subFromFB in subjectsFromFB)
+        {
+            Subject parsedSubject = new Subject() { Id = subFromFB.Key, Name = subFromFB.Object.Name, Order = subFromFB.Object.Order };
+
+            fbSubjects.Add(parsedSubject);
+        }
+
+        if (subjects != fbSubjects)
+        {
+            subjects = fbSubjects;
+        }
+    }
+
+    public static async Task<List<Ticket>> GetAllTickets()
+    {
+        List<Ticket> fbTickets = new List<Ticket>();
+
+        var ticketsFromFB = await client.Child("Tickets").OnceAsync<TempTicket>();
+
+        foreach (var tickFromFB in ticketsFromFB)
+        {
+            Ticket parsedTicket = new Ticket()
+            {
+                IsActive = tickFromFB.Object.isActive,
+                Topics = new List<string>(tickFromFB.Object.Topics),
+                OpenTimes = new List<DateTime>(tickFromFB.Object.OpenTimes),
+            };
+
+            // PARSE SUBJECT
+            foreach (Subject sub in subjects)
+            {
+                if (sub.Id == tickFromFB.Object.Subject)
+                {
+                    parsedTicket.Subject = sub;
+                    break;
+                }
+            }
+
+            // PARSE SENDER
+
+
+            // PARSE HELPERS
+        }
+
+        if (tickets != fbTickets)
+        {
+            tickets = fbTickets;
+        }
+
+        return tickets;
+    }
+
+    public static void GetAllStaticDBObjects()
+    {
+        GetAllSubjects();
+    }
+
     public static void InitRealData()
     {
         InitAuth();
-
     }
 
     public static void InitFakeData()
@@ -76,13 +155,13 @@ public class Service
 
         grades.Sort((a, b) => (int)a.Order - (int)b.Order);
 
-        subjects.Add(new Subject() { Name = "Math", Order = 10, Id = 1 });
-        subjects.Add(new Subject() { Name = "English", Order = 20, Id = 2 });
-        subjects.Add(new Subject() { Name = "Hebrew", Order = 30, Id = 3 });
-        subjects.Add(new Subject() { Name = "Biology", Order = 40, Id = 4 });
-        subjects.Add(new Subject() { Name = "Physics", Order = 50, Id = 5 });
-        subjects.Add(new Subject() { Name = "History", Order = 60, Id = 6 });
-        subjects.Add(new Subject() { Name = "Bible", Order = 70, Id = 7 });
+        subjects.Add(new Subject() { Name = "Math", Order = 10, Id = "1" });
+        subjects.Add(new Subject() { Name = "English", Order = 20, Id = "2" });
+        subjects.Add(new Subject() { Name = "Hebrew", Order = 30, Id = "3" });
+        subjects.Add(new Subject() { Name = "Biology", Order = 40, Id = "4" });
+        subjects.Add(new Subject() { Name = "Physics", Order = 50, Id = "5" });
+        subjects.Add(new Subject() { Name = "History", Order = 60, Id = "6" });
+        subjects.Add(new Subject() { Name = "Bible", Order = 70, Id = "7" });
 
         schools.Add(new School() { Name = "Tchernichovsky", Id = 0, City = "Netanya" });
         schools.Add(new School() { Name = "Ort Gutman", Id = 1, City = "Netanya" });
@@ -185,11 +264,6 @@ public class Service
         return true;
     }
 
-    public static List<Ticket> GetTickets()
-    {
-        return tickets;
-    }
-
     public static List<Subject> GetSubjects()
     {
         return subjects;
@@ -249,7 +323,8 @@ public class Service
             var authUser = await auth.SignInWithEmailAndPasswordAsync(email, password);
             currentAuthUser = authUser;
 
-            
+            GetAllStaticDBObjects();
+
             return true;
         }
         catch (FirebaseAuthException e)

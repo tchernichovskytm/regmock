@@ -45,7 +45,10 @@ namespace regmock.ViewModels
         #region Constructor
         public RequestHelpPageViewModel()
         {
-            Tickets = new ObservableCollection<Ticket>(Service.GetTickets());
+            // get the list of those new tickets
+            Task<List<Ticket>> ticketsList = Service.GetAllTickets();
+            Tickets = new ObservableCollection<Ticket>(ticketsList.Result);
+
             BringTopicsToFirst();
             
             TicketToggleCmd = new Command((object ticket) =>

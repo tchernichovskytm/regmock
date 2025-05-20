@@ -7,7 +7,7 @@ namespace regmock
         public static MauiApp CreateMauiApp()
         {
             // TODO: change to database
-            Service.InitFakeData();
+            Service.InitRealData();
 
             var builder = MauiApp.CreateBuilder();
             builder
