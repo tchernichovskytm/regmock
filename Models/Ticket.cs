@@ -28,6 +28,8 @@ namespace regmock.Models
             }
         }
 
+        public string? FirebaseKey { get; set; }
+
         #region BackendProperties
         public ICommand? IsActiveToggleCmd { get; set; }
 

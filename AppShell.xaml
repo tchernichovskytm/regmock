@@ -29,7 +29,7 @@
         Route="GiveHelpPage" Title="Give Help" IsVisible="{Binding IsLoggedIn}" />
     <ShellContent
         ContentTemplate="{DataTemplate local:RequestHelpPage}"
-        Route="RequestHelpPage" Title="Request Help" />
+        Route="RequestHelpPage" Title="Request Help" IsVisible="{Binding IsNotLoggedIn}" />
     
     <ShellContent
         ContentTemplate="{DataTemplate local:PickFavoritesPage}"

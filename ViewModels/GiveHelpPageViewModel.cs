@@ -55,7 +55,10 @@ namespace regmock.ViewModels
         #region Constructor
         public GiveHelpPageViewModel()
         {
-            GetServiceTickets();
+            // get all the items from the fb into the service
+            Service.GetAllTicketsFromFB();
+            // get the new ticket list from the service
+            Tickets = new ObservableCollection<Ticket>(Service.GetTickets());
 
             BringTopicsToFirst();
 
@@ -66,11 +69,6 @@ namespace regmock.ViewModels
         #endregion
 
         #region Functions
-        public async void GetServiceTickets()
-        {
-            List<Ticket> ticketsList = await Service.GetAllTickets();
-            Tickets = new ObservableCollection<Ticket>(ticketsList);
-        }
         public void FavButtonClick()
         {
             if (IsFav == false)

@@ -45,9 +45,10 @@ namespace regmock.ViewModels
         #region Constructor
         public RequestHelpPageViewModel()
         {
-            // get the list of those new tickets
-            Task<List<Ticket>> ticketsList = Service.GetAllTickets();
-            Tickets = new ObservableCollection<Ticket>(ticketsList.Result);
+            // get all the items from the fb into the service
+            Service.GetAllTicketsFromFB();
+            // get the new ticket list from the service
+            Tickets = new ObservableCollection<Ticket>(Service.GetTickets());
 
             BringTopicsToFirst();
             

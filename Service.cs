@@ -56,7 +56,7 @@ public class Service
             });
     }
 
-    class TempTicket
+    class FirebaseTicket
     {
         public string SenderId { get; set; }
         public string Subject { get; set; }
@@ -66,17 +66,11 @@ public class Service
         public bool isActive { get; set; }
     }
 
-    class TempSubject
-    {
-        public string Name { get; set; }
-        public int Order { get; set; }
-    }
-
-    public static async void GetAllSubjects()
+    public static void GetAllSubjectsFromFB()
     {
         List<Subject> fbSubjects = new List<Subject>();
 
-        var subjectsFromFB = await client.Child("Subjects").OnceAsync<Subject>();
+        var subjectsFromFB = client.Child("Subjects").OnceAsync<Subject>().Result;
 
         foreach (var subFromFB in subjectsFromFB)
         {
@@ -91,16 +85,18 @@ public class Service
         }
     }
 
-    public static async Task<List<Ticket>> GetAllTickets()
+    public static void GetAllTicketsFromFB()
     {
         List<Ticket> fbTickets = new List<Ticket>();
 
-        var ticketsFromFB = await client.Child("Tickets").OnceAsync<TempTicket>();
+        var ticketsFromFB = client.Child("Tickets").OnceAsync<FirebaseTicket>().Result;
 
         foreach (var tickFromFB in ticketsFromFB)
         {
             Ticket parsedTicket = new Ticket()
             {
+                // in order to update tickets in firebase i saved the key to it
+                FirebaseKey = tickFromFB.Key,
                 IsActive = tickFromFB.Object.isActive,
                 Topics = new List<string>(tickFromFB.Object.Topics),
                 OpenTimes = new List<DateTime>(tickFromFB.Object.OpenTimes),
@@ -120,19 +116,19 @@ public class Service
 
 
             // PARSE HELPERS
+
+            fbTickets.Add(parsedTicket);
         }
 
         if (tickets != fbTickets)
         {
             tickets = fbTickets;
         }
-
-        return tickets;
     }
 
-    public static void GetAllStaticDBObjects()
+    public static void GetAllStaticFBObjects()
     {
-        GetAllSubjects();
+        GetAllSubjectsFromFB();
     }
 
     public static void InitRealData()
@@ -258,10 +254,28 @@ public class Service
     }
 
     // For toggling tickets
-    public static bool HandleTicket(Ticket ticket)
+    public static bool HandleTicket(Ticket updatedTicket)
     {
-        //JsonSerializer.Serialize(ticket);
+        if (updatedTicket.FirebaseKey == null)
+        {
+            // this is a new ticket that was created
+            FirebaseTicket firebaseTicket = new FirebaseTicket() {
+                Subject = updatedTicket.Subject.Id,
+                isActive = updatedTicket.IsActive,
+
+            };
+
+            client.Child("Tickets").PutAsync<FirebaseTicket>()
+        } else if (updatedTicket.FirebaseKey != "")
+        {
+            // this is a ticket that already exists on firebase
+        }
         return true;
+    }
+
+    public static List<Ticket> GetTickets()
+    {
+        return tickets;
     }
 
     public static List<Subject> GetSubjects()
@@ -323,11 +337,11 @@ public class Service
             var authUser = await auth.SignInWithEmailAndPasswordAsync(email, password);
             currentAuthUser = authUser;
 
-            GetAllStaticDBObjects();
+            GetAllStaticFBObjects();
 
             return true;
         }
-        catch (FirebaseAuthException e)
+        catch (FirebaseAuthException)
         {
             return false;
         }
