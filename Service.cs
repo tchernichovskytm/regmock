@@ -11,6 +11,7 @@ using Firebase.Database.Query;
 using UserModel = regmock.Models.User;
 using regmock.ViewModels;
 using System.ComponentModel;
+using System.Linq;
 
 public class Service
 {
@@ -25,6 +26,8 @@ public class Service
     static List<Subject> subjects = new List<Subject>();
 
     static List<Ticket> tickets = new List<Ticket>();
+
+    static List<Ticket> requestedTickets = new List<Ticket>();
 
     static List<School> schools = new List<School>();
 
@@ -56,21 +59,17 @@ public class Service
             });
     }
 
-    class FirebaseTicket
+    class FirebaseUserModel
     {
-        public string SenderId { get; set; }
-        public string Subject { get; set; }
-        public string[] Helpers { get; set; }
-        public string[] Topics { get; set; }
-        public DateTime[] OpenTimes { get; set; }
-        public bool isActive { get; set; }
+        public string? Fullname { get; set; }
+        public string? Grade { get; set; }
     }
 
-    public static void GetAllSubjectsFromFB()
+    public static async void GetAllSubjectsFromFB()
     {
         List<Subject> fbSubjects = new List<Subject>();
 
-        var subjectsFromFB = client.Child("Subjects").OnceAsync<Subject>().Result;
+        var subjectsFromFB = await client.Child("Subjects").OnceAsync<Subject>();
 
         foreach (var subFromFB in subjectsFromFB)
         {
@@ -85,21 +84,49 @@ public class Service
         }
     }
 
-    public static void GetAllTicketsFromFB()
+    public static async void GetAllGradesFromFB()
+    {
+        List<Grade> fbGrades = new List<Grade>();
+
+        var gradesFromFB = await client.Child("Grades").OnceAsync<Grade>();
+
+        foreach (var gFromFB in gradesFromFB)
+        {
+            Grade parsedGrade = new Grade() { Id = gFromFB.Key, Name = gFromFB.Object.Name, Order = gFromFB.Object.Order };
+
+            fbGrades.Add(parsedGrade);
+        }
+
+        if (grades != fbGrades)
+        {
+            grades = fbGrades;
+        }
+    }
+
+    class FromFirebaseTicket
+    {
+        public string? SenderId { get; set; }
+        public string? Subject { get; set; }
+        public Dictionary<string, string>? Helpers { get; set; }
+        public Dictionary<string, string>? Topics { get; set; }
+        public Dictionary<string, DateTime>? OpenTimes { get; set; }
+        public bool? IsActive { get; set; }
+    }
+
+    public static async void GetAllTicketsFromFB()
     {
         List<Ticket> fbTickets = new List<Ticket>();
 
-        var ticketsFromFB = client.Child("Tickets").OnceAsync<FirebaseTicket>().Result;
+        var ticketsFromFB = await client.Child("Tickets").OnceAsync<FromFirebaseTicket>();
 
         foreach (var tickFromFB in ticketsFromFB)
         {
+            if (tickFromFB.Object.IsActive == false) continue;
+
             Ticket parsedTicket = new Ticket()
             {
-                // in order to update tickets in firebase i saved the key to it
-                FirebaseKey = tickFromFB.Key,
-                IsActive = tickFromFB.Object.isActive,
-                Topics = new List<string>(tickFromFB.Object.Topics),
-                OpenTimes = new List<DateTime>(tickFromFB.Object.OpenTimes),
+                IsActive = tickFromFB.Object.IsActive,
+                Topics = new List<string>(tickFromFB.Object.Topics.Values),
             };
 
             // PARSE SUBJECT
@@ -112,10 +139,21 @@ public class Service
                 }
             }
 
-            // PARSE SENDER
-
-
-            // PARSE HELPERS
+            // PARSE SENDER (only need it's fullname and grade)
+            var fbSenderQuery = await client.Child("Users").Child($"{tickFromFB.Object.SenderId}").OnceAsync<FirebaseUserModel>();
+            var fbSender = fbSenderQuery.First();
+            if (fbSender != null)
+            {
+                parsedTicket.Sender = new UserModel() { Fullname = fbSender.Object.Fullname };
+                foreach (Grade g in grades)
+                {
+                    if (g.Id == fbSender.Object.Grade)
+                    {
+                        parsedTicket.Sender.Grade = g;
+                        break;
+                    }
+                }
+            }
 
             fbTickets.Add(parsedTicket);
         }
@@ -126,9 +164,46 @@ public class Service
         }
     }
 
+    public static async Task GetRequestedTicketsFromFB()
+    {
+        List<Ticket> reqFbTickets = new List<Ticket>();
+
+        var requestedTicketsFromFB = await client.Child("Tickets").OrderBy("SenderId").EqualTo(auth.User.Uid).OnceAsync<FromFirebaseTicket>();
+
+        foreach (var reqTickFromFB in requestedTicketsFromFB)
+        {
+            Ticket parsedRequestedTicket = new Ticket()
+            {
+                // in order to update tickets in firebase i saved the key to it
+                FirebaseKey = reqTickFromFB.Key,
+                IsActive = reqTickFromFB.Object.IsActive,
+                Topics = new List<string> (reqTickFromFB.Object.Topics.Values),
+                OpenTimes = new List<DateTime> (reqTickFromFB.Object.OpenTimes.Values),
+            };
+
+            // PARSE SUBJECT
+            foreach (Subject sub in subjects)
+            {
+                if (sub.Id == reqTickFromFB.Object.Subject)
+                {
+                    parsedRequestedTicket.Subject = sub;
+                    break;
+                }
+            }
+
+            reqFbTickets.Add(parsedRequestedTicket);
+        }
+
+        if (requestedTickets != reqFbTickets)
+        {
+            requestedTickets = reqFbTickets;
+        }
+    }
+
     public static void GetAllStaticFBObjects()
     {
         GetAllSubjectsFromFB();
+        GetAllGradesFromFB();
     }
 
     public static void InitRealData()
@@ -142,12 +217,12 @@ public class Service
 
         //This is fake data, later on data will come from Firbase
         //grades.Add(new Grade() { Name = "מורה", Order = 70, Id = 7 });
-        grades.Add(new Grade() { Name = "ז'", Order = 10, Id = 1 });
-        grades.Add(new Grade() { Name = "ח'", Order = 20, Id = 2 });
-        grades.Add(new Grade() { Name = "ט'", Order = 30, Id = 3 });
-        grades.Add(new Grade() { Name = "י'", Order = 40, Id = 4 });
-        grades.Add(new Grade() { Name = "י\"א", Order = 50, Id = 5 });
-        grades.Add(new Grade() { Name = "י\"ב", Order = 60, Id = 6 });
+        grades.Add(new Grade() { Name = "ז'", Order = 10, Id = "1" });
+        grades.Add(new Grade() { Name = "ח'", Order = 20, Id = "2" });
+        grades.Add(new Grade() { Name = "ט'", Order = 30, Id = "3" });
+        grades.Add(new Grade() { Name = "י'", Order = 40, Id = "4" });
+        grades.Add(new Grade() { Name = "י\"א", Order = 50, Id = "5" });
+        grades.Add(new Grade() { Name = "י\"ב", Order = 60, Id = "6" });
 
         grades.Sort((a, b) => (int)a.Order - (int)b.Order);
 
@@ -252,23 +327,53 @@ public class Service
         helperFavorites.Add(favorite);
         return true;
     }
+    class ToFirebaseTicket
+    {
+        public string? SenderId { get; set; }
+        public string? Subject { get; set; }
+        public List<string>? Helpers { get; set; }
+        public List<string>? Topics { get; set; }
+        public List<DateTime>? OpenTimes { get; set; }
+        public bool? IsActive { get; set; }
+    }
 
     // For toggling tickets
-    public static bool HandleTicket(Ticket updatedTicket)
+    public static async Task<bool> HandleTicket(Ticket updatedTicket)
     {
-        if (updatedTicket.FirebaseKey == null)
+
+        if (updatedTicket.FirebaseKey == null || updatedTicket.FirebaseKey == "")
         {
             // this is a new ticket that was created
-            FirebaseTicket firebaseTicket = new FirebaseTicket() {
+            ToFirebaseTicket newFirebaseTicket = new ToFirebaseTicket()
+            {
+                SenderId = auth.User.Uid,
                 Subject = updatedTicket.Subject.Id,
-                isActive = updatedTicket.IsActive,
-
+                Topics = updatedTicket.Topics,
+                IsActive = updatedTicket.IsActive,
             };
 
-            client.Child("Tickets").PutAsync<FirebaseTicket>()
-        } else if (updatedTicket.FirebaseKey != "")
+            await client.Child("ServerTime").PutAsync(new Dictionary<string, object> { { ".sv", "timestamp" } });
+            var millis = await client.Child("ServerTime").OnceSingleAsync<long>();
+            var firebaseTime = DateTimeOffset.FromUnixTimeMilliseconds(millis).UtcDateTime;
+
+            Console.WriteLine(firebaseTime);
+
+            newFirebaseTicket.OpenTimes = new List<DateTime> { firebaseTime };
+
+            await client.Child("Tickets").PostAsync<ToFirebaseTicket>(newFirebaseTicket);
+        }
+        else if (updatedTicket.FirebaseKey != "")
         {
             // this is a ticket that already exists on firebase
+            await client.Child("ServerTime").PutAsync(new Dictionary<string, object> { { ".sv", "timestamp" } });
+            var millis = await client.Child("ServerTime").OnceSingleAsync<long>();
+            var firebaseTime = DateTimeOffset.FromUnixTimeMilliseconds(millis).UtcDateTime;
+
+            //await client.Child("Tickets").Child(updatedTicket.FirebaseKey).PatchAsync<ToFirebaseTicket>(updatedFirebaseTicket);
+
+            await client.Child("Tickets").Child(updatedTicket.FirebaseKey).Child("Topics").PostAsync($"\"{updatedTicket.Topics.LastOrDefault()}\"");
+            await client.Child("Tickets").Child(updatedTicket.FirebaseKey).Child("OpenTimes").PostAsync<string>($"\"{firebaseTime.ToString()}\"");
+            await client.Child("Tickets").Child(updatedTicket.FirebaseKey).Child("IsActive").PutAsync<bool>(updatedTicket.IsActive.Value);
         }
         return true;
     }
@@ -276,6 +381,11 @@ public class Service
     public static List<Ticket> GetTickets()
     {
         return tickets;
+    }
+
+    public static List<Ticket> GetRequstedTickets()
+    {
+        return requestedTickets;
     }
 
     public static List<Subject> GetSubjects()

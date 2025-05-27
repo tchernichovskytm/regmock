@@ -43,15 +43,15 @@ namespace regmock.ViewModels
         #endregion
 
         #region Constructor
-        public RequestHelpPageViewModel()
+        public async void InitializeTicketsAsync()
         {
             // get all the items from the fb into the service
-            Service.GetAllTicketsFromFB();
+            await Service.GetRequestedTicketsFromFB();
             // get the new ticket list from the service
-            Tickets = new ObservableCollection<Ticket>(Service.GetTickets());
+            Tickets = new ObservableCollection<Ticket>(Service.GetRequstedTickets());
 
             BringTopicsToFirst();
-            
+
             TicketToggleCmd = new Command((object ticket) =>
             {
                 if (ticket is Ticket)
@@ -69,6 +69,11 @@ namespace regmock.ViewModels
 
             AddTicketCmd = new Command(NewTicketClick);
         }
+
+        public RequestHelpPageViewModel()
+        {
+            InitializeTicketsAsync();
+        }
         #endregion
 
         #region Functions
@@ -83,11 +88,11 @@ namespace regmock.ViewModels
             });
             await Shell.Current.Navigation.PushModalAsync(new NewTicketPage((Command)ticketCmd), true);
 
-            // DONT: send ticket back to service
+            // DONT: do not send ticket back to service
         }
-        public void TicketToggled(Ticket ticket)
+        public async void TicketToggled(Ticket ticket)
         {
-            bool response = Service.HandleTicket(ticket);
+            var response = await Service.HandleTicket(ticket);
             if (response)
             {
                 if (ticket.IsActive == true)
