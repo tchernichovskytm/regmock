@@ -168,6 +168,8 @@ public class Service
     {
         List<Ticket> reqFbTickets = new List<Ticket>();
 
+        string test = DateTime.Now.ToString();
+
         var requestedTicketsFromFB = await client.Child("Tickets").OrderBy("SenderId").EqualTo(auth.User.Uid).OnceAsync<FromFirebaseTicket>();
 
         foreach (var reqTickFromFB in requestedTicketsFromFB)
