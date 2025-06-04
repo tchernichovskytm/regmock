@@ -19,22 +19,6 @@ namespace regmock.ViewModels
                 OnPropertyChanged(nameof(Tickets));
             }
         }
-
-        //private TimeSpan timer;
-
-        //public TimeSpan Timer
-        //{
-        //    get { return timer; }
-        //    set
-        //    {
-        //        timer = value;
-        //        OnPropertyChanged(nameof(TimerStr));
-        //    }
-        //}
-        //public string TimerStr
-        //{
-        //    get { return Timer.ToString(); }
-        //}
         #endregion
 
         #region Commands
@@ -43,7 +27,7 @@ namespace regmock.ViewModels
         #endregion
 
         #region Constructor
-        public async void InitializeTicketsAsync()
+        public async Task InitializeTicketsAsync()
         {
             // get all the items from the fb into the service
             await Service.GetRequestedTicketsFromFB();
@@ -52,13 +36,6 @@ namespace regmock.ViewModels
 
             BringTopicsToFirst();
 
-            TicketToggleCmd = new Command((object ticket) =>
-            {
-                if (ticket is Ticket)
-                {
-                    TicketToggled((Ticket)ticket);
-                }
-            });
             foreach (Ticket ticket in Tickets)
             {
                 ticket.IsActiveToggleCmd = (Command)TicketToggleCmd;
@@ -67,23 +44,35 @@ namespace regmock.ViewModels
             Thread clock = new Thread(TimerDecrease);
             clock.Start();
 
-            AddTicketCmd = new Command(NewTicketClick);
         }
 
         public RequestHelpPageViewModel()
         {
-            InitializeTicketsAsync();
+
+            TicketToggleCmd = new Command((object ticket) =>
+            {
+                if (ticket is Ticket)
+                {
+                    TicketToggled((Ticket)ticket);
+                }
+            });
+
+            AddTicketCmd = new Command(NewTicketClick);
         }
         #endregion
 
         #region Functions
         private async void NewTicketClick()
         {
-            ICommand ticketCmd = new Command((newTicket) =>
+            ICommand ticketCmd = new Command((newTicketObj) =>
             {
                 Monitor.Enter(this);
-                if (newTicket is Ticket)
-                    Tickets.Add((Ticket)newTicket);
+                if (newTicketObj is Ticket)
+                {
+                    Ticket newTicket = (Ticket)newTicketObj;
+                    Tickets.Add(newTicket);
+                    newTicket.IsActiveToggleCmd = (Command)TicketToggleCmd;
+                }
                 Monitor.Exit(this);
             });
             await Shell.Current.Navigation.PushModalAsync(new NewTicketPage((Command)ticketCmd), true);
@@ -92,6 +81,7 @@ namespace regmock.ViewModels
         }
         public async void TicketToggled(Ticket ticket)
         {
+            Monitor.Enter(this);
             var response = await Service.HandleTicket(ticket);
             if (response)
             {
@@ -106,6 +96,7 @@ namespace regmock.ViewModels
                     ticket.ServerActiveTime = "";
                 }
             }
+            Monitor.Exit(this);
         }
 
         public void BringTopicsToFirst()

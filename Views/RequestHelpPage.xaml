@@ -23,9 +23,9 @@
                             <Grid Padding="6" BackgroundColor="WhiteSmoke" ColumnDefinitions="*,*" >
                                 <VerticalStackLayout HorizontalOptions="Start" Grid.Column="0">
                                     <Label FontSize="24"
-                                               Text="{Binding Subject.Name}" />
+                                        Text="{Binding Subject.Name}" />
                                     <Label FontSize="14"
-                                               Text="{Binding Topics[0]}" />
+                                        Text="{Binding Topics[0]}" />
                                 </VerticalStackLayout>
                                 <HorizontalStackLayout HorizontalOptions="End" Grid.Column="1">
                                     <Label VerticalOptions="Center"

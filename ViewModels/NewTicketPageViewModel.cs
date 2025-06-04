@@ -104,7 +104,8 @@ namespace regmock.ViewModels
                 IsActive = false,
             };
 
-            if (Service.AddTicket(NewTicket))
+            var success = await Service.HandleTicket(NewTicket);
+            if (success)
             {
                 TicketCmd.Execute(NewTicket);
                 await Shell.Current.Navigation.PopModalAsync(true);
