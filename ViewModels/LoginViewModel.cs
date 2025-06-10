@@ -115,7 +115,14 @@ namespace regmock.ViewModels
                 if (success)
                 {
                     LoginErr = "Logged in";
-                    await Shell.Current.GoToAsync("\\\\RequestHelpPage");
+
+                    Service.LoggedInCommand.Execute(null);
+
+                    // TODO: make this go to a real page later
+                    if (true)
+                        await Shell.Current.GoToAsync("\\\\GiveHelpPage");
+                    else
+                        await Shell.Current.GoToAsync("\\\\RequestHelpPage");
                 }
                 else
                 {

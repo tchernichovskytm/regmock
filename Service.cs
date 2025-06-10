@@ -13,9 +13,13 @@ using regmock.ViewModels;
 using System.ComponentModel;
 using System.Linq;
 using System.Globalization;
+using System.Windows.Input;
 
 public class Service
 {
+    public static ICommand LoggedInCommand;
+    public static ICommand LoggedOutCommand;
+
     static UserCredential currentAuthUser = null;
 
     static UserModel currentUser = null;
@@ -120,9 +124,18 @@ public class Service
         public bool? IsActive { get; set; }
     }
 
-    public static async void GetAllTicketsFromFB()
+    public static async Task GetAllTicketsFromFB()
     {
         List<Ticket> fbTickets = new List<Ticket>();
+
+        // TODO: we need to switch the date time saved in tickets to unix miliseconds in order to query them easialy,
+        //       this requires changing a bunch of code, after that i need to query the tickets like this:
+        //                            var ticketsQuery = await client
+        //                            .Child("Tickets")
+        //                            .OrderBy("lastOpened")              // Order by the lastOpened timestamp (Unix milliseconds)
+        //                            .StartAt(twentyFourHoursAgoMillis)  // Only get tickets with lastOpened >= 24 hours ago
+        //                            .EndAt(currentMillis)               // Optionally, limit to the current time (you may omit this if not necessary)
+        //                            .OnceAsync<FromFirebaseTicket>();
 
         var ticketsFromFB = await client.Child("Tickets").OnceAsync<FromFirebaseTicket>();
 
@@ -149,14 +162,14 @@ public class Service
                 }
 
                 // PARSE SENDER (only need it's fullname and grade)
-                var fbSenderQuery = await client.Child("Users").Child($"{tickFromFB.Object.SenderId}").OnceAsync<FirebaseUserModel>();
-                var fbSender = fbSenderQuery.First();
+                var fbSender = await client.Child("Users").Child($"{tickFromFB.Object.SenderId}").OnceSingleAsync<FirebaseUserModel>(); //.OnceAsync<FirebaseUserModel>();
+                //var fbSender = fbSenderQuery.First();
                 if (fbSender != null)
                 {
-                    parsedTicket.Sender = new UserModel() { Fullname = fbSender.Object.Fullname };
+                    parsedTicket.Sender = new UserModel() { Fullname = fbSender.Fullname };
                     foreach (Grade g in grades)
                     {
-                        if (g.Id == fbSender.Object.Grade)
+                        if (g.Id == fbSender.Grade)
                         {
                             parsedTicket.Sender.Grade = g;
                             break;
@@ -199,8 +212,7 @@ public class Service
                     parsedRequestedTicket.OpenTimes = reqTickFromFB.Object.OpenTimes.Values
                         .Select(str =>
                         {
-                            if (DateTime.TryParseExact(str, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture,
-                                                        DateTimeStyles.None, out DateTime result))
+                            if (DateTime.TryParseExact(str, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result))
                             {
                                 return result;
                             }
@@ -235,9 +247,9 @@ public class Service
                 {
                     parsedRequestedTicket.IsActive = false;
                     remainingActiveTime = TimeSpan.Zero;
+                    await client.Child("Tickets").Child(reqTickFromFB.Key).Child("IsActive").PutAsync<bool>(false);
                 }
 
-                // TODO: make sure this works and handle turning off the ticket if the timespan is 0
                 parsedRequestedTicket.ActiveTimeSpan = remainingActiveTime;
                 if (parsedRequestedTicket.IsActive == true)
                 {
@@ -415,7 +427,7 @@ public class Service
 
             if (updatedTicket.Topics != null)
             {
-                string topic = updatedTicket.Topics.FirstOrDefault();
+                string? topic = updatedTicket.Topics.FirstOrDefault();
                 await client.Child("Tickets").Child(newFBTicket.Key).Child("Topics").PostAsync($"\"{topic}\"");
             }
 

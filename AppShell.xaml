@@ -7,16 +7,6 @@
     Shell.FlyoutBehavior="Flyout"
     Title="Mockflow Beta 1.0">
 
-    <!-- DEBUG -->
-    <!--<ShellContent
-        ContentTemplate="{DataTemplate local:PickFavoritesPage}"
-        Route="PickFavoritesPage" Title="Pick Favorites" />
-    <ShellContent
-        ContentTemplate="{DataTemplate local:GiveHelpPage}"
-        Route="GiveHelpPage" Title="Give Help" />-->
-    <!-- DEBUG -->
-
-
     <ShellContent
         ContentTemplate="{DataTemplate local:LoginPage}"
         Route="LoginPage" Title="Login" IsVisible="{Binding IsNotLoggedIn}" />
@@ -24,17 +14,20 @@
         ContentTemplate="{DataTemplate local:RegisterPage}"
         Route="RegisterPage" Title="Register" IsVisible="{Binding IsNotLoggedIn}" />
 
+    <!-- DEBUG -->
+    <!-- DEBUG -->
+
     <ShellContent
         ContentTemplate="{DataTemplate local:GiveHelpPage}"
         Route="GiveHelpPage" Title="Give Help" IsVisible="{Binding IsLoggedIn}" />
     <ShellContent
         ContentTemplate="{DataTemplate local:RequestHelpPage}"
-        Route="RequestHelpPage" Title="Request Help" IsVisible="{Binding IsNotLoggedIn}" />
-    
+        Route="RequestHelpPage" Title="Request Help" IsVisible="{Binding IsLoggedIn}" />
+
     <ShellContent
         ContentTemplate="{DataTemplate local:PickFavoritesPage}"
         Route="PickFavoritesPage" Title="Pick Favorites" IsVisible="{Binding IsLoggedIn}" />
-    
+
     <ShellContent
         ContentTemplate="{DataTemplate local:NewPreferencePage}"
         Route="NewPreferencePage" Title="New Preference" IsVisible="False" />
