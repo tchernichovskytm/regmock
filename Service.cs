@@ -124,6 +124,7 @@ public class Service
         public bool? IsActive { get; set; }
     }
 
+    // get tickets from everyone
     public static async Task GetAllTicketsFromFB()
     {
         List<Ticket> fbTickets = new List<Ticket>();
@@ -187,6 +188,7 @@ public class Service
         }
     }
 
+    // get tickets that the user made
     public static async Task GetRequestedTicketsFromFB()
     {
         List<Ticket> reqFbTickets = new List<Ticket>();
@@ -218,8 +220,9 @@ public class Service
                             }
                             else
                             {
-                                Console.WriteLine($"Invalid date format: {str}");
-                                return DateTime.MinValue;
+                                throw new ArgumentException($"Invalid date format: {str}");
+                                // Console.WriteLine($"Invalid date format: {str}");
+                                // return DateTime.MinValue;
                             }
                         })
                         .ToList();

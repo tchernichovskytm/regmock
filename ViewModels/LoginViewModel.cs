@@ -102,6 +102,7 @@ namespace regmock.ViewModels
         {
             emailErr = "";
             passwordErr = "";
+            loginErr = "";
 
             IsPassVisible = true;
 
