@@ -58,7 +58,7 @@ namespace regmock.ViewModels
             // get all the items from the fb into the service
             await Service.GetAllTicketsFromFB();
             // get the new ticket list from the service
-            Tickets = new ObservableCollection<Ticket>(Service.GetTickets());
+            Tickets = new ObservableCollection<Ticket>(Service.GetOthersTickets());
             OnPropertyChanged(nameof(Tickets));
 
             BringTopicsToFirst();

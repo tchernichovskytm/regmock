@@ -30,9 +30,9 @@ namespace regmock.ViewModels
         public async Task InitializeTicketsAsync()
         {
             // get all the items from the fb into the service
-            await Service.GetRequestedTicketsFromFB();
+            await Service.GetAllTicketsFromFB();
             // get the new ticket list from the service
-            Tickets = new ObservableCollection<Ticket>(Service.GetRequstedTickets());
+            Tickets = new ObservableCollection<Ticket>(Service.GetSelfTickets());
 
             BringTopicsToFirst();
 
@@ -88,7 +88,7 @@ namespace regmock.ViewModels
                 if (ticket.IsActive == true)
                 {
                     ticket.ActiveTimeSpan = TimeSpan.FromHours(24);
-                    ticket.ServerActiveTime = $"{(ticket.ActiveTimeSpan.Days * 24 + ticket.ActiveTimeSpan.Hours).ToString("00")}:{ticket.ActiveTimeSpan.Minutes.ToString("00")}:{ticket.ActiveTimeSpan.Seconds.ToString("00")}";
+                    ticket.ServerActiveTime = Service.TimeSpanToString(ticket.ActiveTimeSpan);
                 }
                 else if (ticket.IsActive == false)
                 {

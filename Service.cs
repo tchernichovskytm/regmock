@@ -17,6 +17,7 @@ using System.Windows.Input;
 
 public class Service
 {
+    // given by ShellViewModel
     public static ICommand LoggedInCommand;
     public static ICommand LoggedOutCommand;
 
@@ -30,7 +31,8 @@ public class Service
 
     static List<Subject> subjects = new List<Subject>();
 
-    static List<Ticket> tickets = new List<Ticket>();
+    static List<Ticket> selfTickets = new List<Ticket>();
+    static List<Ticket> othersTickets = new List<Ticket>();
 
     static List<Ticket> requestedTickets = new List<Ticket>();
 
@@ -70,7 +72,7 @@ public class Service
         public string? Grade { get; set; }
     }
 
-    public static async void GetAllSubjectsFromFB()
+    public static async Task GetAllSubjectsFromFB()
     {
         List<Subject> fbSubjects = new List<Subject>();
 
@@ -92,7 +94,7 @@ public class Service
         }
     }
 
-    public static async void GetAllGradesFromFB()
+    public static async Task GetAllGradesFromFB()
     {
         List<Grade> fbGrades = new List<Grade>();
 
@@ -127,7 +129,8 @@ public class Service
     // get tickets from everyone
     public static async Task GetAllTicketsFromFB()
     {
-        List<Ticket> fbTickets = new List<Ticket>();
+        List<Ticket> fbSelfTickets = new List<Ticket>();
+        List<Ticket> fbOthersTickets = new List<Ticket>();
 
         // TODO: we need to switch the date time saved in tickets to unix miliseconds in order to query them easialy,
         //       this requires changing a bunch of code, after that i need to query the tickets like this:
@@ -144,14 +147,17 @@ public class Service
         {
             foreach (var tickFromFB in ticketsFromFB)
             {
-                if (tickFromFB.Object.IsActive == false) continue;
+                if (tickFromFB.Object.IsActive == false && tickFromFB.Object.SenderId != auth.User.Uid) continue;
 
                 Ticket parsedTicket = new Ticket()
                 {
+                    // in order to update tickets in firebase i saved the key to it
+                    FirebaseKey = tickFromFB.Key,
                     IsActive = tickFromFB.Object.IsActive,
                     Topics = new List<string>(tickFromFB.Object.Topics.Values),
                 };
 
+                // TODO: maybe turn subjects into a hashmap for better lookup
                 // PARSE SUBJECT
                 foreach (Subject sub in subjects)
                 {
@@ -162,56 +168,10 @@ public class Service
                     }
                 }
 
-                // PARSE SENDER (only need it's fullname and grade)
-                var fbSender = await client.Child("Users").Child($"{tickFromFB.Object.SenderId}").OnceSingleAsync<FirebaseUserModel>(); //.OnceAsync<FirebaseUserModel>();
-                //var fbSender = fbSenderQuery.First();
-                if (fbSender != null)
+                if (tickFromFB.Object.SenderId == auth.User.Uid)
                 {
-                    parsedTicket.Sender = new UserModel() { Fullname = fbSender.Fullname };
-                    foreach (Grade g in grades)
-                    {
-                        if (g.Id == fbSender.Grade)
-                        {
-                            parsedTicket.Sender.Grade = g;
-                            break;
-                        }
-                    }
-                }
-
-                fbTickets.Add(parsedTicket);
-            }
-
-            if (tickets != fbTickets)
-            {
-                tickets = fbTickets;
-            }
-        }
-    }
-
-    // get tickets that the user made
-    public static async Task GetRequestedTicketsFromFB()
-    {
-        List<Ticket> reqFbTickets = new List<Ticket>();
-
-        var requestedTicketsFromFB = await client.Child("Tickets").OrderBy("SenderId").EqualTo(auth.User.Uid).OnceAsync<FromFirebaseTicket>();
-
-        if (requestedTicketsFromFB != null)
-        {
-            foreach (var reqTickFromFB in requestedTicketsFromFB)
-            {
-                Ticket parsedRequestedTicket = new Ticket()
-                {
-                    // in order to update tickets in firebase i saved the key to it
-                    FirebaseKey = reqTickFromFB.Key,
-                    IsActive = reqTickFromFB.Object.IsActive,
-                };
-                if (reqTickFromFB.Object.Topics != null)
-                {
-                    parsedRequestedTicket.Topics = new List<string>(reqTickFromFB.Object.Topics.Values);
-                }
-                if (reqTickFromFB.Object.OpenTimes != null)
-                {
-                    parsedRequestedTicket.OpenTimes = reqTickFromFB.Object.OpenTimes.Values
+                    // PARSE OPEN TIMES
+                    parsedTicket.OpenTimes = tickFromFB.Object.OpenTimes.Values
                         .Select(str =>
                         {
                             if (DateTime.TryParseExact(str, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result))
@@ -221,57 +181,150 @@ public class Service
                             else
                             {
                                 throw new ArgumentException($"Invalid date format: {str}");
-                                // Console.WriteLine($"Invalid date format: {str}");
-                                // return DateTime.MinValue;
                             }
                         })
                         .ToList();
-                }
 
-                // PARSE SUBJECT
-                foreach (Subject sub in subjects)
-                {
-                    if (sub.Id == reqTickFromFB.Object.Subject)
+                    DateTime lastOpenTime = parsedTicket.OpenTimes.Last();
+
+                    DateTime firebaseTime = await GetFirebaseTime();
+
+                    TimeSpan timeSinceLastOpen = firebaseTime - lastOpenTime;
+
+                    TimeSpan remainingActiveTime = TimeSpan.FromHours(24) - timeSinceLastOpen;
+
+                    if (remainingActiveTime <= TimeSpan.Zero)
                     {
-                        parsedRequestedTicket.Subject = sub;
-                        break;
+                        // TODO: this is problematic, firebase is not a good enough server
+                        //       it should mark tickets as inactive by itself
+                        parsedTicket.IsActive = false;
+                        remainingActiveTime = TimeSpan.Zero;
+                        await client.Child("Tickets").Child(tickFromFB.Key).Child("IsActive").PutAsync<bool>(false);
                     }
+
+                    parsedTicket.ActiveTimeSpan = remainingActiveTime;
+                    if (parsedTicket.IsActive == true)
+                    {
+                        parsedTicket.ServerActiveTime = TimeSpanToString(parsedTicket.ActiveTimeSpan);
+                    }
+                    else
+                    {
+                        parsedTicket.ServerActiveTime = "";
+                    }
+
+                    fbSelfTickets.Add(parsedTicket);
                 }
-
-                DateTime lastOpenTime = parsedRequestedTicket.OpenTimes.Last();
-
-                DateTime firebaseTime = await GetFirebaseTime();
-
-                TimeSpan timeSinceLastOpen = firebaseTime - lastOpenTime;
-
-                TimeSpan remainingActiveTime = TimeSpan.FromHours(24) - timeSinceLastOpen;
-
-                if (remainingActiveTime <= TimeSpan.Zero)
+                else
                 {
-                    parsedRequestedTicket.IsActive = false;
-                    remainingActiveTime = TimeSpan.Zero;
-                    await client.Child("Tickets").Child(reqTickFromFB.Key).Child("IsActive").PutAsync<bool>(false);
-                }
+                    // PARSE SENDER (only need it's fullname and grade)
+                    // the ticket only saves the ID of the sender so we find it in Users
+                    var fbSender = await client.Child("Users").Child(tickFromFB.Object.SenderId).OnceSingleAsync<FirebaseUserModel>();
 
-                parsedRequestedTicket.ActiveTimeSpan = remainingActiveTime;
-                if (parsedRequestedTicket.IsActive == true)
-                {
-                    parsedRequestedTicket.ServerActiveTime = $"{(parsedRequestedTicket.ActiveTimeSpan.Days * 24 + parsedRequestedTicket.ActiveTimeSpan.Hours).ToString("00")}:{parsedRequestedTicket.ActiveTimeSpan.Minutes.ToString("00")}:{parsedRequestedTicket.ActiveTimeSpan.Seconds.ToString("00")}";
+                    if (fbSender != null)
+                    {
+                        parsedTicket.Sender = new UserModel() { Fullname = fbSender.Fullname };
+                        foreach (Grade g in grades)
+                        {
+                            if (g.Id == fbSender.Grade)
+                            {
+                                parsedTicket.Sender.Grade = g;
+                                break;
+                            }
+                        }
+                    }
+
+                    fbOthersTickets.Add(parsedTicket);
                 }
-                reqFbTickets.Add(parsedRequestedTicket);
             }
 
-            if (requestedTickets != reqFbTickets)
-            {
-                requestedTickets = reqFbTickets;
-            }
+            selfTickets = fbSelfTickets;
+            othersTickets = fbOthersTickets;
         }
     }
 
-    public static void GetAllStaticFBObjects()
+    public static string TimeSpanToString(TimeSpan ts)
     {
-        GetAllSubjectsFromFB();
-        GetAllGradesFromFB();
+        return $"{(ts.Days * 24 + ts.Hours).ToString("00")}:{ts.Minutes.ToString("00")}:{ts.Seconds.ToString("00")}";
+    }
+
+    // get tickets that the user made
+    //public static async Task GetRequestedTicketsFromFB()
+    //{
+    //    List<Ticket> reqFbTickets = new List<Ticket>();
+
+    //    var requestedTicketsFromFB = await client.Child("Tickets").OrderBy("SenderId").EqualTo(auth.User.Uid).OnceAsync<FromFirebaseTicket>();
+
+    //    if (requestedTicketsFromFB != null)
+    //    {
+    //        foreach (var reqTickFromFB in requestedTicketsFromFB)
+    //        {
+    //            Ticket parsedRequestedTicket = new Ticket()
+    //            {
+    //                // in order to update tickets in firebase i saved the key to it
+    //                FirebaseKey = reqTickFromFB.Key,
+    //                IsActive = reqTickFromFB.Object.IsActive,
+    //                Topics = new List<string>(reqTickFromFB.Object.Topics.Values),
+    //            };
+
+    //            // PARSE SUBJECT
+    //            foreach (Subject sub in subjects)
+    //            {
+    //                if (sub.Id == reqTickFromFB.Object.Subject)
+    //                {
+    //                    parsedRequestedTicket.Subject = sub;
+    //                    break;
+    //                }
+    //            }
+
+    //            // PARSE OPEN TIMES
+    //            parsedRequestedTicket.OpenTimes = reqTickFromFB.Object.OpenTimes.Values
+    //                .Select(str =>
+    //                {
+    //                    if (DateTime.TryParseExact(str, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result))
+    //                    {
+    //                        return result;
+    //                    }
+    //                    else
+    //                    {
+    //                        throw new ArgumentException($"Invalid date format: {str}");
+    //                    }
+    //                })
+    //                .ToList();
+
+    //            DateTime lastOpenTime = parsedRequestedTicket.OpenTimes.Last();
+
+    //            DateTime firebaseTime = await GetFirebaseTime();
+
+    //            TimeSpan timeSinceLastOpen = firebaseTime - lastOpenTime;
+
+    //            TimeSpan remainingActiveTime = TimeSpan.FromHours(24) - timeSinceLastOpen;
+
+    //            if (remainingActiveTime <= TimeSpan.Zero)
+    //            {
+    //                parsedRequestedTicket.IsActive = false;
+    //                remainingActiveTime = TimeSpan.Zero;
+    //                await client.Child("Tickets").Child(reqTickFromFB.Key).Child("IsActive").PutAsync<bool>(false);
+    //            }
+
+    //            parsedRequestedTicket.ActiveTimeSpan = remainingActiveTime;
+    //            if (parsedRequestedTicket.IsActive == true)
+    //            {
+    //                parsedRequestedTicket.ServerActiveTime = $"{(parsedRequestedTicket.ActiveTimeSpan.Days * 24 + parsedRequestedTicket.ActiveTimeSpan.Hours).ToString("00")}:{parsedRequestedTicket.ActiveTimeSpan.Minutes.ToString("00")}:{parsedRequestedTicket.ActiveTimeSpan.Seconds.ToString("00")}";
+    //            }
+    //            reqFbTickets.Add(parsedRequestedTicket);
+    //        }
+
+    //        if (requestedTickets != reqFbTickets)
+    //        {
+    //            requestedTickets = reqFbTickets;
+    //        }
+    //    }
+    //}
+
+    public static async Task GetAllStaticFBObjects()
+    {
+        await GetAllSubjectsFromFB();
+        await GetAllGradesFromFB();
     }
 
     public static void InitRealData()
@@ -279,99 +332,99 @@ public class Service
         InitAuth();
     }
 
-    public static void InitFakeData()
-    {
-        InitAuth();
+    //public static void InitFakeData()
+    //{
+    //    InitAuth();
 
-        //This is fake data, later on data will come from Firbase
-        //grades.Add(new Grade() { Name = "מורה", Order = 70, Id = 7 });
-        grades.Add(new Grade() { Name = "ז'", Order = 10, Id = "1" });
-        grades.Add(new Grade() { Name = "ח'", Order = 20, Id = "2" });
-        grades.Add(new Grade() { Name = "ט'", Order = 30, Id = "3" });
-        grades.Add(new Grade() { Name = "י'", Order = 40, Id = "4" });
-        grades.Add(new Grade() { Name = "י\"א", Order = 50, Id = "5" });
-        grades.Add(new Grade() { Name = "י\"ב", Order = 60, Id = "6" });
+    //    //This is fake data, later on data will come from Firbase
+    //    //grades.Add(new Grade() { Name = "מורה", Order = 70, Id = 7 });
+    //    grades.Add(new Grade() { Name = "ז'", Order = 10, Id = "1" });
+    //    grades.Add(new Grade() { Name = "ח'", Order = 20, Id = "2" });
+    //    grades.Add(new Grade() { Name = "ט'", Order = 30, Id = "3" });
+    //    grades.Add(new Grade() { Name = "י'", Order = 40, Id = "4" });
+    //    grades.Add(new Grade() { Name = "י\"א", Order = 50, Id = "5" });
+    //    grades.Add(new Grade() { Name = "י\"ב", Order = 60, Id = "6" });
 
-        grades.Sort((a, b) => (int)a.Order - (int)b.Order);
+    //    grades.Sort((a, b) => (int)a.Order - (int)b.Order);
 
-        subjects.Add(new Subject() { Name = "Math", Order = 10, Id = "1" });
-        subjects.Add(new Subject() { Name = "English", Order = 20, Id = "2" });
-        subjects.Add(new Subject() { Name = "Hebrew", Order = 30, Id = "3" });
-        subjects.Add(new Subject() { Name = "Biology", Order = 40, Id = "4" });
-        subjects.Add(new Subject() { Name = "Physics", Order = 50, Id = "5" });
-        subjects.Add(new Subject() { Name = "History", Order = 60, Id = "6" });
-        subjects.Add(new Subject() { Name = "Bible", Order = 70, Id = "7" });
+    //    subjects.Add(new Subject() { Name = "Math", Order = 10, Id = "1" });
+    //    subjects.Add(new Subject() { Name = "English", Order = 20, Id = "2" });
+    //    subjects.Add(new Subject() { Name = "Hebrew", Order = 30, Id = "3" });
+    //    subjects.Add(new Subject() { Name = "Biology", Order = 40, Id = "4" });
+    //    subjects.Add(new Subject() { Name = "Physics", Order = 50, Id = "5" });
+    //    subjects.Add(new Subject() { Name = "History", Order = 60, Id = "6" });
+    //    subjects.Add(new Subject() { Name = "Bible", Order = 70, Id = "7" });
 
-        schools.Add(new School() { Name = "Tchernichovsky", Id = 0, City = "Netanya" });
-        schools.Add(new School() { Name = "Ort Gutman", Id = 1, City = "Netanya" });
-        schools.Add(new School() { Name = "Rigler", Id = 2, City = "Netanya" });
+    //    schools.Add(new School() { Name = "Tchernichovsky", Id = 0, City = "Netanya" });
+    //    schools.Add(new School() { Name = "Ort Gutman", Id = 1, City = "Netanya" });
+    //    schools.Add(new School() { Name = "Rigler", Id = 2, City = "Netanya" });
 
-        msgs.Add(new Message() { Title = "Welcome", Content = "blah blah", Sender = "System", Date = DateTime.Now, MessageType = MessageType.System });
-        msgs.Add(new Message() { Title = "Hey", Content = "im eldan and this is a message", Sender = "Eldan", Date = DateTime.Now, MessageType = MessageType.Teacher });
+    //    msgs.Add(new Message() { Title = "Welcome", Content = "blah blah", Sender = "System", Date = DateTime.Now, MessageType = MessageType.System });
+    //    msgs.Add(new Message() { Title = "Hey", Content = "im eldan and this is a message", Sender = "Eldan", Date = DateTime.Now, MessageType = MessageType.Teacher });
 
-        DateTime yearAgo = DateTime.Now.AddYears(-1);
-        DateTime weekAgo = DateTime.Now.AddDays(-7);
-        DateTime hourAgo = DateTime.Now.AddHours(-1);
-        DateTime twothousandandeight = new DateTime(2008, 1, 1);
+    //    DateTime yearAgo = DateTime.Now.AddYears(-1);
+    //    DateTime weekAgo = DateTime.Now.AddDays(-7);
+    //    DateTime hourAgo = DateTime.Now.AddHours(-1);
+    //    DateTime twothousandandeight = new DateTime(2008, 1, 1);
 
-        //Dictionary<Subject, List<Grade>> fav = new Dictionary<Subject, List<Grade>>();
-        //fav.Add(subjects[0], new List<Grade>() { grades[0], grades[1] });
+    //    //Dictionary<Subject, List<Grade>> fav = new Dictionary<Subject, List<Grade>>();
+    //    //fav.Add(subjects[0], new List<Grade>() { grades[0], grades[1] });
 
-        users.Add(new UserModel() { Fullname = "Eldan", Email = "eldan@gmail", PhoneNumber = "0583", Password = "123", UserType = Role.None, Grade = grades[0], RegistrationDate = yearAgo, HelperFavorites = helperFavorites });
-        users.Add(new UserModel() { Fullname = "Ido Sweed", Email = "ido@gmail.com", PhoneNumber = "0583", Password = "058ASDf@#", UserType = Role.Pupil, Grade = grades[5], RegistrationDate = DateTime.Now });
-        users.Add(new UserModel() { Fullname = "Ariel", Email = "ariel@gmail", PhoneNumber = "0583", Password = "123", UserType = Role.Pupil, Grade = grades[5], RegistrationDate = hourAgo });
-        users.Add(new UserModel() { Fullname = "Polina", Email = "polina@gmail", PhoneNumber = "0583", Password = "123", UserType = Role.Pupil, Grade = grades[5], RegistrationDate = weekAgo });
+    //    users.Add(new UserModel() { Fullname = "Eldan", Email = "eldan@gmail", PhoneNumber = "0583", Password = "123", UserType = Role.None, Grade = grades[0], RegistrationDate = yearAgo, HelperFavorites = helperFavorites });
+    //    users.Add(new UserModel() { Fullname = "Ido Sweed", Email = "ido@gmail.com", PhoneNumber = "0583", Password = "058ASDf@#", UserType = Role.Pupil, Grade = grades[5], RegistrationDate = DateTime.Now });
+    //    users.Add(new UserModel() { Fullname = "Ariel", Email = "ariel@gmail", PhoneNumber = "0583", Password = "123", UserType = Role.Pupil, Grade = grades[5], RegistrationDate = hourAgo });
+    //    users.Add(new UserModel() { Fullname = "Polina", Email = "polina@gmail", PhoneNumber = "0583", Password = "123", UserType = Role.Pupil, Grade = grades[5], RegistrationDate = weekAgo });
 
 
-        DateTime ServerCurrent = DateTime.Now; // This Will Be Taken From The Database
-        tickets.Add(new Ticket()
-        {
-            OpenTimes = new List<DateTime>() { DateTime.Now },
-            Subject = subjects[0],
-            Topics = new List<string>() { "Multiplication", "Division" },
-            Sender = users[1],
-            Helpers = new List<UserModel> { users[0] },
-            IsActive = true,
+    //    DateTime ServerCurrent = DateTime.Now; // This Will Be Taken From The Database
+    //    tickets.Add(new Ticket()
+    //    {
+    //        OpenTimes = new List<DateTime>() { DateTime.Now },
+    //        Subject = subjects[0],
+    //        Topics = new List<string>() { "Multiplication", "Division" },
+    //        Sender = users[1],
+    //        Helpers = new List<UserModel> { users[0] },
+    //        IsActive = true,
 
-        });
-        tickets.Add(new Ticket()
-        {
-            OpenTimes = new List<DateTime>() { DateTime.Today },
-            Subject = subjects[1],
-            Topics = new List<string>() { "Grammar" },
-            Sender = users[1],
-            Helpers = new List<UserModel> { users[0] },
-            IsActive = true,
-        });
-        foreach (Ticket ticket in tickets)
-        {
-            if (ticket.IsActive == false) continue;
-            TimeSpan ActiveTime = TimeSpan.FromHours(24) - ServerCurrent.Subtract(ticket.OpenTimes.LastOrDefault());
+    //    });
+    //    tickets.Add(new Ticket()
+    //    {
+    //        OpenTimes = new List<DateTime>() { DateTime.Today },
+    //        Subject = subjects[1],
+    //        Topics = new List<string>() { "Grammar" },
+    //        Sender = users[1],
+    //        Helpers = new List<UserModel> { users[0] },
+    //        IsActive = true,
+    //    });
+    //    foreach (Ticket ticket in tickets)
+    //    {
+    //        if (ticket.IsActive == false) continue;
+    //        TimeSpan ActiveTime = TimeSpan.FromHours(24) - ServerCurrent.Subtract(ticket.OpenTimes.LastOrDefault());
 
-            ticket.ActiveTimeSpan = ActiveTime;
-            if (ActiveTime.CompareTo(TimeSpan.Zero) <= 0)
-            {
-                ticket.IsActive = false;
-            }
-            else
-            {
-                ticket.ServerActiveTime = $"{(ActiveTime.Days * 24 + ActiveTime.Hours).ToString("00")}:{ActiveTime.Minutes.ToString("00")}:{ActiveTime.Seconds.ToString("00")}";
-            }
-        }
+    //        ticket.ActiveTimeSpan = ActiveTime;
+    //        if (ActiveTime.CompareTo(TimeSpan.Zero) <= 0)
+    //        {
+    //            ticket.IsActive = false;
+    //        }
+    //        else
+    //        {
+    //            ticket.ServerActiveTime = $"{(ActiveTime.Days * 24 + ActiveTime.Hours).ToString("00")}:{ActiveTime.Minutes.ToString("00")}:{ActiveTime.Seconds.ToString("00")}";
+    //        }
+    //    }
 
-        //helperFavorites.Add(subjects[0], new List<Grade> { grades[0], grades[1] });
-        //helperFavorites.Add(subjects[1], new List<Grade> { grades[2] });
-        Favorite f1 = new Favorite() { Subject = subjects[0], Grades = new List<Grade>() { grades[0], grades[1] } };
-        Favorite f2 = new Favorite() { Subject = subjects[1], Grades = new List<Grade>() { grades[2] } };
-        helperFavorites.Add(f1);
-        helperFavorites.Add(f2);
-    }
+    //    //helperFavorites.Add(subjects[0], new List<Grade> { grades[0], grades[1] });
+    //    //helperFavorites.Add(subjects[1], new List<Grade> { grades[2] });
+    //    Favorite f1 = new Favorite() { Subject = subjects[0], Grades = new List<Grade>() { grades[0], grades[1] } };
+    //    Favorite f2 = new Favorite() { Subject = subjects[1], Grades = new List<Grade>() { grades[2] } };
+    //    helperFavorites.Add(f1);
+    //    helperFavorites.Add(f2);
+    //}
 
-    public static bool AddTicket(Ticket ticket)
-    {
-        tickets.Add(ticket);
-        return true;
-    }
+    //public static bool AddTicket(Ticket ticket)
+    //{
+    //    selfTickets.Add(ticket);
+    //    return true;
+    //}
     public static bool RemoveFavorite(Favorite favorite)
     {
         helperFavorites.Remove(favorite);
@@ -468,9 +521,19 @@ public class Service
         return firebaseTime;
     }
 
-    public static List<Ticket> GetTickets()
+    public static List<Ticket> GetSelfTickets()
     {
-        return tickets;
+        return selfTickets;
+    }
+
+    public static List<Ticket> GetOthersTickets()
+    {
+        return othersTickets;
+    }
+
+    public static List<Ticket> GetAllTickets()
+    {
+        return [.. selfTickets, .. othersTickets];
     }
 
     public static List<Ticket> GetRequstedTickets()
@@ -537,7 +600,7 @@ public class Service
             var authUser = await auth.SignInWithEmailAndPasswordAsync(email, password);
             currentAuthUser = authUser;
 
-            GetAllStaticFBObjects();
+            await GetAllStaticFBObjects();
 
             return true;
         }
