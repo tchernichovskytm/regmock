@@ -4,7 +4,7 @@ namespace regmock.Models
 {
     public class Ticket : INotifyPropertyChanged
     {
-        public List<DateTime>? OpenTimes { get; set; }
+        public List<Int64>? OpenTimes { get; set; }
         public Subject? Subject { get; set; }
         public List<string>? Topics { get; set; }
         public User? Sender { get; set; }
@@ -46,7 +46,7 @@ namespace regmock.Models
                 }
             }
         }
-        public TimeSpan ActiveTimeSpan { get; set; }
+        public Int64 ActiveTimeSpan { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

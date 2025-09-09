@@ -104,9 +104,10 @@ namespace regmock.ViewModels
                 IsActive = false,
             };
 
-            var success = await Service.HandleTicket(NewTicket);
+            var (success, key) = await Service.HandleTicket(NewTicket);
             if (success)
             {
+                NewTicket.FirebaseKey = key;
                 TicketCmd.Execute(NewTicket);
                 await Shell.Current.Navigation.PopModalAsync(true);
             }

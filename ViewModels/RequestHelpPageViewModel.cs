@@ -49,11 +49,12 @@ namespace regmock.ViewModels
         public RequestHelpPageViewModel()
         {
 
-            TicketToggleCmd = new Command((object ticket) =>
+            TicketToggleCmd = new Command(async (object obj) =>
             {
-                if (ticket is Ticket)
+                if (obj is Ticket)
                 {
-                    TicketToggled((Ticket)ticket);
+                    Ticket ticket = (Ticket)obj;
+                    TicketToggled(ticket);
                 }
             });
 
@@ -64,14 +65,14 @@ namespace regmock.ViewModels
         #region Functions
         private async void NewTicketClick()
         {
-            ICommand ticketCmd = new Command((newTicketObj) =>
+            ICommand ticketCmd = new Command((object newTicketObj) =>
             {
                 Monitor.Enter(this);
                 if (newTicketObj is Ticket)
                 {
                     Ticket newTicket = (Ticket)newTicketObj;
+                    newTicket.IsActiveToggleCmd = TicketToggleCmd;
                     Tickets.Add(newTicket);
-                    newTicket.IsActiveToggleCmd = (Command)TicketToggleCmd;
                 }
                 Monitor.Exit(this);
             });
@@ -82,17 +83,17 @@ namespace regmock.ViewModels
         public async void TicketToggled(Ticket ticket)
         {
             Monitor.Enter(this);
-            var response = await Service.HandleTicket(ticket);
-            if (response)
+            var (success, _) = await Service.HandleTicket(ticket);
+            if (success)
             {
                 if (ticket.IsActive == true)
                 {
-                    ticket.ActiveTimeSpan = TimeSpan.FromHours(24);
-                    ticket.ServerActiveTime = Service.TimeSpanToString(ticket.ActiveTimeSpan);
+                    ticket.ActiveTimeSpan = Service.Unix24HoursMiliseconds;
+                    ticket.ServerActiveTime = Service.UnixMilisecondsToHHMMSS(ticket.ActiveTimeSpan);
                 }
-                else if (ticket.IsActive == false)
+                else
                 {
-                    ticket.ActiveTimeSpan = TimeSpan.Zero;
+                    ticket.ActiveTimeSpan = 0;
                     ticket.ServerActiveTime = "";
                 }
             }
@@ -119,15 +120,15 @@ namespace regmock.ViewModels
                     {
                         continue;
                     }
-                    ticket.ActiveTimeSpan = ticket.ActiveTimeSpan.Subtract(new TimeSpan(0, 0, 1));
-                    if (ticket.ActiveTimeSpan.CompareTo(TimeSpan.Zero) <= 0)
+                    ticket.ActiveTimeSpan = ticket.ActiveTimeSpan -= 1000; // 1000ms == 1s
+                    if (ticket.ActiveTimeSpan <= 0)
                     {
                         ticket.IsActive = false;
                         ticket.ServerActiveTime = "";
                     }
                     else
                     {
-                        ticket.ServerActiveTime = ticket.ActiveTimeSpan.ToString(@"hh\:mm\:ss");
+                        ticket.ServerActiveTime = Service.UnixMilisecondsToHHMMSS(ticket.ActiveTimeSpan);
                     }
                 }
                 Monitor.Exit(this);
