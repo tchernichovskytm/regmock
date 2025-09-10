@@ -17,7 +17,7 @@
                         <DataTemplate>
                             <VerticalStackLayout>
                                 <Grid Padding="6" BackgroundColor="WhiteSmoke" RowDefinitions="*,*" ColumnDefinitions="*, Auto">
-                                    <HorizontalStackLayout Spacing="8" VerticalOptions="Center" Grid.Row="0" Grid.Column="0">
+                                    <HorizontalStackLayout Padding="8,2,0,0" Spacing="8" VerticalOptions="Center" Grid.Row="0" Grid.Column="0">
                                         <Label
                                             HorizontalOptions="Center" 
                                             VerticalOptions="Center"
@@ -33,7 +33,7 @@
                                         />
                                     </HorizontalStackLayout>
 
-                                    <HorizontalStackLayout Spacing="8" VerticalOptions="Center" Grid.Row="1" Grid.Column="0">
+                                    <HorizontalStackLayout Padding="8,0,0,2" Spacing="8" VerticalOptions="Center" Grid.Row="1" Grid.Column="0">
                                         <Label
                                             HorizontalOptions="Center" 
                                             VerticalOptions="Center"

@@ -156,7 +156,8 @@ namespace regmock.ViewModels
                 Grades = toggledGrades,
             };
 
-            if (Service.EditFavorite(OldFavorite, NewFavorite) == true)
+            var success = await Service.EditFavorite(OldFavorite, NewFavorite);
+            if (success)
             {
                 FavoriteCmd.Execute(new List<Favorite>() { OldFavorite, NewFavorite });
                 await Shell.Current.Navigation.PopModalAsync(true);
@@ -168,7 +169,8 @@ namespace regmock.ViewModels
         }
         private async void DeleteClick()
         {
-            if (Service.RemoveFavorite(OldFavorite) == true)
+            var success = await Service.RemoveFavorite(OldFavorite);
+            if (success)
             {
                 FavoriteCmd.Execute(new List<Favorite>() { OldFavorite, null });
                 await Shell.Current.Navigation.PopModalAsync(true);

@@ -21,7 +21,7 @@ public class Service
     public static ICommand LoggedInCommand;
     public static ICommand LoggedOutCommand;
 
-    public const Int64 Unix24HoursMiliseconds = 24 * 60 * 60 * 1000;
+    public const Int64 UnixMiliseconds24Hours = 24 * 60 * 60 * 1000;
 
     static UserCredential currentAuthUser = null;
 
@@ -35,8 +35,6 @@ public class Service
 
     static List<Ticket> selfTickets = new List<Ticket>();
     static List<Ticket> othersTickets = new List<Ticket>();
-
-    static List<Ticket> requestedTickets = new List<Ticket>();
 
     static List<School> schools = new List<School>();
 
@@ -193,7 +191,7 @@ public class Service
 
                     Int64 timeSinceLastOpen = firebaseTime - lastOpenTime;
 
-                    Int64 remainingActiveTime = Unix24HoursMiliseconds - timeSinceLastOpen;
+                    Int64 remainingActiveTime = UnixMiliseconds24Hours - timeSinceLastOpen;
 
                     if (remainingActiveTime <= 0)
                     {
@@ -436,12 +434,14 @@ public class Service
     //    selfTickets.Add(ticket);
     //    return true;
     //}
-    public static bool RemoveFavorite(Favorite favorite)
+
+    // TODO: turn these into firebase functions
+    public static async Task<bool> RemoveFavorite(Favorite favorite)
     {
         helperFavorites.Remove(favorite);
         return true;
     }
-    public static bool EditFavorite(Favorite oldFavorite, Favorite newFavorite)
+    public static async Task<bool> EditFavorite(Favorite oldFavorite, Favorite newFavorite)
     {
         foreach (Favorite f in helperFavorites)
         {
@@ -454,7 +454,7 @@ public class Service
         }
         return true;
     }
-    public static bool AddFavorite(Favorite favorite)
+    public static async Task<bool> AddFavorite(Favorite favorite)
     {
         helperFavorites.Add(favorite);
         return true;
@@ -472,47 +472,54 @@ public class Service
     // For toggling tickets
     public static async Task<(bool, string)> HandleTicket(Ticket updatedTicket)
     {
-        if (updatedTicket.FirebaseKey == null || updatedTicket.FirebaseKey == "")
+        try
         {
-            // this is a new ticket that was created
-            ToFirebaseTicket newFirebaseTicket = new ToFirebaseTicket()
+            if (updatedTicket.FirebaseKey == null || updatedTicket.FirebaseKey == "")
             {
-                SenderId = auth.User.Uid,
-                Subject = updatedTicket.Subject.Id,
-                IsActive = updatedTicket.IsActive,
-            };
-
-            Int64 firebaseTime = await GetFirebaseTime();
-
-            var newFBTicket = await client.Child("Tickets").PostAsync<ToFirebaseTicket>(newFirebaseTicket);
-
-            // TODO: i dont think this is how you handle errors properly
-            if (updatedTicket.Topics.Count == 0) throw new ArgumentException("updatedTicket.Topics cannot be empty");
-
-            await client.Child("Tickets").Child(newFBTicket.Key).Child("Topics").PostAsync<string>(updatedTicket.Topics.First());
-            await client.Child("Tickets").Child(newFBTicket.Key).Child("OpenTimes").PostAsync<Int64>(firebaseTime);
-
-            return (true, newFBTicket.Key);
-        }
-        else if (updatedTicket.FirebaseKey != "")
-        {
-            // this is a ticket that already exists on firebase
-            Int64 firebaseTime = await GetFirebaseTime();
-
-            if (updatedTicket.IsActive != null)
-            {
-                await client.Child("Tickets").Child(updatedTicket.FirebaseKey).Child("IsActive").PutAsync<bool>(updatedTicket.IsActive.Value);
-                if (updatedTicket.IsActive == true)
+                // this is a new ticket that was created
+                ToFirebaseTicket newFirebaseTicket = new ToFirebaseTicket()
                 {
-                    await client.Child("Tickets").Child(updatedTicket.FirebaseKey).Child("OpenTimes").PostAsync<Int64>(firebaseTime);
-                    if (updatedTicket.Topics != null)
+                    SenderId = auth.User.Uid,
+                    Subject = updatedTicket.Subject.Id,
+                    IsActive = updatedTicket.IsActive,
+                };
+
+                Int64 firebaseTime = await GetFirebaseTime();
+
+                var newFBTicket = await client.Child("Tickets").PostAsync<ToFirebaseTicket>(newFirebaseTicket);
+
+                // TODO: i dont think this is how you handle errors properly
+                if (updatedTicket.Topics.Count == 0) throw new ArgumentException("updatedTicket.Topics cannot be empty");
+
+                await client.Child("Tickets").Child(newFBTicket.Key).Child("Topics").PostAsync<string>(updatedTicket.Topics.First());
+                await client.Child("Tickets").Child(newFBTicket.Key).Child("OpenTimes").PostAsync<Int64>(firebaseTime);
+
+                return (true, newFBTicket.Key);
+            }
+            else if (updatedTicket.FirebaseKey != "")
+            {
+                // this is a ticket that already exists on firebase
+                Int64 firebaseTime = await GetFirebaseTime();
+
+                if (updatedTicket.IsActive != null)
+                {
+                    await client.Child("Tickets").Child(updatedTicket.FirebaseKey).Child("IsActive").PutAsync<bool>(updatedTicket.IsActive.Value);
+                    if (updatedTicket.IsActive == true)
                     {
-                        await client.Child("Tickets").Child(updatedTicket.FirebaseKey).Child("Topics").PostAsync<string>(updatedTicket.Topics.Last());
+                        await client.Child("Tickets").Child(updatedTicket.FirebaseKey).Child("OpenTimes").PostAsync<Int64>(firebaseTime);
+                        if (updatedTicket.Topics != null)
+                        {
+                            await client.Child("Tickets").Child(updatedTicket.FirebaseKey).Child("Topics").PostAsync<string>(updatedTicket.Topics.Last());
+                        }
                     }
                 }
             }
+            return (true, null);
         }
-        return (true, null);
+        catch (Exception)
+        {
+            return (false, null);
+        }
     }
 
     private static async Task<Int64> GetFirebaseTime()
@@ -536,11 +543,6 @@ public class Service
     public static List<Ticket> GetAllTickets()
     {
         return [.. selfTickets, .. othersTickets];
-    }
-
-    public static List<Ticket> GetRequstedTickets()
-    {
-        return requestedTickets;
     }
 
     public static List<Subject> GetSubjects()

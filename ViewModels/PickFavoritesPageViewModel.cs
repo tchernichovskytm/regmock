@@ -34,65 +34,94 @@ namespace regmock.ViewModels
         {
             HelperFavorites = new ObservableCollection<Favorite>(Service.GetFavorites());
 
-            AddFavoriteCmd = new Command(() =>
+            AddFavoriteCmd = new Command(async () =>
             {
-                AddFavoriteClick();
-                Service.SetFavorites(new List<Favorite>(HelperFavorites));
+                await AddFavoriteClick();
             });
-            EditFavoriteCmd = new Command((object favorite) =>
+            EditFavoriteCmd = new Command(async (object favorite) =>
             {
                 if (favorite is Favorite)
                 {
-                    EditFavoriteClick((Favorite)favorite);
-                    Service.SetFavorites(new List<Favorite>(HelperFavorites));
+                    await EditFavoriteClick((Favorite)favorite);
                 }
             });
         }
         #endregion
 
         #region Functions
-        private async void AddFavoriteClick()
+        private async Task AddFavoriteClick()
         {
-            ICommand favoriteCmd = new Command((newFavorite) =>
+            ICommand favoriteCmd = new Command(async (obj) =>
             {
-                if (newFavorite is Favorite)
+                if (obj is Favorite)
                 {
-                    HelperFavorites.Add((Favorite)newFavorite);
+                    Favorite newFavorite = (Favorite)obj;
+                    var success = await Service.AddFavorite(newFavorite);
+                    if (success)
+                    {
+                        HelperFavorites.Add(newFavorite);
+                    }
+                    else
+                    {
+                        // TODO: handle error
+                    }
+                    //Service.SetFavorites(new List<Favorite>(HelperFavorites));
                 }
             });
             List<Subject> ExistingSubjects = new List<Subject>();
-            foreach (Favorite f in helperFavorites) {
+            foreach (Favorite f in helperFavorites)
+            {
                 ExistingSubjects.Add(f.Subject);
             }
             await Shell.Current.Navigation.PushModalAsync(new NewPreferencePage(ExistingSubjects, (Command)favoriteCmd), true);
         }
-        private async void EditFavoriteClick(Favorite favorite)
+        private async Task EditFavoriteClick(Favorite favorite)
         {
-            ICommand modifyFavoriteCmd = new Command((modifyFavList) =>
+            ICommand modifyFavoriteCmd = new Command(async (object obj) =>
             {
-                if (modifyFavList is List<Favorite> && ((List<Favorite>)modifyFavList).Count == 2)
+                if (!(obj is List<Favorite> && ((List<Favorite>)obj).Count == 2))
                 {
-                    Favorite oldFavorite = ((List<Favorite>)modifyFavList)[0];
-                    Favorite newFavorite = ((List<Favorite>)modifyFavList)[1];
+                    // invalid object sent back
+                    return;
+                }
+                List<Favorite> modifyFavList = (List<Favorite>)obj;
+                Favorite oldFavorite = modifyFavList[0];
+                Favorite newFavorite = modifyFavList[1];
 
-                    foreach (Favorite fav in HelperFavorites)
+                foreach (Favorite fav in HelperFavorites)
+                {
+                    if (fav.Equals(oldFavorite))
                     {
-                        if (fav.Equals(oldFavorite))
+                        if (newFavorite == null)
                         {
-                            if (newFavorite == null)
+                            var success = await Service.RemoveFavorite(fav);
+                            if (success)
                             {
                                 HelperFavorites.Remove(fav);
-                                return;
                             }
                             else
                             {
+                                // TODO: handle error
+                            }
+                            return;
+                        }
+                        else
+                        {
+                            var success = await Service.EditFavorite(fav, newFavorite);
+                            if (success)
+                            {
                                 fav.Subject = newFavorite.Subject;
                                 fav.Grades = newFavorite.Grades;
-                                return;
                             }
+                            else
+                            {
+                                // TODO: handle error
+                            }
+                            return;
                         }
                     }
                 }
+                Service.SetFavorites(new List<Favorite>(HelperFavorites));
             });
             await Shell.Current.Navigation.PushModalAsync(new EditPreferencePage(favorite, (Command)modifyFavoriteCmd), true);
         }

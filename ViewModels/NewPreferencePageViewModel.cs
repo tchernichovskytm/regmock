@@ -135,7 +135,8 @@ namespace regmock.ViewModels
                 Grades = toggledGrades,
             };
 
-            if (Service.AddFavorite(NewFavorite) == true)
+            var success = await Service.AddFavorite(NewFavorite);
+            if (success)
             {
                 FavoriteCmd.Execute(NewFavorite);
                 await Shell.Current.Navigation.PopModalAsync(true);

@@ -70,11 +70,13 @@ namespace regmock.ViewModels
         }
 
         #endregion
+        
         #region Commands
         public ICommand CloseCmd { get; set; }
         public ICommand AddTicketCmd { get; set; }
         public ICommand TicketCmd { get; set; }
         #endregion
+        
         #region Constructor
         public NewTicketPageViewModel(Command ticketCmd)
         {
@@ -90,6 +92,7 @@ namespace regmock.ViewModels
             TicketCmd = ticketCmd;
         }
         #endregion
+        
         #region Functions
         public async void CloseClick()
         {

@@ -120,10 +120,9 @@ namespace regmock.ViewModels
                     Service.LoggedInCommand.Execute(null);
 
                     // TODO: make this go to a real page later
-                    if (false)
-                        await Shell.Current.GoToAsync("\\\\GiveHelpPage");
-                    else
-                        await Shell.Current.GoToAsync("\\\\RequestHelpPage");
+                    //await Shell.Current.GoToAsync("\\\\GiveHelpPage");
+                    //await Shell.Current.GoToAsync("\\\\RequestHelpPage");
+                    await Shell.Current.GoToAsync("\\\\PickFavoritesPage");
                 }
                 else
                 {

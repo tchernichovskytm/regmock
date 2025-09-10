@@ -88,7 +88,7 @@ namespace regmock.ViewModels
             {
                 if (ticket.IsActive == true)
                 {
-                    ticket.ActiveTimeSpan = Service.Unix24HoursMiliseconds;
+                    ticket.ActiveTimeSpan = Service.UnixMiliseconds24Hours;
                     ticket.ServerActiveTime = Service.UnixMilisecondsToHHMMSS(ticket.ActiveTimeSpan);
                 }
                 else
@@ -96,6 +96,10 @@ namespace regmock.ViewModels
                     ticket.ActiveTimeSpan = 0;
                     ticket.ServerActiveTime = "";
                 }
+            }
+            else
+            {
+                // TODO: handle error
             }
             Monitor.Exit(this);
         }
