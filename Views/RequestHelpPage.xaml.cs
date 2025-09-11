@@ -5,7 +5,6 @@ namespace regmock.Views;
 public partial class RequestHelpPage : ContentPage
 {
     private RequestHelpPageViewModel viewModel;
-    private bool firstLoad = false;
     public RequestHelpPage()
     {
         InitializeComponent();
@@ -16,11 +15,7 @@ public partial class RequestHelpPage : ContentPage
 
     protected override async void OnAppearing()
     {
-        if (firstLoad == false)
-        {
-            base.OnAppearing();
-            await viewModel.InitializeTicketsAsync();
-            firstLoad = true;
-        }
+        base.OnAppearing();
+        await viewModel.InitializeTicketsAsync();
     }
 }

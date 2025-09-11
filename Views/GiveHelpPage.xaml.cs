@@ -4,10 +4,17 @@ namespace regmock.Views;
 
 public partial class GiveHelpPage : ContentPage
 {
-	public GiveHelpPage()
-	{
-		InitializeComponent();
+    private GiveHelpPageViewModel viewModel;
+    public GiveHelpPage()
+    {
+        InitializeComponent();
 
-		BindingContext = new GiveHelpPageViewModel();
-	}
+        viewModel = new GiveHelpPageViewModel();
+        BindingContext = viewModel;
+    }
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await viewModel.InitializeTicketsAsync();
+    }
 }

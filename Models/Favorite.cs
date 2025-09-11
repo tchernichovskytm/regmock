@@ -31,12 +31,15 @@ namespace regmock.Models
                 OnPropertyChanged(nameof(Grades));
             }
         }
+        public string? FirebaseKey { get; set; }
 
+        #region BackendProperties
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        #endregion
     }
 }

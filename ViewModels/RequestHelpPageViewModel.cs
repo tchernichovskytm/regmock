@@ -33,6 +33,7 @@ namespace regmock.ViewModels
             await Service.GetAllTicketsFromFB();
             // get the new ticket list from the service
             Tickets = new ObservableCollection<Ticket>(Service.GetSelfTickets());
+            OnPropertyChanged(nameof(Tickets));
 
             BringTopicsToFirst();
 
@@ -83,7 +84,7 @@ namespace regmock.ViewModels
         public async void TicketToggled(Ticket ticket)
         {
             Monitor.Enter(this);
-            var (success, _) = await Service.HandleTicket(ticket);
+            var success = await Service.HandleTicket(ticket);
             if (success)
             {
                 if (ticket.IsActive == true)

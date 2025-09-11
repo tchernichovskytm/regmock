@@ -66,8 +66,6 @@ namespace regmock.ViewModels
 
         public GiveHelpPageViewModel()
         {
-            InitializeTicketsAsync();
-
             FavButtonIcon = IconFont.Favorite_outline;
             IsFav = false;
             FavButtonCmd = new Command(FavButtonClick);
