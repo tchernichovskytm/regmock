@@ -66,12 +66,6 @@ public class Service
             });
     }
 
-    class FirebaseUserModel
-    {
-        public string? Fullname { get; set; }
-        public string? Grade { get; set; }
-    }
-
     public static async Task GetAllSubjectsFromFB()
     {
         List<Subject> fbSubjects = new List<Subject>();
@@ -116,6 +110,12 @@ public class Service
         }
     }
 
+    class FromFirebaseUserDisplay
+    {
+        public string? Fullname { get; set; }
+        public string? Grade { get; set; }
+    }
+
     class FromFirebaseTicket
     {
         public string? SenderId { get; set; }
@@ -126,8 +126,34 @@ public class Service
         public bool? IsActive { get; set; }
     }
 
+    public static Subject FindSubjectFromId(string subjectId)
+    {
+        if (string.IsNullOrEmpty(subjectId)) return null;
+        foreach (Subject subject in subjects)
+        {
+            if (subject.Id == subjectId)
+            {
+                return subject;
+            }
+        }
+        return null;
+    }
+
+    public static Grade FindGradeFromId(string gradeId)
+    {
+        if (string.IsNullOrEmpty(gradeId)) return null;
+        foreach (Grade grade in grades)
+        {
+            if (grade.Id == gradeId)
+            {
+                return grade;
+            }
+        }
+        return null;
+    }
+
     // get tickets from everyone
-    public static async Task GetAllTicketsFromFB()
+    public static async Task<bool> GetAllTicketsFromFB()
     {
         List<Ticket> fbSelfTickets = new List<Ticket>();
         List<Ticket> fbOthersTickets = new List<Ticket>();
@@ -143,91 +169,107 @@ public class Service
 
         var ticketsFromFB = await client.Child("Tickets").OnceAsync<FromFirebaseTicket>();
 
-        if (ticketsFromFB != null)
+        if (ticketsFromFB != null) throw new Exception("Invalid Ticket List From FB");
+
+        foreach (var tickFromFB in ticketsFromFB)
         {
-            foreach (var tickFromFB in ticketsFromFB)
+            if (tickFromFB.Object.IsActive == false && tickFromFB.Object.SenderId != auth.User.Uid) continue;
+
+            Ticket parsedTicket = new Ticket()
             {
-                if (tickFromFB.Object.IsActive == false && tickFromFB.Object.SenderId != auth.User.Uid) continue;
+                // in order to update tickets in firebase i saved the key to it
+                FirebaseKey = tickFromFB.Key,
+                IsActive = tickFromFB.Object.IsActive,
+                Topics = new List<string>(tickFromFB.Object.Topics.Values),
+            };
 
-                Ticket parsedTicket = new Ticket()
-                {
-                    // in order to update tickets in firebase i saved the key to it
-                    FirebaseKey = tickFromFB.Key,
-                    IsActive = tickFromFB.Object.IsActive,
-                    Topics = new List<string>(tickFromFB.Object.Topics.Values),
-                };
+            // TODO: maybe turn subjects into a hashmap for better lookup
+            // PARSE SUBJECT
+            parsedTicket.Subject = FindSubjectFromId(tickFromFB.Object.Subject) ?? throw new Exception("Invalid Subject ID From Firebase");
 
-                // TODO: maybe turn subjects into a hashmap for better lookup
-                // PARSE SUBJECT
-                foreach (Subject sub in subjects)
+            if (tickFromFB.Object.SenderId == auth.User.Uid)
+            {
+                // PARSE OPEN TIMES
+                parsedTicket.OpenTimes = new List<long>(tickFromFB.Object.OpenTimes.Values);
+
+                Int64 lastOpenTime = parsedTicket.OpenTimes.Last();
+
+                Int64 firebaseTime = await GetFirebaseTime();
+
+                Int64 timeSinceLastOpen = firebaseTime - lastOpenTime;
+
+                Int64 remainingActiveTime = UnixMiliseconds24Hours - timeSinceLastOpen;
+
+                if (remainingActiveTime <= 0)
                 {
-                    if (sub.Id == tickFromFB.Object.Subject)
-                    {
-                        parsedTicket.Subject = sub;
-                        break;
-                    }
+                    // TODO: this is problematic, firebase is not a good enough server
+                    //       it should mark tickets as inactive by itself
+                    parsedTicket.IsActive = false;
+                    remainingActiveTime = 0;
+                    await client.Child("Tickets").Child(tickFromFB.Key).Child("IsActive").PutAsync<bool>(false);
                 }
 
-                if (tickFromFB.Object.SenderId == auth.User.Uid)
+                parsedTicket.ActiveTimeSpan = remainingActiveTime;
+                if (parsedTicket.IsActive == true)
                 {
-                    // PARSE OPEN TIMES
-                    parsedTicket.OpenTimes = new List<long>(tickFromFB.Object.OpenTimes.Values);
-
-                    Int64 lastOpenTime = parsedTicket.OpenTimes.Last();
-
-                    Int64 firebaseTime = await GetFirebaseTime();
-
-                    Int64 timeSinceLastOpen = firebaseTime - lastOpenTime;
-
-                    Int64 remainingActiveTime = UnixMiliseconds24Hours - timeSinceLastOpen;
-
-                    if (remainingActiveTime <= 0)
-                    {
-                        // TODO: this is problematic, firebase is not a good enough server
-                        //       it should mark tickets as inactive by itself
-                        parsedTicket.IsActive = false;
-                        remainingActiveTime = 0;
-                        await client.Child("Tickets").Child(tickFromFB.Key).Child("IsActive").PutAsync<bool>(false);
-                    }
-
-                    parsedTicket.ActiveTimeSpan = remainingActiveTime;
-                    if (parsedTicket.IsActive == true)
-                    {
-                        parsedTicket.ServerActiveTime = UnixMilisecondsToHHMMSS(parsedTicket.ActiveTimeSpan);
-                    }
-                    else
-                    {
-                        parsedTicket.ServerActiveTime = "";
-                    }
-
-                    fbSelfTickets.Add(parsedTicket);
+                    parsedTicket.ServerActiveTime = UnixMilisecondsToHHMMSS(parsedTicket.ActiveTimeSpan);
                 }
                 else
                 {
-                    // PARSE SENDER (only need it's fullname and grade)
-                    // the ticket only saves the ID of the sender so we find it in Users
-                    var fbSender = await client.Child("Users").Child(tickFromFB.Object.SenderId).OnceSingleAsync<FirebaseUserModel>();
-
-                    if (fbSender != null)
-                    {
-                        parsedTicket.Sender = new UserModel() { Fullname = fbSender.Fullname };
-                        foreach (Grade g in grades)
-                        {
-                            if (g.Id == fbSender.Grade)
-                            {
-                                parsedTicket.Sender.Grade = g;
-                                break;
-                            }
-                        }
-                    }
-
-                    fbOthersTickets.Add(parsedTicket);
+                    parsedTicket.ServerActiveTime = "";
                 }
-            }
 
+                fbSelfTickets.Add(parsedTicket);
+            }
+            else
+            {
+                // PARSE SENDER (only need it's fullname and grade)
+                // the ticket only saves the ID of the sender so we find it in Users
+                var fbSender = await client.Child("Users").Child(tickFromFB.Object.SenderId).OnceSingleAsync<FromFirebaseUserDisplay>();
+
+                if (fbSender == null) throw new Exception("Invalid Sender From FB");
+                parsedTicket.Sender = new UserModel() { Fullname = fbSender.Fullname };
+                parsedTicket.Sender.Grade = FindGradeFromId(fbSender.Grade) ?? throw new Exception("Invalid Grade ID From Firebase");
+
+                fbOthersTickets.Add(parsedTicket);
+            }
+            // this is done because the tickets may fail reading halfway in
+            // so we only want to save the tickets after they all passed
             selfTickets = fbSelfTickets;
             othersTickets = fbOthersTickets;
         }
+        return true;
+    }
+
+    class FromFirebaseFavorite
+    {
+        public string? Subject { get; set; }
+        public List<string> Grades { get; set; }
+    }
+
+    public static async Task<bool> GetHelperFavoritesFromFB()
+    {
+        List<Favorite> fbFavorites = new List<Favorite>();
+
+        var favoritesFromFB = await client.Child("Users").Child(auth.User.Uid).Child("HelperFavorites").OnceAsync<FromFirebaseFavorite>();
+
+        if (favoritesFromFB == null) throw new Exception("Invalid Favorite List From FB");
+        foreach (var favFromFB in favoritesFromFB)
+        {
+            Favorite parsedFavorite = new Favorite()
+            {
+                Grades = new List<Grade>()
+            };
+            parsedFavorite.Subject = FindSubjectFromId(favFromFB.Object.Subject) ?? throw new Exception("Invalid Subject ID From Firebase");
+            foreach (string gradeId in favFromFB.Object.Grades)
+            {
+                parsedFavorite.Grades.Add(FindGradeFromId(gradeId) ?? throw new Exception("Invalid Grade ID From Firebase"));
+            }
+            fbFavorites.Add(parsedFavorite);
+        }
+        helperFavorites = fbFavorites;
+
+        return true;
     }
 
     public static string UnixMilisecondsToHHMMSS(Int64 unixMilis)
@@ -244,80 +286,6 @@ public class Service
         return $"{(days * 24 + hours):00}:{minutes:00}:{seconds:00}";
     }
 
-    // get tickets that the user made
-    //public static async Task GetRequestedTicketsFromFB()
-    //{
-    //    List<Ticket> reqFbTickets = new List<Ticket>();
-
-    //    var requestedTicketsFromFB = await client.Child("Tickets").OrderBy("SenderId").EqualTo(auth.User.Uid).OnceAsync<FromFirebaseTicket>();
-
-    //    if (requestedTicketsFromFB != null)
-    //    {
-    //        foreach (var reqTickFromFB in requestedTicketsFromFB)
-    //        {
-    //            Ticket parsedRequestedTicket = new Ticket()
-    //            {
-    //                // in order to update tickets in firebase i saved the key to it
-    //                FirebaseKey = reqTickFromFB.Key,
-    //                IsActive = reqTickFromFB.Object.IsActive,
-    //                Topics = new List<string>(reqTickFromFB.Object.Topics.Values),
-    //            };
-
-    //            // PARSE SUBJECT
-    //            foreach (Subject sub in subjects)
-    //            {
-    //                if (sub.Id == reqTickFromFB.Object.Subject)
-    //                {
-    //                    parsedRequestedTicket.Subject = sub;
-    //                    break;
-    //                }
-    //            }
-
-    //            // PARSE OPEN TIMES
-    //            parsedRequestedTicket.OpenTimes = reqTickFromFB.Object.OpenTimes.Values
-    //                .Select(str =>
-    //                {
-    //                    if (DateTime.TryParseExact(str, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result))
-    //                    {
-    //                        return result;
-    //                    }
-    //                    else
-    //                    {
-    //                        throw new ArgumentException($"Invalid date format: {str}");
-    //                    }
-    //                })
-    //                .ToList();
-
-    //            DateTime lastOpenTime = parsedRequestedTicket.OpenTimes.Last();
-
-    //            DateTime firebaseTime = await GetFirebaseTime();
-
-    //            TimeSpan timeSinceLastOpen = firebaseTime - lastOpenTime;
-
-    //            TimeSpan remainingActiveTime = TimeSpan.FromHours(24) - timeSinceLastOpen;
-
-    //            if (remainingActiveTime <= TimeSpan.Zero)
-    //            {
-    //                parsedRequestedTicket.IsActive = false;
-    //                remainingActiveTime = TimeSpan.Zero;
-    //                await client.Child("Tickets").Child(reqTickFromFB.Key).Child("IsActive").PutAsync<bool>(false);
-    //            }
-
-    //            parsedRequestedTicket.ActiveTimeSpan = remainingActiveTime;
-    //            if (parsedRequestedTicket.IsActive == true)
-    //            {
-    //                parsedRequestedTicket.ServerActiveTime = $"{(parsedRequestedTicket.ActiveTimeSpan.Days * 24 + parsedRequestedTicket.ActiveTimeSpan.Hours).ToString("00")}:{parsedRequestedTicket.ActiveTimeSpan.Minutes.ToString("00")}:{parsedRequestedTicket.ActiveTimeSpan.Seconds.ToString("00")}";
-    //            }
-    //            reqFbTickets.Add(parsedRequestedTicket);
-    //        }
-
-    //        if (requestedTickets != reqFbTickets)
-    //        {
-    //            requestedTickets = reqFbTickets;
-    //        }
-    //    }
-    //}
-
     public static async Task GetAllStaticFBObjects()
     {
         await GetAllSubjectsFromFB();
@@ -330,32 +298,13 @@ public class Service
     }
 
     // TODO: turn these into firebase functions
-    public static async Task<bool> RemoveFavorite(Favorite favorite)
-    {
-        helperFavorites.Remove(favorite);
-        return true;
-    }
-    public static async Task<bool> EditFavorite(Favorite oldFavorite, Favorite newFavorite)
-    {
-        foreach (Favorite f in helperFavorites)
-        {
-            if (f == oldFavorite)
-            {
-                oldFavorite.Subject = newFavorite.Subject;
-                oldFavorite.Grades = newFavorite.Grades;
-                break;
-            }
-        }
-        return true;
-    }
-
     class ToFirebaseFavorite
     {
         public string? Subject { get; set; }
         public List<string>? Grades { get; set; }
     }
 
-    public static async Task<bool> AddFavorite(Favorite favorite)
+    private static ToFirebaseFavorite FavoriteToFirebaseObject(Favorite favorite)
     {
         ToFirebaseFavorite toFirebaseFavorite = new ToFirebaseFavorite
         {
@@ -366,6 +315,28 @@ public class Service
         {
             toFirebaseFavorite.Grades.Add(g.Id);
         }
+        return toFirebaseFavorite;
+    }
+
+    public static async Task<bool> RemoveFavorite(Favorite favorite)
+    {
+        if (string.IsNullOrEmpty(favorite.FirebaseKey)) return false;
+        await client.Child("Users").Child(auth.User.Uid).Child("HelperFavorites").Child(favorite.FirebaseKey).DeleteAsync();
+        return true;
+    }
+
+    public static async Task<bool> EditFavorite(Favorite oldFavorite, Favorite newFavorite)
+    {
+        ToFirebaseFavorite toFirebaseFavorite = FavoriteToFirebaseObject(newFavorite);
+
+        await client.Child("Users").Child(auth.User.Uid).Child("HelperFavorites").Child(oldFavorite.FirebaseKey).PatchAsync<ToFirebaseFavorite>(toFirebaseFavorite);
+        
+        return true;
+    }
+
+    public static async Task<bool> AddFavorite(Favorite favorite)
+    {
+        ToFirebaseFavorite toFirebaseFavorite = FavoriteToFirebaseObject(favorite);
 
         var newFBFavorite = await client.Child("Users").Child(auth.User.Uid).Child("HelperFavorites").PostAsync<ToFirebaseFavorite>(toFirebaseFavorite);
         favorite.FirebaseKey = newFBFavorite.Key;
@@ -387,7 +358,7 @@ public class Service
     {
         try
         {
-            if (updatedTicket.FirebaseKey == null || updatedTicket.FirebaseKey == "")
+            if (string.IsNullOrEmpty(updatedTicket.FirebaseKey))
             {
                 // this is a new ticket that was created
                 ToFirebaseTicket toFirebaseTicket = new ToFirebaseTicket()
@@ -473,14 +444,9 @@ public class Service
         return schools;
     }
 
-    public static List<Favorite> GetFavorites()
+    public static List<Favorite> GetHelperFavorites()
     {
         return helperFavorites;
-    }
-
-    public static void SetFavorites(List<Favorite> favorites)
-    {
-        helperFavorites = favorites;
     }
 
 
@@ -509,8 +475,7 @@ public class Service
 
     public static async Task<bool> RequestLoginAsync(string email, string password)
     {
-        if (email == null || password == null) return false;
-        if (email == "" || password == "") return false;
+        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) return false;
 
         try
         {

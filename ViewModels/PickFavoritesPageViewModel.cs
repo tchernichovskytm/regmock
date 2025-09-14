@@ -30,10 +30,18 @@ namespace regmock.ViewModels
         #endregion
 
         #region Constructor
+        public async Task InitializeFavoritesAsync()
+        {
+            // first get the favorites from fb into a list
+            await Service.GetHelperFavoritesFromFB();
+
+            // then get it from the saved list
+            HelperFavorites = new ObservableCollection<Favorite>(Service.GetHelperFavorites());
+            OnPropertyChanged(nameof(HelperFavorites));
+        }
+
         public PickFavoritesPageViewModel()
         {
-            HelperFavorites = new ObservableCollection<Favorite>(Service.GetFavorites());
-
             AddFavoriteCmd = new Command(async () =>
             {
                 await AddFavoriteClick();
@@ -79,7 +87,7 @@ namespace regmock.ViewModels
         {
             ICommand modifyFavoriteCmd = new Command(async (object obj) =>
             {
-                if (!(obj is List<Favorite> && ((List<Favorite>)obj).Count == 2))
+                if (obj is not List<Favorite> || ((List<Favorite>)obj).Count != 2)
                 {
                     // invalid object sent back
                     return;
@@ -121,7 +129,6 @@ namespace regmock.ViewModels
                         }
                     }
                 }
-                Service.SetFavorites(new List<Favorite>(HelperFavorites));
             });
             await Shell.Current.Navigation.PushModalAsync(new EditPreferencePage(favorite, (Command)modifyFavoriteCmd), true);
         }

@@ -12,6 +12,7 @@ public partial class GiveHelpPage : ContentPage
         viewModel = new GiveHelpPageViewModel();
         BindingContext = viewModel;
     }
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();
