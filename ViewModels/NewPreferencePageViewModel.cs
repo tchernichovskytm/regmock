@@ -135,16 +135,16 @@ namespace regmock.ViewModels
                 Grades = toggledGrades,
             };
 
-            var success = await Service.AddFavorite(NewFavorite);
-            if (success)
-            {
+            //var success = await Service.AddFavorite(NewFavorite);
+            //if (success)
+            //{
                 FavoriteCmd.Execute(NewFavorite);
                 await Shell.Current.Navigation.PopModalAsync(true);
-            }
-            else
-            {
+            //}
+            //else
+            //{
                 // TODO: handle error
-            }
+            //}
         }
         #endregion
     }

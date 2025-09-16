@@ -156,29 +156,29 @@ namespace regmock.ViewModels
                 Grades = toggledGrades,
             };
 
-            var success = await Service.EditFavorite(OldFavorite, NewFavorite);
-            if (success)
-            {
+            //var success = await Service.EditFavorite(OldFavorite, NewFavorite);
+            //if (success)
+            //{
                 FavoriteCmd.Execute(new List<Favorite>() { OldFavorite, NewFavorite });
                 await Shell.Current.Navigation.PopModalAsync(true);
-            }
-            else
-            {
+            //}
+            //else
+            //{
                 // TODO: handle error
-            }
+            //}
         }
         private async void DeleteClick()
         {
-            var success = await Service.RemoveFavorite(OldFavorite);
-            if (success)
-            {
+            //var success = await Service.RemoveFavorite(OldFavorite);
+            //if (success)
+            //{
                 FavoriteCmd.Execute(new List<Favorite>() { OldFavorite, null });
                 await Shell.Current.Navigation.PopModalAsync(true);
-            }
-            else
-            {
+            //}
+            //else
+            //{
                 // TODO: handle error
-            }
+            //}
         }
         #endregion
     }

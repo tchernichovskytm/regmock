@@ -1,7 +1,7 @@
 using regmock.ViewModels;
-using regmock.Models;
 
 namespace regmock.Views;
+
 public partial class RequestHelpPage : ContentPage
 {
     private RequestHelpPageViewModel viewModel;
@@ -13,9 +13,9 @@ public partial class RequestHelpPage : ContentPage
         BindingContext = viewModel;
     }
 
-    protected override async void OnAppearing()
+    protected override async void OnNavigatedTo(NavigatedToEventArgs e)
     {
-        base.OnAppearing();
+        base.OnNavigatedTo(e);
         await viewModel.InitializeTicketsAsync();
     }
 }

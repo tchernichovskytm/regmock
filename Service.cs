@@ -126,6 +126,7 @@ public class Service
         public bool? IsActive { get; set; }
     }
 
+    // TODO: maybe turn subjects into a hashmap for better lookup
     public static Subject FindSubjectFromId(string subjectId)
     {
         if (string.IsNullOrEmpty(subjectId)) return null;
@@ -169,11 +170,11 @@ public class Service
 
         var ticketsFromFB = await client.Child("Tickets").OnceAsync<FromFirebaseTicket>();
 
-        if (ticketsFromFB != null) throw new Exception("Invalid Ticket List From FB");
+        if (ticketsFromFB == null) return false;
 
         foreach (var tickFromFB in ticketsFromFB)
         {
-            if (tickFromFB.Object.IsActive == false && tickFromFB.Object.SenderId != auth.User.Uid) continue;
+            if (tickFromFB.Object.IsActive == false || tickFromFB.Object.SenderId == auth.User.Uid) continue;
 
             Ticket parsedTicket = new Ticket()
             {
@@ -183,9 +184,8 @@ public class Service
                 Topics = new List<string>(tickFromFB.Object.Topics.Values),
             };
 
-            // TODO: maybe turn subjects into a hashmap for better lookup
             // PARSE SUBJECT
-            parsedTicket.Subject = FindSubjectFromId(tickFromFB.Object.Subject) ?? throw new Exception("Invalid Subject ID From Firebase");
+            parsedTicket.Subject = FindSubjectFromId(tickFromFB.Object.Subject);
 
             if (tickFromFB.Object.SenderId == auth.User.Uid)
             {
@@ -194,6 +194,7 @@ public class Service
 
                 Int64 lastOpenTime = parsedTicket.OpenTimes.Last();
 
+                // TODO: this requests the time for every ticket, probably shouldnt
                 Int64 firebaseTime = await GetFirebaseTime();
 
                 Int64 timeSinceLastOpen = firebaseTime - lastOpenTime;
@@ -227,9 +228,9 @@ public class Service
                 // the ticket only saves the ID of the sender so we find it in Users
                 var fbSender = await client.Child("Users").Child(tickFromFB.Object.SenderId).OnceSingleAsync<FromFirebaseUserDisplay>();
 
-                if (fbSender == null) throw new Exception("Invalid Sender From FB");
+                if (fbSender == null) return false;
                 parsedTicket.Sender = new UserModel() { Fullname = fbSender.Fullname };
-                parsedTicket.Sender.Grade = FindGradeFromId(fbSender.Grade) ?? throw new Exception("Invalid Grade ID From Firebase");
+                parsedTicket.Sender.Grade = FindGradeFromId(fbSender.Grade);
 
                 fbOthersTickets.Add(parsedTicket);
             }
@@ -244,7 +245,7 @@ public class Service
     class FromFirebaseFavorite
     {
         public string? Subject { get; set; }
-        public List<string> Grades { get; set; }
+        public List<string>? Grades { get; set; }
     }
 
     public static async Task<bool> GetHelperFavoritesFromFB()
@@ -253,17 +254,21 @@ public class Service
 
         var favoritesFromFB = await client.Child("Users").Child(auth.User.Uid).Child("HelperFavorites").OnceAsync<FromFirebaseFavorite>();
 
-        if (favoritesFromFB == null) throw new Exception("Invalid Favorite List From FB");
+        if (favoritesFromFB == null) return false;
         foreach (var favFromFB in favoritesFromFB)
         {
+            if (string.IsNullOrEmpty(favFromFB.Object.Subject) || favFromFB.Object.Grades == null) continue;
+
             Favorite parsedFavorite = new Favorite()
             {
-                Grades = new List<Grade>()
+                Grades = new List<Grade>(),
+                FirebaseKey = favFromFB.Key,
             };
-            parsedFavorite.Subject = FindSubjectFromId(favFromFB.Object.Subject) ?? throw new Exception("Invalid Subject ID From Firebase");
+            parsedFavorite.Subject = FindSubjectFromId(favFromFB.Object.Subject);
+
             foreach (string gradeId in favFromFB.Object.Grades)
             {
-                parsedFavorite.Grades.Add(FindGradeFromId(gradeId) ?? throw new Exception("Invalid Grade ID From Firebase"));
+                parsedFavorite.Grades.Add(FindGradeFromId(gradeId));
             }
             fbFavorites.Add(parsedFavorite);
         }

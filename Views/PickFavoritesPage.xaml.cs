@@ -13,9 +13,9 @@ public partial class PickFavoritesPage : ContentPage
         BindingContext = viewModel;
     }
 
-    protected override async void OnAppearing()
+    protected override async void OnNavigatedTo(NavigatedToEventArgs e)
     {
-        base.OnAppearing();
+        base.OnNavigatedTo(e);
         await viewModel.InitializeFavoritesAsync();
     }
 }
