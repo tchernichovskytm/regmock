@@ -1,38 +1,41 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:behaviors="clr-namespace:regmock.Behaviors"
-             x:Class="regmock.Views.RequestHelpPage"
-             Title="RequestHelpPage">
+<ContentPage
+    x:Class="regmock.Views.RequestHelpPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:behaviors="clr-namespace:regmock.Behaviors"
+    Title="RequestHelpPage">
     <Grid Style="{StaticResource MainGridStyle}">
-        <Button Grid.Row="0"
-            Text="Edit"
-            HorizontalOptions="Start"
+        <Button
+            Grid.Row="0"
             BackgroundColor="Transparent"
-            TextColor="Blue"/>
+            HorizontalOptions="Start"
+            Text="Edit"
+            TextColor="Blue" />
 
         <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
 
             <CollectionView ItemsSource="{Binding Tickets}">
                 <CollectionView.ItemsLayout>
-                    <LinearItemsLayout  Orientation="Vertical" ItemSpacing="5" />
+                    <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <VerticalStackLayout>
-                            <Grid Padding="6" BackgroundColor="WhiteSmoke" ColumnDefinitions="*,*" >
-                                <VerticalStackLayout HorizontalOptions="Start" Grid.Column="0">
-                                    <Label FontSize="24"
-                                        Text="{Binding Subject.Name}" />
-                                    <Label FontSize="14"
-                                        Text="{Binding Topics[0]}" />
+                            <Grid
+                                Padding="6"
+                                BackgroundColor="WhiteSmoke"
+                                ColumnDefinitions="*,*">
+                                <VerticalStackLayout Grid.Column="0" HorizontalOptions="Start">
+                                    <Label FontSize="24" Text="{Binding Subject.Name}" />
+                                    <Label FontSize="14" Text="{Binding Topics[0]}" />
                                 </VerticalStackLayout>
-                                <HorizontalStackLayout HorizontalOptions="End" Grid.Column="1">
-                                    <Label VerticalOptions="Center"
-                                               FontSize="18"
-                                               Text="{Binding ServerActiveTime}" />
-                                    <Switch Margin="6,0,0,0"
-                                                IsToggled="{Binding IsActive}" />
+                                <HorizontalStackLayout Grid.Column="1" HorizontalOptions="End">
+                                    <Label
+                                        FontSize="18"
+                                        Text="{Binding ServerActiveTime}"
+                                        VerticalOptions="Center" />
+                                    <Switch Margin="6,0,0,0" IsToggled="{Binding IsActive}" />
                                 </HorizontalStackLayout>
                             </Grid>
                         </VerticalStackLayout>
@@ -42,12 +45,13 @@
 
         </VerticalStackLayout>
 
-        <Button Grid.Row="2"
-            Text="New Ticket"
-            TextColor="Blue"
+        <Button
+            Grid.Row="2"
             BackgroundColor="Transparent"
+            Command="{Binding AddTicketCmd}"
             FontSize="Header"
-            Command="{Binding AddTicketCmd}"/>
+            Text="New Ticket"
+            TextColor="Blue" />
 
     </Grid>
 </ContentPage>

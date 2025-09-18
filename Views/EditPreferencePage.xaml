@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="regmock.Views.EditPreferencePage"
-             xmlns:helper="clr-namespace:regmock.Helper"
-             Title="EditPreferencePage">
+<ContentPage
+    x:Class="regmock.Views.EditPreferencePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helper="clr-namespace:regmock.Helper"
+    Title="EditPreferencePage">
     <VerticalStackLayout Margin="18">
         <Grid RowDefinitions="*,*,*">
             <Button
-            Grid.Row="0"
-            HorizontalOptions="End"
-            FontFamily="MaterialIcons"
-            FontSize="46"
-            Text="{x:Static helper:IconFont.Close}"
-            WidthRequest="64"
-            HeightRequest="64"
-            TextColor="Black"
-            BackgroundColor="Transparent"
-            Command="{Binding CloseCmd}" />
+                Grid.Row="0"
+                BackgroundColor="Transparent"
+                Command="{Binding CloseCmd}"
+                FontFamily="MaterialIcons"
+                FontSize="46"
+                HeightRequest="64"
+                HorizontalOptions="End"
+                Text="{x:Static helper:IconFont.Close}"
+                TextColor="Black"
+                WidthRequest="64" />
 
             <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
                 <!--<VerticalStackLayout>
@@ -27,38 +28,39 @@
                         </Picker.Items>
                     </Picker>
                 </VerticalStackLayout>-->
-                <Label Text="{Binding EditSubjectName}">
-                    
-                </Label>
+                <Label Text="{Binding EditSubjectName}" />
 
                 <CollectionView ItemsSource="{Binding ToggleGrades}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <HorizontalStackLayout>
-                                <CheckBox VerticalOptions="Center" IsChecked="{Binding Toggled}"/>
+                                <CheckBox IsChecked="{Binding Toggled}" VerticalOptions="Center" />
 
-                                <Label VerticalOptions="Center" Text="{Binding Grade.Name}"/>
+                                <Label Text="{Binding Grade.Name}" VerticalOptions="Center" />
                             </HorizontalStackLayout>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
             </VerticalStackLayout>
-            
-            <VerticalStackLayout Margin="15" Spacing="64" Grid.Row="2">
+
+            <VerticalStackLayout
+                Grid.Row="2"
+                Margin="15"
+                Spacing="64">
                 <Button
-                    IsEnabled="{Binding CanApply}"
                     Command="{Binding ApplyCmd}"
                     HorizontalOptions="Center"
+                    IsEnabled="{Binding CanApply}"
+                    Style="{StaticResource AddButton}"
                     Text="Apply"
-                    WidthRequest="175"
-                    Style="{StaticResource AddButton}"/>
+                    WidthRequest="175" />
                 <Button
+                    BorderColor="Red"
                     Command="{Binding DeleteCmd}"
                     HorizontalOptions="Center"
-                    Text="Delete"
-                    WidthRequest="175"
                     Style="{StaticResource AddButton}"
-                    BorderColor="Red"/>
+                    Text="Delete"
+                    WidthRequest="175" />
             </VerticalStackLayout>
         </Grid>
     </VerticalStackLayout>

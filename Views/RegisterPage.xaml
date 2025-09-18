@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:helper="clr-namespace:regmock.Helper"
-             x:Class="regmock.Views.RegisterPage"
-             Title="RegisterPage">
+<ContentPage
+    x:Class="regmock.Views.RegisterPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helper="clr-namespace:regmock.Helper"
+    Title="RegisterPage">
     <Grid Style="{StaticResource MainGridStyle}">
         <!--<Label Grid.Row="0" Text="Register" Style="{StaticResource TitleLabel}" />-->
-        <!--TODO: remove later-->
+        <!--  TODO: remove later  -->
 
         <ScrollView Grid.Row="1">
 
@@ -17,113 +18,113 @@
                         <Entry Text="{Binding FullnameEntry}" />
 
                         <Button
-                            Command="{Binding FullnameReset_Cmd}"
-                            HorizontalOptions="End" 
-                            MaximumWidthRequest="64"
                             Padding="0"
-                            
                             BackgroundColor="Transparent"
                             BorderColor="Transparent"
+                            Command="{Binding FullnameReset_Cmd}"
+                            FontFamily="MaterialIcons"
                             FontSize="20"
-                            FontFamily="MaterialIcons" 
+                            HorizontalOptions="End"
+                            MaximumWidthRequest="64"
                             Text="{x:Static helper:IconFont.Close}"
-                            TextColor="Gray"
-                        />
+                            TextColor="Gray" />
                     </Grid>
 
-                    <Label Text="{Binding FullnameErr}" Style="{StaticResource errLabel}" />
+                    <Label Style="{StaticResource errLabel}" Text="{Binding FullnameErr}" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout>
                     <Label Text="Phone Number:" />
 
                     <Grid>
-                        <Entry Text="{Binding PhonenumberEntry}" Placeholder="+972"/>
+                        <Entry Placeholder="+972" Text="{Binding PhonenumberEntry}" />
 
                         <Button
-                            Command="{Binding PhoneReset_Cmd}"
-                            HorizontalOptions="End" 
-                            MaximumWidthRequest="64"
                             Padding="0"
-                            
                             BackgroundColor="Transparent"
                             BorderColor="Transparent"
+                            Command="{Binding PhoneReset_Cmd}"
+                            FontFamily="MaterialIcons"
                             FontSize="20"
-                            FontFamily="MaterialIcons" 
+                            HorizontalOptions="End"
+                            MaximumWidthRequest="64"
                             Text="{x:Static helper:IconFont.Close}"
-                            TextColor="Gray"
-                        />
+                            TextColor="Gray" />
                     </Grid>
 
-                    <Label Text="{Binding PhonenumberErr}" Style="{StaticResource errLabel}" />
+                    <Label Style="{StaticResource errLabel}" Text="{Binding PhonenumberErr}" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout>
                     <Label Text="Email:" />
                     <Grid>
-                        <Entry Text="{Binding EmailEntry}"/>
+                        <Entry Text="{Binding EmailEntry}" />
 
                         <Button
-                            Command="{Binding EmailReset_Cmd}"
-                            HorizontalOptions="End" 
-                            MaximumWidthRequest="64"
                             Padding="0"
-                            
                             BackgroundColor="Transparent"
                             BorderColor="Transparent"
+                            Command="{Binding EmailReset_Cmd}"
+                            FontFamily="MaterialIcons"
                             FontSize="20"
-                            FontFamily="MaterialIcons" 
+                            HorizontalOptions="End"
+                            MaximumWidthRequest="64"
                             Text="{x:Static helper:IconFont.Close}"
-                            TextColor="Gray"
-                        />
+                            TextColor="Gray" />
                     </Grid>
-                    <Label Text="{Binding EmailErr}" Style="{StaticResource errLabel}" />
+                    <Label Style="{StaticResource errLabel}" Text="{Binding EmailErr}" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout>
                     <Label Text="Password:" />
                     <Grid ColumnDefinitions="*, Auto, Auto">
-                        <Entry Text="{Binding PasswordEntry}" IsPassword="{Binding IsPassVisible}" Grid.ColumnSpan="3"/>
+                        <Entry
+                            Grid.ColumnSpan="3"
+                            IsPassword="{Binding IsPassVisible}"
+                            Text="{Binding PasswordEntry}" />
 
                         <Button
-                            Command="{Binding ShowPass_Cmd}"
                             Grid.Column="1"
+                            Padding="0"
+                            BackgroundColor="Transparent"
+                            BorderColor="Transparent"
+                            Command="{Binding ShowPass_Cmd}"
+                            FontFamily="MaterialIcons"
+                            FontSize="20"
                             HorizontalOptions="End"
                             MaximumWidthRequest="20"
+                            Text="{x:Static helper:IconFont.Remove_red_eye}"
+                            TextColor="Gray" />
+                        <Button
+                            Grid.Column="2"
                             Padding="0"
-                            
                             BackgroundColor="Transparent"
                             BorderColor="Transparent"
-                            FontSize="20"
-                            FontFamily="MaterialIcons" 
-                            TextColor="Gray"
-                            Text="{x:Static helper:IconFont.Remove_red_eye}"
-                        />
-                        <Button
                             Command="{Binding PassReset_Cmd}"
-                            Grid.Column="2"
+                            FontFamily="MaterialIcons"
+                            FontSize="20"
                             HorizontalOptions="End"
                             MaximumWidthRequest="64"
-                            Padding="0"
-                        
-                            BackgroundColor="Transparent"
-                            BorderColor="Transparent"
-                            FontSize="20"
-                            FontFamily="MaterialIcons" 
                             Text="{x:Static helper:IconFont.Close}"
-                            TextColor="Gray"
-                        />
+                            TextColor="Gray" />
                     </Grid>
 
-                    <Label Text="{Binding PasswordErr}" Style="{StaticResource errLabel}" />
+                    <Label Style="{StaticResource errLabel}" Text="{Binding PasswordErr}" />
                 </VerticalStackLayout>
 
             </VerticalStackLayout>
         </ScrollView>
 
         <VerticalStackLayout Grid.Row="2">
-            <Label Text="{Binding RegisterErr}" TextColor="Red" HorizontalOptions="Center" />
-            <Button Command="{Binding Register_Cmd}" IsEnabled="{Binding CanRegister}" Text="Register" Style="{StaticResource ConfirmButton}" />
+            <Label
+                HorizontalOptions="Center"
+                Text="{Binding RegisterErr}"
+                TextColor="Red" />
+            <Button
+                Command="{Binding Register_Cmd}"
+                IsEnabled="{Binding CanRegister}"
+                Style="{StaticResource ConfirmButton}"
+                Text="Register" />
         </VerticalStackLayout>
     </Grid>
 

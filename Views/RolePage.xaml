@@ -1,30 +1,46 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="regmock.Views.RolePage"
-             Title="RolePage">
+<ContentPage
+    x:Class="regmock.Views.RolePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="RolePage">
     <ScrollView>
         <Grid Style="{StaticResource MainGridStyle}">
-            <Label Grid.Row="0" Text="Who Are You" Style="{StaticResource TitleLabel}" />
+            <Label
+                Grid.Row="0"
+                Style="{StaticResource TitleLabel}"
+                Text="Who Are You" />
 
             <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
 
                 <Grid RowDefinitions="*,*,*" RowSpacing="50">
-                    <Button Grid.Row="0" Text="Pupil" Style="{StaticResource RoleButton}" ContentLayout="Bottom, 10">
+                    <Button
+                        Grid.Row="0"
+                        ContentLayout="Bottom, 10"
+                        Style="{StaticResource RoleButton}"
+                        Text="Pupil">
                         <Button.ImageSource>
-                            <FileImageSource File="student.png"/>
+                            <FileImageSource File="student.png" />
                         </Button.ImageSource>
                     </Button>
 
-                    <Button Grid.Row="1" Text="School Teacher" Style="{StaticResource RoleButton}" ContentLayout="Bottom, 10">
+                    <Button
+                        Grid.Row="1"
+                        ContentLayout="Bottom, 10"
+                        Style="{StaticResource RoleButton}"
+                        Text="School Teacher">
                         <Button.ImageSource>
-                            <FileImageSource File="teacher.png"/>
+                            <FileImageSource File="teacher.png" />
                         </Button.ImageSource>
                     </Button>
 
-                    <Button Grid.Row="2" Text="Principal" Style="{StaticResource RoleButton}" ContentLayout="Bottom, 10">
+                    <Button
+                        Grid.Row="2"
+                        ContentLayout="Bottom, 10"
+                        Style="{StaticResource RoleButton}"
+                        Text="Principal">
                         <Button.ImageSource>
-                            <FileImageSource  File="principal.png"/>
+                            <FileImageSource File="principal.png" />
                         </Button.ImageSource>
                     </Button>
                 </Grid>

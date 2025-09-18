@@ -4,38 +4,54 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:regmock.Views"
-    Shell.FlyoutBehavior="Flyout"
-    Title="Mockflow Beta 1.0">
+    Title="Mockflow Beta 1.0"
+    Shell.FlyoutBehavior="Flyout">
 
     <ShellContent
+        Title="Login"
         ContentTemplate="{DataTemplate local:LoginPage}"
-        Route="LoginPage" Title="Login" IsVisible="{Binding IsNotLoggedIn}" />
+        IsVisible="{Binding IsNotLoggedIn}"
+        Route="LoginPage" />
     <ShellContent
+        Title="Register"
         ContentTemplate="{DataTemplate local:RegisterPage}"
-        Route="RegisterPage" Title="Register" IsVisible="{Binding IsNotLoggedIn}" />
+        IsVisible="{Binding IsNotLoggedIn}"
+        Route="RegisterPage" />
 
-    <!-- DEBUG -->
-    <!-- DEBUG -->
+    <!--  DEBUG  -->
+    <!--  DEBUG  -->
 
     <ShellContent
+        Title="Give Help"
         ContentTemplate="{DataTemplate local:GiveHelpPage}"
-        Route="GiveHelpPage" Title="Give Help" IsVisible="{Binding IsLoggedIn}" />
+        IsVisible="{Binding IsLoggedIn}"
+        Route="GiveHelpPage" />
     <ShellContent
+        Title="Request Help"
         ContentTemplate="{DataTemplate local:RequestHelpPage}"
-        Route="RequestHelpPage" Title="Request Help" IsVisible="{Binding IsLoggedIn}" />
+        IsVisible="{Binding IsLoggedIn}"
+        Route="RequestHelpPage" />
 
     <ShellContent
+        Title="Pick Favorites"
         ContentTemplate="{DataTemplate local:PickFavoritesPage}"
-        Route="PickFavoritesPage" Title="Pick Favorites" IsVisible="{Binding IsLoggedIn}" />
+        IsVisible="{Binding IsLoggedIn}"
+        Route="PickFavoritesPage" />
 
     <ShellContent
+        Title="New Preference"
         ContentTemplate="{DataTemplate local:NewPreferencePage}"
-        Route="NewPreferencePage" Title="New Preference" IsVisible="False" />
+        IsVisible="False"
+        Route="NewPreferencePage" />
     <ShellContent
+        Title="Edit Preference"
         ContentTemplate="{DataTemplate local:EditPreferencePage}"
-        Route="EditPreferencePage" Title="Edit Preference" IsVisible="False" />
+        IsVisible="False"
+        Route="EditPreferencePage" />
     <ShellContent
+        Title="New Ticket"
         ContentTemplate="{DataTemplate local:NewTicketPage}"
-        Route="NewTicketPage" Title="New Ticket" IsVisible="False" />
+        IsVisible="False"
+        Route="NewTicketPage" />
 
 </Shell>

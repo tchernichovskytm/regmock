@@ -1,32 +1,34 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="regmock.Views.RolePagePrincipal"
-             Title="RolePagePrincipal">
+<ContentPage
+    x:Class="regmock.Views.RolePagePrincipal"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="RolePagePrincipal">
     <ScrollView>
         <Grid Style="{StaticResource MainGridStyle}">
-            <Label Grid.Row="0" Text="Select School" Style="{StaticResource TitleLabel}" />
+            <Label
+                Grid.Row="0"
+                Style="{StaticResource TitleLabel}"
+                Text="Select School" />
 
             <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
 
                 <VerticalStackLayout>
                     <Label Text="Select School:" />
                     <Grid>
-                        <Picker
-                       ItemsSource="{Binding SchoolList}"
-                       ItemDisplayBinding="{Binding Name}" />
+                        <Picker ItemDisplayBinding="{Binding Name}" ItemsSource="{Binding SchoolList}" />
                     </Grid>
 
-                    <Label Text="{Binding SchoolErr}" Style="{StaticResource errLabel}" />
+                    <Label Style="{StaticResource errLabel}" Text="{Binding SchoolErr}" />
                 </VerticalStackLayout>
 
 
             </VerticalStackLayout>
 
             <Button
-           Grid.Row="2"
-           Text="Send Request"
-           Style="{StaticResource ConfirmButton}" />
+                Grid.Row="2"
+                Style="{StaticResource ConfirmButton}"
+                Text="Send Request" />
         </Grid>
     </ScrollView>
 </ContentPage>

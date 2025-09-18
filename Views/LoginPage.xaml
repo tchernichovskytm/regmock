@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:helper="clr-namespace:regmock.Helper"
-             x:Class="regmock.Views.LoginPage"
-             Title="LoginPage">
+<ContentPage
+    x:Class="regmock.Views.LoginPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helper="clr-namespace:regmock.Helper"
+    Title="LoginPage">
     <Grid Style="{StaticResource MainGridStyle}">
-        <Label Grid.Row="0" Text="Login" Style="{StaticResource TitleLabel}" />
+        <Label
+            Grid.Row="0"
+            Style="{StaticResource TitleLabel}"
+            Text="Login" />
 
         <ScrollView Grid.Row="1">
             <VerticalStackLayout Style="{StaticResource MainStack}">
@@ -13,91 +17,77 @@
                 <VerticalStackLayout>
                     <Label Text="Email:" />
                     <Grid ColumnDefinitions="*,Auto">
-                        <Entry Text="{Binding EmailEntry}" Grid.ColumnSpan="2" />
+                        <Entry Grid.ColumnSpan="2" Text="{Binding EmailEntry}" />
 
                         <Button
-                            Command="{Binding EmailReset_Cmd}"
-                            HorizontalOptions="End"
-                            MaximumWidthRequest="64"
+                            Grid.Column="1"
                             Padding="0"
-                        
                             BackgroundColor="Transparent"
                             BorderColor="Transparent"
+                            Command="{Binding EmailReset_Cmd}"
+                            FontFamily="MaterialIcons"
                             FontSize="20"
-                            FontFamily="MaterialIcons" 
+                            HorizontalOptions="End"
+                            MaximumWidthRequest="64"
                             Text="{x:Static helper:IconFont.Close}"
-                            TextColor="Gray"
-                            
-                            Grid.Column="1"
-                        />
+                            TextColor="Gray" />
                     </Grid>
 
-                    <Label Text="{Binding EmailErr}" Style="{StaticResource errLabel}" />
+                    <Label Style="{StaticResource errLabel}" Text="{Binding EmailErr}" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout>
                     <Label Text="Password:" />
 
                     <Grid ColumnDefinitions="*, Auto, Auto">
-                        <Entry Text="{Binding PasswordEntry}" IsPassword="{Binding IsPassVisible}" Grid.ColumnSpan="3"/>
+                        <Entry
+                            Grid.ColumnSpan="3"
+                            IsPassword="{Binding IsPassVisible}"
+                            Text="{Binding PasswordEntry}" />
 
                         <Button
+                            Grid.Column="1"
+                            Padding="0"
+                            BackgroundColor="Transparent"
                             Command="{Binding ShowPass_Cmd}"
+                            FontFamily="MaterialIcons"
+                            FontSize="20"
                             HorizontalOptions="End"
                             MaximumWidthRequest="20"
-                            Padding="0"
-                        
-                            BackgroundColor="Transparent"
-                            
-                            FontSize="20"
-                            FontFamily="MaterialIcons" 
                             Text="{x:Static helper:IconFont.Remove_red_eye}"
-                            TextColor="Gray"
-                            
-                            Grid.Column="1"
-                        />
+                            TextColor="Gray" />
                         <Button
+                            Grid.Column="2"
+                            Padding="0"
+                            BackgroundColor="Transparent"
                             Command="{Binding PassReset_Cmd}"
+                            FontFamily="MaterialIcons"
+                            FontSize="20"
                             HorizontalOptions="End"
                             MaximumWidthRequest="64"
-                            Padding="0"
-                        
-                            BackgroundColor="Transparent"
-                            
-                            FontSize="20"
-                            FontFamily="MaterialIcons" 
                             Text="{x:Static helper:IconFont.Close}"
-                            TextColor="Gray"
-                            
-                            Grid.Column="2"
-                        />
+                            TextColor="Gray" />
                     </Grid>
 
-                    <Label Text="{Binding PasswordErr}" Style="{StaticResource errLabel}" />
+                    <Label Style="{StaticResource errLabel}" Text="{Binding PasswordErr}" />
                 </VerticalStackLayout>
 
-                <VerticalStackLayout>
-                    
-                </VerticalStackLayout>
+                <VerticalStackLayout />
 
             </VerticalStackLayout>
         </ScrollView>
 
         <VerticalStackLayout Grid.Row="2">
             <Label
-                HorizontalOptions="Center"
-
                 FontSize="18"
+                HorizontalOptions="Center"
                 Text="{Binding LoginErr}"
-                TextColor="{Binding LoginErrColor}"
-            />
+                TextColor="{Binding LoginErrColor}" />
             <Button
-                Text="Login"
-                Style="{StaticResource ConfirmButton}"
-            
-                IsEnabled="{Binding CanLogin}"
                 Command="{Binding Login_Cmd}"
-            />
+                IsEnabled="{Binding CanLogin}"
+                Style="{StaticResource ConfirmButton}"
+                Text="Login" />
         </VerticalStackLayout>
     </Grid>
 </ContentPage>

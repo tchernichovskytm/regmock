@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="regmock.Views.RolePageStudent"
-             Title="RolePageStudent">
+<ContentPage
+    x:Class="regmock.Views.RolePageStudent"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="RolePageStudent">
     <ScrollView>
         <Grid Style="{StaticResource MainGridStyle}">
-            <Label Grid.Row="0" Text="Select School" Style="{StaticResource TitleLabel}" />
+            <Label
+                Grid.Row="0"
+                Style="{StaticResource TitleLabel}"
+                Text="Select School" />
 
             <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
 
@@ -13,13 +17,10 @@
                     <Label Text="Select School:" />
                     <Grid>
                         <!--<Entry Text="{Binding SchoolEntry}" />-->
-                        <Picker
-                            ItemsSource="{Binding SchoolList}"
-                            ItemDisplayBinding="{Binding Name}"
-                        />
+                        <Picker ItemDisplayBinding="{Binding Name}" ItemsSource="{Binding SchoolList}" />
                         <!--<Button
                             Command="{Binding }"
-                            HorizontalOptions="End" 
+                            HorizontalOptions="End"
                             BackgroundColor="Transparent"
                             BorderColor="Transparent"
                             TextColor="Gray"
@@ -27,24 +28,21 @@
                         />-->
                     </Grid>
 
-                    <Label Text="{Binding SchoolErr}" Style="{StaticResource errLabel}" />
+                    <Label Style="{StaticResource errLabel}" Text="{Binding SchoolErr}" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout>
                     <Label Text="Select a Grade:" />
-                    <Picker
-                        ItemsSource="{Binding GradeList}"
-                        ItemDisplayBinding="{Binding Name}"
-                    />
-                    <Label Text="{Binding GradeErr}" Style="{StaticResource errLabel}" />
+                    <Picker ItemDisplayBinding="{Binding Name}" ItemsSource="{Binding GradeList}" />
+                    <Label Style="{StaticResource errLabel}" Text="{Binding GradeErr}" />
                 </VerticalStackLayout>
 
             </VerticalStackLayout>
 
             <Button
                 Grid.Row="2"
-                Text="Assign School"
-                Style="{StaticResource ConfirmButton}" />
+                Style="{StaticResource ConfirmButton}"
+                Text="Assign School" />
         </Grid>
     </ScrollView>
 </ContentPage>

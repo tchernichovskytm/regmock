@@ -1,31 +1,32 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="regmock.Views.NewPreferencePage"
-             xmlns:helper="clr-namespace:regmock.Helper"
-             Title="NewPreferencePage">
+<ContentPage
+    x:Class="regmock.Views.NewPreferencePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helper="clr-namespace:regmock.Helper"
+    Title="NewPreferencePage">
     <VerticalStackLayout Margin="18">
         <Grid RowDefinitions="64,*,75">
             <Button
                 Grid.Row="0"
-                HorizontalOptions="End"
+                BackgroundColor="Transparent"
+                Command="{Binding CloseCmd}"
                 FontFamily="MaterialIcons"
                 FontSize="46"
-                Text="{x:Static helper:IconFont.Close}"
-                WidthRequest="64"
                 HeightRequest="64"
+                HorizontalOptions="End"
+                Text="{x:Static helper:IconFont.Close}"
                 TextColor="Black"
-                BackgroundColor="Transparent"
-                Command="{Binding CloseCmd}" />
+                WidthRequest="64" />
 
             <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
                 <VerticalStackLayout>
-                    <Label
-                    Text="Select a subject" />
-                    <Picker ItemsSource="{Binding Subjects}" ItemDisplayBinding="{Binding Name}" SelectedIndex="{Binding SelectedSubjectIndex}">
-                        <Picker.Items>
-
-                        </Picker.Items>
+                    <Label Text="Select a subject" />
+                    <Picker
+                        ItemDisplayBinding="{Binding Name}"
+                        ItemsSource="{Binding Subjects}"
+                        SelectedIndex="{Binding SelectedSubjectIndex}">
+                        <Picker.Items />
                     </Picker>
                 </VerticalStackLayout>
 
@@ -33,9 +34,9 @@
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <HorizontalStackLayout>
-                                <CheckBox VerticalOptions="Center" IsChecked="{Binding Toggled}"/>
+                                <CheckBox IsChecked="{Binding Toggled}" VerticalOptions="Center" />
 
-                                <Label VerticalOptions="Center" Text="{Binding Grade.Name}"/>
+                                <Label Text="{Binding Grade.Name}" VerticalOptions="Center" />
                             </HorizontalStackLayout>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
@@ -43,11 +44,11 @@
             </VerticalStackLayout>
             <Button
                 Grid.Row="2"
-                IsEnabled="{Binding CanAdd}"
                 Command="{Binding AddFavoriteCmd}"
                 HorizontalOptions="Center"
-                Text="Add Preference"
-                Style="{StaticResource AddButton}"/>
+                IsEnabled="{Binding CanAdd}"
+                Style="{StaticResource AddButton}"
+                Text="Add Preference" />
         </Grid>
     </VerticalStackLayout>
 </ContentPage>
