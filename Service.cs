@@ -326,7 +326,9 @@ public class Service
     public static async Task<bool> RemoveFavorite(Favorite favorite)
     {
         if (string.IsNullOrEmpty(favorite.FirebaseKey)) return false;
+
         await client.Child("Users").Child(auth.User.Uid).Child("HelperFavorites").Child(favorite.FirebaseKey).DeleteAsync();
+
         return true;
     }
 
@@ -335,7 +337,7 @@ public class Service
         ToFirebaseFavorite toFirebaseFavorite = FavoriteToFirebaseObject(newFavorite);
 
         await client.Child("Users").Child(auth.User.Uid).Child("HelperFavorites").Child(oldFavorite.FirebaseKey).PatchAsync<ToFirebaseFavorite>(toFirebaseFavorite);
-        
+
         return true;
     }
 
@@ -345,6 +347,7 @@ public class Service
 
         var newFBFavorite = await client.Child("Users").Child(auth.User.Uid).Child("HelperFavorites").PostAsync<ToFirebaseFavorite>(toFirebaseFavorite);
         favorite.FirebaseKey = newFBFavorite.Key;
+
         return true;
     }
 
@@ -431,7 +434,7 @@ public class Service
 
     public static List<Ticket> GetAllTickets()
     {
-        return [.. selfTickets, .. othersTickets];
+        return [..selfTickets, ..othersTickets];
     }
 
     public static List<Subject> GetSubjects()

@@ -32,8 +32,7 @@
                                                FontSize="18"
                                                Text="{Binding ServerActiveTime}" />
                                     <Switch Margin="6,0,0,0"
-                                                IsToggled="{Binding IsActive}">
-                                    </Switch>
+                                                IsToggled="{Binding IsActive}" />
                                 </HorizontalStackLayout>
                             </Grid>
                         </VerticalStackLayout>

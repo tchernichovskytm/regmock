@@ -31,7 +31,7 @@ namespace regmock.Models
                 OnPropertyChanged(nameof(Grades));
             }
         }
-        
+
         public string? FirebaseKey { get; set; }
 
         #region BackendProperties

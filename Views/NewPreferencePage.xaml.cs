@@ -5,10 +5,10 @@ namespace regmock.Views;
 
 public partial class NewPreferencePage : ContentPage
 {
-	public NewPreferencePage(List<Subject> ExistingSubjects,Command preferenceCmd)
-	{
-		InitializeComponent();
+    public NewPreferencePage(List<Subject> ExistingSubjects, Command preferenceCmd)
+    {
+        InitializeComponent();
 
-		BindingContext = new NewPreferencePageViewModel(ExistingSubjects, preferenceCmd);
-	}
+        BindingContext = new NewPreferencePageViewModel(ExistingSubjects, preferenceCmd);
+    }
 }

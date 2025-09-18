@@ -8,32 +8,7 @@ namespace regmock.ViewModels
     public class EditPreferencePageViewModel : ViewModelBase
     {
         #region Properties
-        //private ObservableCollection<Subject> subjects;
-
-        //public ObservableCollection<Subject> Subjects
-        //{
-        //    get { return subjects; }
-        //    set
-        //    {
-        //        subjects = value;
-        //        OnPropertyChanged(nameof(Subjects));
-        //    }
-        //}
-
-        //private int selectedSubjectIndex;
-
-        //public int SelectedSubjectIndex
-        //{
-        //    get { return selectedSubjectIndex; }
-        //    set
-        //    {
-        //        selectedSubjectIndex = value;
-        //        OnPropertyChanged(nameof(SelectedSubjectIndex));
-        //    }
-        //}
-
         private Subject editSubject;
-
 
         private ObservableCollection<ToggleGrade> toggleGrades;
 
@@ -74,7 +49,6 @@ namespace regmock.ViewModels
         public EditPreferencePageViewModel(Favorite favorite, Command favoriteCmd)
         {
             OldFavorite = favorite;
-            //Subjects = new ObservableCollection<Subject>(Service.GetSubjects());
             ToggleGrades = new ObservableCollection<ToggleGrade>();
             List<Grade> Grades = Service.GetGrades();
 
@@ -100,18 +74,6 @@ namespace regmock.ViewModels
             }
 
             editSubject = favorite.Subject;
-
-            //int foundIdx = -1;
-            //for (int i = 0; i < Subjects.Count; i++)
-            //{
-            //    if (Subjects[i].Id == favorite.Subject.Id)
-            //    {
-            //        foundIdx = i;
-            //        break;
-            //    }
-            //}
-
-            //SelectedSubjectIndex = foundIdx;
 
             FavoriteCmd = favoriteCmd;
 
@@ -151,34 +113,17 @@ namespace regmock.ViewModels
 
             Favorite NewFavorite = new Favorite()
             {
-                //Subject = Subjects[selectedSubjectIndex],
                 Subject = editSubject,
                 Grades = toggledGrades,
             };
 
-            //var success = await Service.EditFavorite(OldFavorite, NewFavorite);
-            //if (success)
-            //{
-                FavoriteCmd.Execute(new List<Favorite>() { OldFavorite, NewFavorite });
-                await Shell.Current.Navigation.PopModalAsync(true);
-            //}
-            //else
-            //{
-                // TODO: handle error
-            //}
+            FavoriteCmd.Execute(new List<Favorite>() { OldFavorite, NewFavorite });
+            await Shell.Current.Navigation.PopModalAsync(true);
         }
         private async void DeleteClick()
         {
-            //var success = await Service.RemoveFavorite(OldFavorite);
-            //if (success)
-            //{
-                FavoriteCmd.Execute(new List<Favorite>() { OldFavorite, null });
-                await Shell.Current.Navigation.PopModalAsync(true);
-            //}
-            //else
-            //{
-                // TODO: handle error
-            //}
+            FavoriteCmd.Execute(new List<Favorite>() { OldFavorite, null });
+            await Shell.Current.Navigation.PopModalAsync(true);
         }
         #endregion
     }

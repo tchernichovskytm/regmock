@@ -3,10 +3,10 @@ using regmock.ViewModels;
 
 public partial class RolePageTeacher : ContentPage
 {
-	public RolePageTeacher()
-	{
-		InitializeComponent();
+    public RolePageTeacher()
+    {
+        InitializeComponent();
 
-		BindingContext = new RolePageTeacherViewModel();
-	}
+        BindingContext = new RolePageTeacherViewModel();
+    }
 }

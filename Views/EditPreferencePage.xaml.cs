@@ -5,10 +5,10 @@ namespace regmock.Views;
 
 public partial class EditPreferencePage : ContentPage
 {
-	public EditPreferencePage(Favorite favorite, Command favoriteCmd)
-	{
-		InitializeComponent();
+    public EditPreferencePage(Favorite favorite, Command favoriteCmd)
+    {
+        InitializeComponent();
 
-		BindingContext = new EditPreferencePageViewModel(favorite, favoriteCmd);
+        BindingContext = new EditPreferencePageViewModel(favorite, favoriteCmd);
     }
 }

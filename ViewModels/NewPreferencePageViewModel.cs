@@ -138,12 +138,12 @@ namespace regmock.ViewModels
             //var success = await Service.AddFavorite(NewFavorite);
             //if (success)
             //{
-                FavoriteCmd.Execute(NewFavorite);
-                await Shell.Current.Navigation.PopModalAsync(true);
+            FavoriteCmd.Execute(NewFavorite);
+            await Shell.Current.Navigation.PopModalAsync(true);
             //}
             //else
             //{
-                // TODO: handle error
+            // TODO: handle error
             //}
         }
         #endregion

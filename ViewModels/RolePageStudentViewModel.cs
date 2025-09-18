@@ -26,9 +26,10 @@ namespace regmock.ViewModels
         public List<School> SchoolList
         {
             get { return schoolList; }
-            set { 
+            set
+            {
                 schoolList = value;
-                OnPropertyChanged(nameof(SchoolList));  
+                OnPropertyChanged(nameof(SchoolList));
             }
         }
 
@@ -50,7 +51,8 @@ namespace regmock.ViewModels
         public List<Grade> GradeList
         {
             get { return gradeList; }
-            set {
+            set
+            {
                 gradeList = value;
                 OnPropertyChanged(nameof(GradeList));
             }

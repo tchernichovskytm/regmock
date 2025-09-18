@@ -12,22 +12,24 @@
 
                 <VerticalStackLayout>
                     <Label Text="Email:" />
-                    <Grid>
-                        <Entry Text="{Binding EmailEntry}"/>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Entry Text="{Binding EmailEntry}" Grid.ColumnSpan="2" />
 
                         <Button
-                        Command="{Binding EmailReset_Cmd}"
-                        HorizontalOptions="End"
-                        MaximumWidthRequest="64"
-                        Padding="0"
+                            Command="{Binding EmailReset_Cmd}"
+                            HorizontalOptions="End"
+                            MaximumWidthRequest="64"
+                            Padding="0"
                         
-                        BackgroundColor="Transparent"
-                        BorderColor="Transparent"
-                        FontSize="20"
-                        FontFamily="MaterialIcons" 
-                        Text="{x:Static helper:IconFont.Close}"
-                        TextColor="Gray"
-                    />
+                            BackgroundColor="Transparent"
+                            BorderColor="Transparent"
+                            FontSize="20"
+                            FontFamily="MaterialIcons" 
+                            Text="{x:Static helper:IconFont.Close}"
+                            TextColor="Gray"
+                            
+                            Grid.Column="1"
+                        />
                     </Grid>
 
                     <Label Text="{Binding EmailErr}" Style="{StaticResource errLabel}" />
@@ -41,31 +43,33 @@
 
                         <Button
                             Command="{Binding ShowPass_Cmd}"
-                            Grid.Column="1"
                             HorizontalOptions="End"
                             MaximumWidthRequest="20"
                             Padding="0"
                         
                             BackgroundColor="Transparent"
-                            BorderColor="Transparent"
+                            
                             FontSize="20"
                             FontFamily="MaterialIcons" 
-                            TextColor="Gray"
                             Text="{x:Static helper:IconFont.Remove_red_eye}"
+                            TextColor="Gray"
+                            
+                            Grid.Column="1"
                         />
                         <Button
                             Command="{Binding PassReset_Cmd}"
-                            Grid.Column="2"
                             HorizontalOptions="End"
                             MaximumWidthRequest="64"
                             Padding="0"
                         
                             BackgroundColor="Transparent"
-                            BorderColor="Transparent"
+                            
                             FontSize="20"
                             FontFamily="MaterialIcons" 
                             Text="{x:Static helper:IconFont.Close}"
                             TextColor="Gray"
+                            
+                            Grid.Column="2"
                         />
                     </Grid>
 
@@ -73,26 +77,27 @@
                 </VerticalStackLayout>
 
                 <VerticalStackLayout>
-                    <Label
-                        HorizontalOptions="Center"
-                        Style="{StaticResource errLabel}"
-                
-                        Grid.Row="2"
-                        FontSize="18"
-                        Text="{Binding LoginErr}"
-                    />
+                    
                 </VerticalStackLayout>
 
             </VerticalStackLayout>
         </ScrollView>
 
-        <Button
-            Grid.Row="2"
-            Text="Login"
-            Style="{StaticResource ConfirmButton}"
+        <VerticalStackLayout Grid.Row="2">
+            <Label
+                HorizontalOptions="Center"
+
+                FontSize="18"
+                Text="{Binding LoginErr}"
+                TextColor="{Binding LoginErrColor}"
+            />
+            <Button
+                Text="Login"
+                Style="{StaticResource ConfirmButton}"
             
-            IsEnabled="{Binding CanLogin}"
-            Command="{Binding Login_Cmd}"
-        />
+                IsEnabled="{Binding CanLogin}"
+                Command="{Binding Login_Cmd}"
+            />
+        </VerticalStackLayout>
     </Grid>
 </ContentPage>

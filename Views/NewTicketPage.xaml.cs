@@ -4,10 +4,10 @@ using System.Runtime.CompilerServices;
 
 public partial class NewTicketPage : ContentPage
 {
-	public NewTicketPage(Command ticketCmd)
-	{
-		InitializeComponent();
+    public NewTicketPage(Command ticketCmd)
+    {
+        InitializeComponent();
 
-		BindingContext = new NewTicketPageViewModel(ticketCmd);
-	}
+        BindingContext = new NewTicketPageViewModel(ticketCmd);
+    }
 }

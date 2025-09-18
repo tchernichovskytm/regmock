@@ -183,7 +183,8 @@ namespace regmock.ViewModels
             EmailReset_Cmd = new Command(ResetEmail);
             PassReset_Cmd = new Command(ResetPass);
             PhoneReset_Cmd = new Command(ResetPhone);
-            Register_Cmd = new Command(() => {
+            Register_Cmd = new Command(() =>
+            {
                 bool success = RegisterClicked();
                 if (success)
                 {

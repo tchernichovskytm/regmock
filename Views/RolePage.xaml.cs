@@ -4,10 +4,10 @@ namespace regmock.Views;
 
 public partial class RolePage : ContentPage
 {
-	public RolePage()
-	{
-		InitializeComponent();
+    public RolePage()
+    {
+        InitializeComponent();
 
-		BindingContext = new RolePageViewModel();
-	}
+        BindingContext = new RolePageViewModel();
+    }
 }

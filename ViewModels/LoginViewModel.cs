@@ -1,5 +1,6 @@
 ﻿using System.Windows.Input;
 using System.Text.RegularExpressions;
+using Microsoft.Maui.Graphics.Text;
 
 namespace regmock.ViewModels
 {
@@ -88,6 +89,18 @@ namespace regmock.ViewModels
             }
         }
 
+        private Color loginErrColor;
+
+        public Color LoginErrColor
+        {
+            get { return loginErrColor; }
+            set {
+                loginErrColor = value;
+                OnPropertyChanged(nameof(LoginErrColor));
+            }
+        }
+
+
         #endregion
 
         #region Commands
@@ -102,7 +115,7 @@ namespace regmock.ViewModels
         {
             emailErr = "";
             passwordErr = "";
-            loginErr = "";
+            loginErr = "AHHH";
 
             IsPassVisible = true;
 
@@ -116,17 +129,20 @@ namespace regmock.ViewModels
                 if (success)
                 {
                     LoginErr = "Logged in";
+                    LoginErrColor = Colors.Green;
 
                     Service.LoggedInCommand.Execute(null);
 
                     // TODO: make this go to a real page later
+
                     //await Shell.Current.GoToAsync("\\\\GiveHelpPage");
                     //await Shell.Current.GoToAsync("\\\\RequestHelpPage");
                     await Shell.Current.GoToAsync("\\\\PickFavoritesPage");
                 }
                 else
                 {
-                    LoginErr = "Failed to Login";
+                    LoginErr = "Failed to Login, Please try again";
+                    LoginErrColor = Colors.Red;
                 }
             });
         }
