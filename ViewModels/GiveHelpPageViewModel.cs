@@ -3,23 +3,30 @@ using System.Collections.ObjectModel;
 using regmock.Helper;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
+using Microsoft.Maui.Animations;
 
 namespace regmock.ViewModels
 {
     public class GiveHelpPageViewModel : ViewModelBase
     {
         #region Properties
-        private ObservableCollection<Ticket> tickets;
+        private const string FavFalseIcon = IconFont.Favorite_outline;
+        private const string FavTrueIcon = IconFont.Favorite;
 
-        public ObservableCollection<Ticket> Tickets
+        private List<Ticket> AllTickets;
+
+        private ObservableCollection<Ticket> displayTickets;
+
+        public ObservableCollection<Ticket> DisplayTickets
         {
-            get { return tickets; }
+            get { return displayTickets; }
             set
             {
-                tickets = value;
-                OnPropertyChanged(nameof(Tickets));
+                displayTickets = value;
+                OnPropertyChanged(nameof(DisplayTickets));
             }
         }
+
 
         private string favButtonIcon;
 
@@ -45,7 +52,19 @@ namespace regmock.ViewModels
             }
         }
 
+        private bool isFavButtonVisible;
 
+        public bool IsFavButtonVisible
+        {
+            get { return isFavButtonVisible; }
+            set
+            {
+                isFavButtonVisible = value;
+                OnPropertyChanged(nameof(IsFavButtonVisible));
+            }
+        }
+
+        private List<Favorite> HelperFavorites;
         #endregion
 
         #region Commands
@@ -58,15 +77,21 @@ namespace regmock.ViewModels
             // get all the items from the fb into the service
             await Service.GetAllTicketsFromFB();
             // get the new ticket list from the service
-            Tickets = new ObservableCollection<Ticket>(Service.GetOthersTickets());
-            OnPropertyChanged(nameof(Tickets));
+            AllTickets = Service.GetOthersTickets();
+            BringTopicsToFirst(AllTickets);
 
-            BringTopicsToFirst();
+            DisplayTickets = new ObservableCollection<Ticket>(AllTickets);
+
+            await Service.GetHelperFavoritesFromFB();
+            HelperFavorites = Service.GetHelperFavorites();
+            IsFavButtonVisible = HelperFavorites.Count > 0;
+
+            PutTicketFavoriteIcons(AllTickets);
         }
 
         public GiveHelpPageViewModel()
         {
-            FavButtonIcon = IconFont.Favorite_outline;
+            FavButtonIcon = FavFalseIcon;
             IsFav = false;
             FavButtonCmd = new Command(FavButtonClick);
         }
@@ -75,23 +100,70 @@ namespace regmock.ViewModels
         #region Functions
         public void FavButtonClick()
         {
-            if (IsFav == false)
+            //if (IsFav == false)
+            //{
+            //    FavButtonIcon = IconFont.Favorite;
+            //    IsFav = true;
+            //}
+            //else if (IsFav == true)
+            //{
+            //    FavButtonIcon = IconFont.Favorite_outline;
+            //    IsFav = false;
+            //}
+            IsFav = !IsFav;
+            FavButtonIcon = IsFav ? FavTrueIcon : FavFalseIcon;
+            if (IsFav == true)
             {
-                FavButtonIcon = IconFont.Favorite;
-                IsFav = true;
+                DisplayTickets = FilterTicketsByFavorites(AllTickets, HelperFavorites);
             }
-            else if (IsFav == true)
+            else
             {
-                FavButtonIcon = IconFont.Favorite_outline;
-                IsFav = false;
+                DisplayTickets = new ObservableCollection<Ticket>(AllTickets);
             }
         }
 
-        public void BringTopicsToFirst()
+        public bool PassesFilter(Ticket ticket, List<Favorite> helperFavorites)
         {
-            foreach (Ticket ticket in Tickets)
+            foreach (Favorite favorite in helperFavorites)
+            {
+                if (ticket.Subject.Id == favorite.Subject.Id)
+                {
+                    foreach (Grade grade in favorite.Grades)
+                    {
+                        if (ticket.Sender.Grade.Id == grade.Id)
+                        {
+                            return true;
+                        }
+                    }
+                    break;
+                }
+            }
+            return false;
+        }
+
+        public ObservableCollection<Ticket> FilterTicketsByFavorites(List<Ticket> tickets, List<Favorite> helperFavorites)
+        {
+            ObservableCollection<Ticket> filtered = new ObservableCollection<Ticket>();
+            foreach (Ticket ticket in tickets)
+            {
+                if (PassesFilter(ticket, helperFavorites)) filtered.Add(ticket);
+            }
+            return filtered;
+        }
+
+        public void BringTopicsToFirst(List<Ticket> tickets)
+        {
+            foreach (Ticket ticket in tickets)
             {
                 ticket.Topics = new List<string> { ticket.Topics.LastOrDefault() };
+            }
+        }
+
+        public void PutTicketFavoriteIcons(List<Ticket> tickets)
+        {
+            foreach(Ticket ticket in tickets)
+            {
+                ticket.IsFavoriteIcon = PassesFilter(ticket, HelperFavorites) ? FavTrueIcon : FavFalseIcon;
             }
         }
         #endregion

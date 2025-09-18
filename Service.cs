@@ -174,7 +174,7 @@ public class Service
 
         foreach (var tickFromFB in ticketsFromFB)
         {
-            if (tickFromFB.Object.IsActive == false || tickFromFB.Object.SenderId == auth.User.Uid) continue;
+            if (tickFromFB.Object.IsActive == false && tickFromFB.Object.SenderId != auth.User.Uid) continue;
 
             Ticket parsedTicket = new Ticket()
             {

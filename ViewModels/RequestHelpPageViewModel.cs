@@ -35,7 +35,7 @@ namespace regmock.ViewModels
             Tickets = new ObservableCollection<Ticket>(Service.GetSelfTickets());
             OnPropertyChanged(nameof(Tickets));
 
-            BringTopicsToFirst();
+            BringTopicsToFirst(Tickets);
 
             foreach (Ticket ticket in Tickets)
             {
@@ -105,9 +105,9 @@ namespace regmock.ViewModels
             Monitor.Exit(this);
         }
 
-        public void BringTopicsToFirst()
+        public void BringTopicsToFirst(ObservableCollection<Ticket> tickets)
         {
-            foreach (Ticket ticket in Tickets)
+            foreach (Ticket ticket in tickets)
             {
                 ticket.Topics = new List<string> { ticket.Topics.LastOrDefault() };
             }

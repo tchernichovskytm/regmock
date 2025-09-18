@@ -20,23 +20,25 @@
             FontFamily="MaterialIcons"
             FontSize="20"
             HorizontalOptions="End"
+            IsVisible="{Binding IsFavButtonVisible}"
             Text="{Binding FavButtonIcon}"
             TextColor="Black"
             VerticalOptions="Start" />
 
         <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
             <VerticalStackLayout>
-                <CollectionView ItemsSource="{Binding Tickets}">
+                <CollectionView ItemsSource="{Binding DisplayTickets}">
                     <CollectionView.ItemsLayout>
                         <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" />
                     </CollectionView.ItemsLayout>
+
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <VerticalStackLayout>
                                 <Grid
                                     Padding="6"
                                     BackgroundColor="WhiteSmoke"
-                                    ColumnDefinitions="*, Auto"
+                                    ColumnDefinitions="*,Auto"
                                     RowDefinitions="*,*">
                                     <HorizontalStackLayout
                                         Grid.Row="0"
@@ -82,6 +84,7 @@
                                             VerticalOptions="Center"
                                             WidthRequest="28" />
                                     </HorizontalStackLayout>
+                                    <!--  Text="{x:Static helper:IconFont.Favorite}"  -->
                                     <Label
                                         Grid.Row="0"
                                         Grid.Column="1"
@@ -89,9 +92,8 @@
                                         FontFamily="MaterialIcons"
                                         FontSize="20"
                                         HorizontalOptions="Center"
-                                        Text="{x:Static helper:IconFont.Favorite}"
+                                        Text="{Binding IsFavoriteIcon}"
                                         VerticalOptions="Center" />
-
                                     <Label
                                         Grid.Row="1"
                                         Grid.Column="1"

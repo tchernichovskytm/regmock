@@ -48,6 +48,18 @@ namespace regmock.Models
         }
         public Int64 ActiveTimeSpan { get; set; }
 
+        private string isFavoriteIcon;
+
+        public string IsFavoriteIcon
+        {
+            get { return isFavoriteIcon; }
+            set
+            {
+                isFavoriteIcon = value;
+                OnPropertyChanged(nameof(IsFavoriteIcon));
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged(string propertyName)

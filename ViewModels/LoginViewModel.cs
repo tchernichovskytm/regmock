@@ -94,7 +94,8 @@ namespace regmock.ViewModels
         public Color LoginErrColor
         {
             get { return loginErrColor; }
-            set {
+            set
+            {
                 loginErrColor = value;
                 OnPropertyChanged(nameof(LoginErrColor));
             }
@@ -115,7 +116,7 @@ namespace regmock.ViewModels
         {
             emailErr = "";
             passwordErr = "";
-            loginErr = "AHHH";
+            loginErr = "";
 
             IsPassVisible = true;
 
@@ -135,9 +136,9 @@ namespace regmock.ViewModels
 
                     // TODO: make this go to a real page later
 
-                    //await Shell.Current.GoToAsync("\\\\GiveHelpPage");
+                    await Shell.Current.GoToAsync("\\\\GiveHelpPage");
                     //await Shell.Current.GoToAsync("\\\\RequestHelpPage");
-                    await Shell.Current.GoToAsync("\\\\PickFavoritesPage");
+                    //await Shell.Current.GoToAsync("\\\\PickFavoritesPage");
                 }
                 else
                 {
