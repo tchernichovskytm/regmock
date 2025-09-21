@@ -153,6 +153,11 @@ public class Service
         return null;
     }
 
+    public static Int64 TicketRemainingTime(Int64 openedTime, Int64 currentTime, Int64 expirationTime)
+    {
+        return openedTime - (currentTime - expirationTime);
+    }
+
     // get tickets from everyone
     public static async Task<bool> GetAllTicketsFromFB()
     {
@@ -169,6 +174,12 @@ public class Service
         //                            .OnceAsync<FromFirebaseTicket>();
 
         var ticketsFromFB = await client.Child("Tickets").OnceAsync<FromFirebaseTicket>();
+        //var ticketsFromFB = await client.Child("Tickets").Or
+
+        Int64 currentFirebaseTime = await GetFirebaseTime();
+
+        // TODO: not finished
+        //var validTicketsFromFB = ticketsFromFB.Where(ticket => TicketRemainingTime(ticket.Object.OpenTimes.Values.Last(), currentFirebaseTime, UnixMiliseconds24Hours) >= 0);
 
         if (ticketsFromFB == null) return false;
 
@@ -190,17 +201,9 @@ public class Service
             if (tickFromFB.Object.SenderId == auth.User.Uid)
             {
                 // PARSE OPEN TIMES
-                parsedTicket.OpenTimes = new List<long>(tickFromFB.Object.OpenTimes.Values);
+                parsedTicket.OpenTimes = new List<Int64>(tickFromFB.Object.OpenTimes.Values);
 
-                Int64 lastOpenTime = parsedTicket.OpenTimes.Last();
-
-                // TODO: this requests the time for every ticket, probably shouldnt
-                Int64 firebaseTime = await GetFirebaseTime();
-
-                Int64 timeSinceLastOpen = firebaseTime - lastOpenTime;
-
-                Int64 remainingActiveTime = UnixMiliseconds24Hours - timeSinceLastOpen;
-
+                Int64 remainingActiveTime = TicketRemainingTime(parsedTicket.OpenTimes.Last(), currentFirebaseTime, UnixMiliseconds24Hours);
                 if (remainingActiveTime <= 0)
                 {
                     // TODO: this is problematic, firebase is not a good enough server
@@ -222,7 +225,7 @@ public class Service
 
                 fbSelfTickets.Add(parsedTicket);
             }
-            else
+            else // tickFromFB.Object.SenderId != auth.User.Uid
             {
                 // PARSE SENDER (only need it's fullname and grade)
                 // the ticket only saves the ID of the sender so we find it in Users
@@ -434,7 +437,7 @@ public class Service
 
     public static List<Ticket> GetAllTickets()
     {
-        return [..selfTickets, ..othersTickets];
+        return [.. selfTickets, .. othersTickets];
     }
 
     public static List<Subject> GetSubjects()
@@ -500,7 +503,29 @@ public class Service
         }
     }
 
-    public static bool RequestRegister(string fullname, string phonenumber, string email, string password)
+    public static async Task<bool> RequestRegisterAsync(string fullname, string phonenumber, string email, string password)
+    {
+        if (string.IsNullOrEmpty(fullname) || string.IsNullOrEmpty(phonenumber) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) return false;
+
+        try
+        {
+            var authUser = await auth.CreateUserWithEmailAndPasswordAsync(email, password, fullname);
+            UserModel newUser = new UserModel()
+            {
+                Fullname = fullname,
+
+            };
+            //client.Child("Users").Child(authUser.User.Uid).PostAsync<UserModel>(authUser);
+
+            return true;
+        }
+        catch (FirebaseAuthException)
+        {
+            return false;
+        }
+    }
+
+    public static bool RequestFakeRegister(string fullname, string phonenumber, string email, string password)
     {
         foreach (UserModel p in users)
         {

@@ -50,7 +50,7 @@ namespace regmock.ViewModels
         public RequestHelpPageViewModel()
         {
 
-            TicketToggleCmd = new Command(async (object obj) =>
+            TicketToggleCmd = new Command((object obj) =>
             {
                 if (obj is Ticket)
                 {

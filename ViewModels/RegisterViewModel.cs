@@ -203,8 +203,11 @@ namespace regmock.ViewModels
         #region Functions
         private bool RegisterClicked()
         {
-            bool success = Service.RequestRegister(FullnameEntry, PhonenumberEntry, EmailEntry, PasswordEntry);
-            return success;
+            // TODO: real registration
+
+            //bool success = Service.RequestRegister(FullnameEntry, PhonenumberEntry, EmailEntry, PasswordEntry);
+            //return success;
+            return true;
         }
         private void ResetFullname()
         {
