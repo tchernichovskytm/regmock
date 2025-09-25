@@ -38,7 +38,7 @@
         IsVisible="{Binding IsLoggedIn}"
         Route="PickFavoritesPage" />
 
-    <ShellContent
+    <!--<ShellContent
         Title="New Preference"
         ContentTemplate="{DataTemplate local:NewPreferencePage}"
         IsVisible="False"
@@ -52,6 +52,6 @@
         Title="New Ticket"
         ContentTemplate="{DataTemplate local:NewTicketPage}"
         IsVisible="False"
-        Route="NewTicketPage" />
+        Route="NewTicketPage" />-->
 
 </Shell>

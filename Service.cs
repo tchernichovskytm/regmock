@@ -15,7 +15,7 @@ using System.Linq;
 using System.Globalization;
 using System.Windows.Input;
 
-public class Service
+public static class Service
 {
     // given by ShellViewModel
     public static ICommand LoggedInCommand;
@@ -25,7 +25,10 @@ public class Service
 
     static UserCredential currentAuthUser = null;
 
-    static UserModel currentUser = null;
+    //static UserModel currentUser = null;
+
+    // the registration is multiple steps, i need to save the user and build it then send it to FB
+    static UserModel tempUser = null;
 
     static List<UserModel> users = new List<UserModel>();
 
@@ -480,7 +483,7 @@ public class Service
             return false;
         }
 
-        currentUser = foundUser;
+        //currentUser = foundUser;
         return true;
     }
 
@@ -513,8 +516,14 @@ public class Service
             UserModel newUser = new UserModel()
             {
                 Fullname = fullname,
-
+                PhoneNumber = phonenumber,
+                Email = email,
+                Password = password,
+                UserType = Role.None,
+                RegistrationDate = await GetFirebaseTime(),
             };
+            tempUser = newUser;
+
             //client.Child("Users").Child(authUser.User.Uid).PostAsync<UserModel>(authUser);
 
             return true;

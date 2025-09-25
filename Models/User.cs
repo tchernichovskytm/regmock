@@ -9,7 +9,7 @@ namespace regmock.Models
         public string? Email { get; set; }
         public Role? UserType { get; set; }
         public Grade? Grade { get; set; }
-        public DateTime? RegistrationDate { get; set; }
+        public Int64? RegistrationDate { get; set; } // unix milliseconds
         public List<Favorite>? HelperFavorites { get; set; } // Helper Preferences
     }
 }

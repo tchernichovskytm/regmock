@@ -120,9 +120,10 @@
                 HorizontalOptions="Center"
                 Text="{Binding RegisterErr}"
                 TextColor="Red" />
+            <!-- DEBUG: IsEnabled="{Binding CanRegister} -->
             <Button
                 Command="{Binding Register_Cmd}"
-                IsEnabled="{Binding CanRegister}"
+                IsEnabled="True" 
                 Style="{StaticResource ConfirmButton}"
                 Text="Register" />
         </VerticalStackLayout>

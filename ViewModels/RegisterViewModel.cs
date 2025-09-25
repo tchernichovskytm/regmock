@@ -1,4 +1,5 @@
 ﻿using regmock.Models;
+using regmock.Views;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 
@@ -183,11 +184,13 @@ namespace regmock.ViewModels
             EmailReset_Cmd = new Command(ResetEmail);
             PassReset_Cmd = new Command(ResetPass);
             PhoneReset_Cmd = new Command(ResetPhone);
-            Register_Cmd = new Command(() =>
+            Register_Cmd = new Command(async () =>
             {
-                bool success = RegisterClicked();
+                bool success = true;// await Service.RequestRegisterAsync(FullnameEntry, PhonenumberEntry, EmailEntry, PasswordEntry);
                 if (success)
                 {
+                    //await Shell.Current.GoToAsync("\\\\RolePage");
+                    await Shell.Current.Navigation.PushModalAsync(new RolePage(), true);
                     RegisterErr = "Success";
                 }
                 else
@@ -201,14 +204,14 @@ namespace regmock.ViewModels
         #endregion
 
         #region Functions
-        private bool RegisterClicked()
-        {
-            // TODO: real registration
+        //private async Task<bool> RegisterClicked()
+        //{
+        //    // TODO: real registration
 
-            //bool success = Service.RequestRegister(FullnameEntry, PhonenumberEntry, EmailEntry, PasswordEntry);
-            //return success;
-            return true;
-        }
+        //    bool success = await Service.RequestRegisterAsync(FullnameEntry, PhonenumberEntry, EmailEntry, PasswordEntry);
+        //    return success;
+        //    //return true;
+        //}
         private void ResetFullname()
         {
             FullnameEntry = "";

@@ -19,6 +19,9 @@ namespace regmock.ViewModels
             {
                 isNotLoggedIn = value;
                 OnPropertyChanged(nameof(IsNotLoggedIn));
+
+                isLoggedIn = !value;
+                OnPropertyChanged(nameof(IsLoggedIn));
             }
         }
 
@@ -33,8 +36,7 @@ namespace regmock.ViewModels
                 OnPropertyChanged(nameof(IsLoggedIn));
 
                 isNotLoggedIn = !value;
-                // TODO: fix, i dont know why this fails
-                //OnPropertyChanged(nameof(IsNotLoggedIn));
+                OnPropertyChanged(nameof(IsNotLoggedIn));
             }
         }
         #endregion
