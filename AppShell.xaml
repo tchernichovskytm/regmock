@@ -8,15 +8,15 @@
     Shell.FlyoutBehavior="Flyout">
 
     <ShellContent
-        Title="Login"
-        ContentTemplate="{DataTemplate local:LoginPage}"
-        IsVisible="{Binding IsNotLoggedIn}"
-        Route="LoginPage" />
-    <ShellContent
         Title="Register"
         ContentTemplate="{DataTemplate local:RegisterPage}"
         IsVisible="{Binding IsNotLoggedIn}"
         Route="RegisterPage" />
+    <ShellContent
+        Title="Login"
+        ContentTemplate="{DataTemplate local:LoginPage}"
+        IsVisible="{Binding IsNotLoggedIn}"
+        Route="LoginPage" />
 
     <!--  DEBUG  -->
     <!--  DEBUG  -->
