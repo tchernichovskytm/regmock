@@ -65,7 +65,12 @@ public static class Service
             @"https://regmock-3fc47-default-rtdb.europe-west1.firebasedatabase.app/",
             new FirebaseOptions
             {
-                AuthTokenAsyncFactory = () => Task.FromResult(auth.User.Credential.IdToken)
+                AuthTokenAsyncFactory = () =>
+                {
+                    // TODO: the security is so bad
+                    if (auth.User is null) return Task.FromResult(string.Empty);
+                    return Task.FromResult(auth.User.Credential.IdToken);
+                }
             });
     }
 
@@ -109,6 +114,34 @@ public static class Service
             if (grades != fbGrades)
             {
                 grades = fbGrades;
+            }
+        }
+    }
+
+    public static async Task GetAllSchoolsFromFB()
+    {
+        List<School> fbSchools = new List<School>();
+
+        var schoolsFromFB = await client.Child("Schools").OnceAsync<School>();
+
+        if (schoolsFromFB != null)
+        {
+            foreach (var sFromFB in schoolsFromFB)
+            {
+                School parsedSchool = new School()
+                {
+                    Id = sFromFB.Key,
+                    Name = sFromFB.Object.Name,
+                    City = sFromFB.Object.City,
+                    SettlementCode = sFromFB.Object.SettlementCode,
+                };
+
+                fbSchools.Add(parsedSchool);
+            }
+
+            if (schools != fbSchools)
+            {
+                schools = fbSchools;
             }
         }
     }
@@ -297,15 +330,11 @@ public static class Service
         return $"{(days * 24 + hours):00}:{minutes:00}:{seconds:00}";
     }
 
-    public static async Task GetAllStaticFBObjects()
+    public static void GetAllStaticFBObjects()
     {
-        await GetAllSubjectsFromFB();
-        await GetAllGradesFromFB();
-    }
-
-    public static void InitRealData()
-    {
-        InitAuth();
+        GetAllSubjectsFromFB();
+        GetAllGradesFromFB();
+        GetAllSchoolsFromFB();
     }
 
     // TODO: turn these into firebase functions
@@ -495,8 +524,6 @@ public static class Service
         {
             var authUser = await auth.SignInWithEmailAndPasswordAsync(email, password);
             currentAuthUser = authUser;
-
-            await GetAllStaticFBObjects();
 
             return true;
         }
