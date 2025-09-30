@@ -8,8 +8,8 @@ namespace regmock.Models
 {
     public class School
     {
+        public string? Id { get; set; }
         public string? Name { get; set; }
-        public int? Id { get; set; }
         public string? City { get; set; }
         public string? SettlementCode { get; set; }
 

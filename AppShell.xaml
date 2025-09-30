@@ -3,6 +3,7 @@
     x:Class="regmock.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helper="clr-namespace:regmock.Helper"
     xmlns:local="clr-namespace:regmock.Views"
     Title="Mockflow Beta 1.0"
     Shell.FlyoutBehavior="Flyout">
@@ -11,12 +12,27 @@
         Title="Register"
         ContentTemplate="{DataTemplate local:RegisterPage}"
         IsVisible="{Binding IsNotLoggedIn}"
-        Route="RegisterPage" />
+        Route="RegisterPage">
+        <ShellContent.Icon>
+            <FontImageSource
+                FontFamily="MaterialIcons"
+                Glyph="{x:Static helper:IconFont.App_registration}"
+                Color="Black" />
+        </ShellContent.Icon>
+    </ShellContent>
     <ShellContent
         Title="Login"
         ContentTemplate="{DataTemplate local:LoginPage}"
         IsVisible="{Binding IsNotLoggedIn}"
-        Route="LoginPage" />
+        Route="LoginPage">
+        <ShellContent.Icon>
+            <FontImageSource
+                FontFamily="MaterialIcons"
+                Glyph="{x:Static helper:IconFont.Login}"
+                Color="Black" />
+        </ShellContent.Icon>
+
+    </ShellContent>
 
     <!--  DEBUG  -->
     <!--  DEBUG  -->
@@ -31,12 +47,12 @@
         ContentTemplate="{DataTemplate local:RequestHelpPage}"
         IsVisible="{Binding IsLoggedIn}"
         Route="RequestHelpPage" />
-
     <ShellContent
         Title="Pick Favorites"
         ContentTemplate="{DataTemplate local:PickFavoritesPage}"
         IsVisible="{Binding IsLoggedIn}"
         Route="PickFavoritesPage" />
+
 
     <!--<ShellContent
         Title="New Preference"

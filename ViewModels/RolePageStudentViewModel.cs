@@ -96,7 +96,7 @@ namespace regmock.ViewModels
             SchoolList = new List<School>();
             foreach (School s in tmp)
             {
-                School school = new School() { Name = s.Name + " (" + s.City + ")", Id = s.Id, City = s.City };
+                School school = new School() { Name = $"{s.Name} ({s.City})", Id = s.Id, City = s.City };
                 SchoolList.Add(school);
             }
         }
