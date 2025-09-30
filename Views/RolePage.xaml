@@ -6,28 +6,72 @@
     Title="RolePage">
     <Grid Style="{StaticResource MainGridStyle}">
         <Label
-                Grid.Row="0"
-                Style="{StaticResource TitleLabel}"
-                Text="Who Are You" />
+            Grid.Row="0"
+            Style="{StaticResource TitleLabel}"
+            Text="Who Are You?" />
 
-        <Grid Grid.Row="1" RowDefinitions="*,*,*" RowSpacing="50" Margin="24">
-            <Grid Grid.Row="0" RowDefinitions="Auto,*">
-                <Button Grid.RowSpan="2" Command="{Binding StudentClick_Cmd}"/>
-                <Label Grid.Row="0" FontSize="24" Text="Student" HorizontalOptions="Center"/>
-                <Image Grid.Row="1" Source="student.png" />
-            </Grid>
-            
-            <Grid Grid.Row="1" RowDefinitions="Auto,*">
-                <Button Grid.RowSpan="2" Command="{Binding TeacherClick_Cmd}"/>
-                <Label Grid.Row="0" FontSize="24" Text="Teacher" HorizontalOptions="Center"/>
-                <Image Grid.Row="1" Source="teacher.png" />
-            </Grid>
-            
-            <Grid Grid.Row="2" RowDefinitions="Auto,*">
-                <Button Grid.RowSpan="2" Command="{Binding PrincipalClick_Cmd}"/>
-                <Label Grid.Row="0" FontSize="24" Text="Principal" HorizontalOptions="Center"/>
-                <Image Grid.Row="1" Source="principal.png" />
-            </Grid>
+        <Grid
+            Grid.Row="1"
+            Margin="24"
+            RowDefinitions="*,*,*"
+            RowSpacing="50">
+            <Frame
+                Grid.Row="0"
+                Padding="0"
+                BackgroundColor="LightGray"
+                BorderColor="Transparent"
+                CornerRadius="25">
+                <Grid Padding="12" RowDefinitions="Auto,*">
+
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding StudentClick_Cmd}" />
+                    </Grid.GestureRecognizers>
+                    <Label
+                        Grid.Row="0"
+                        FontSize="24"
+                        HorizontalOptions="Center"
+                        Text="Student" />
+                    <Image Grid.Row="1" Source="student.png" />
+                </Grid>
+            </Frame>
+
+            <Frame
+                Grid.Row="1"
+                Padding="0"
+                BackgroundColor="LightGreen"
+                BorderColor="Transparent"
+                CornerRadius="25">
+                <Grid Padding="12" RowDefinitions="Auto,*">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding TeacherClick_Cmd}" />
+                    </Grid.GestureRecognizers>
+                    <Label
+                        Grid.Row="0"
+                        FontSize="24"
+                        HorizontalOptions="Center"
+                        Text="Teacher" />
+                    <Image Grid.Row="1" Source="teacher.png" />
+                </Grid>
+            </Frame>
+
+            <Frame
+                Grid.Row="2"
+                Padding="0"
+                BackgroundColor="SandyBrown"
+                BorderColor="Transparent"
+                CornerRadius="25">
+                <Grid Padding="12" RowDefinitions="Auto,*">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding PrincipalClick_Cmd}" />
+                    </Grid.GestureRecognizers>
+                    <Label
+                        Grid.Row="0"
+                        FontSize="24"
+                        HorizontalOptions="Center"
+                        Text="Principal" />
+                    <Image Grid.Row="1" Source="principal.png" />
+                </Grid>
+            </Frame>
         </Grid>
 
     </Grid>
