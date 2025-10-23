@@ -525,6 +525,7 @@ public static class Service
             var authUser = await auth.SignInWithEmailAndPasswordAsync(email, password);
             currentAuthUser = authUser;
 
+            LoggedInCommand.Execute(null);
             return true;
         }
         catch (FirebaseAuthException)
@@ -533,33 +534,71 @@ public static class Service
         }
     }
 
-    public static async Task<bool> RequestRegisterAsync(string fullname, string phonenumber, string email, string password)
+    public static async Task<bool> InitialRegisterAsync(string fullname, string phonenumber, string email, string password)
     {
-        if (string.IsNullOrEmpty(fullname) || string.IsNullOrEmpty(phonenumber) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) return false;
+        // TODO: verify email does not exist already
 
         try
         {
-            var authUser = await auth.CreateUserWithEmailAndPasswordAsync(email, password, fullname);
-            UserModel newUser = new UserModel()
+            tempUser = new UserModel()
             {
                 Fullname = fullname,
                 PhoneNumber = phonenumber,
                 Email = email,
                 Password = password,
-                UserType = Role.None,
+                Role = Role.None,
                 RegistrationDate = await GetFirebaseTime(),
             };
-            tempUser = newUser;
-
-            //client.Child("Users").Child(authUser.User.Uid).PostAsync<UserModel>(authUser);
-
-            return true;
         }
-        catch (FirebaseAuthException)
+        catch (Exception)
         {
             return false;
         }
+        return true;
     }
+
+    public static async Task<bool> StudentRegisterAsync(School school, Grade grade)
+    {
+        tempUser.Role = Role.Student;
+        tempUser.School = school;
+        tempUser.Grade = grade;
+
+        // TODO: verify that the 2 users are the same and there are no errors
+        var registerAuthUser = await auth.CreateUserWithEmailAndPasswordAsync(tempUser.Email, tempUser.Password, tempUser.Fullname);
+        var loginAuthUser = await auth.SignInWithEmailAndPasswordAsync(tempUser.Email, tempUser.Password);
+        LoggedInCommand.Execute(null);
+        currentAuthUser = loginAuthUser;
+        await client.Child("Users").Child(currentAuthUser.User.Uid).PutAsync<UserModel>(tempUser);
+        return true;
+    }
+
+    //public static async Task<bool> RequestRegisterAsync(string fullname, string phonenumber, string email, string password)
+    //{
+    //    if (string.IsNullOrEmpty(fullname) || string.IsNullOrEmpty(phonenumber) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) return false;
+
+    //    try
+    //    {
+    //        var authUser = await auth.CreateUserWithEmailAndPasswordAsync(email, password, fullname);
+    //        UserModel newUser = new UserModel()
+    //        {
+    //            Fullname = fullname,
+    //            PhoneNumber = phonenumber,
+    //            Email = email,
+    //            Password = password,
+    //            UserType = Role.None,
+    //            RegistrationDate = await GetFirebaseTime(),
+    //        };
+    //        tempUser = newUser;
+
+    //        //client.Child("Users").Child(authUser.User.Uid).PostAsync<UserModel>(authUser);
+
+    //        return true;
+    //    }
+    //    catch (FirebaseAuthException)
+    //    {
+    //        return false;
+    //    }
+    //}
 
     public static bool RequestFakeRegister(string fullname, string phonenumber, string email, string password)
     {

@@ -186,10 +186,9 @@ namespace regmock.ViewModels
             PhoneReset_Cmd = new Command(ResetPhone);
             Register_Cmd = new Command(async () =>
             {
-                bool success = true;// await Service.RequestRegisterAsync(FullnameEntry, PhonenumberEntry, EmailEntry, PasswordEntry);
+                bool success = await Service.InitialRegisterAsync(FullnameEntry, PhonenumberEntry, EmailEntry, PasswordEntry);
                 if (success)
                 {
-                    //await Shell.Current.GoToAsync("\\\\RolePage");
                     await Shell.Current.Navigation.PushModalAsync(new RolePage(), true);
                     RegisterErr = "Success";
                 }
@@ -204,14 +203,6 @@ namespace regmock.ViewModels
         #endregion
 
         #region Functions
-        //private async Task<bool> RegisterClicked()
-        //{
-        //    // TODO: real registration
-
-        //    bool success = await Service.RequestRegisterAsync(FullnameEntry, PhonenumberEntry, EmailEntry, PasswordEntry);
-        //    return success;
-        //    //return true;
-        //}
         private void ResetFullname()
         {
             FullnameEntry = "";
@@ -276,6 +267,7 @@ namespace regmock.ViewModels
                 bool validRegexDigits = validateGuidRegexDigits.IsMatch(PasswordEntry);
 
                 if (PasswordEntry.Length == 0) PasswordErr = "Please enter a password";
+                else if (PasswordEntry.Length < 6) PasswordErr = "Password must be at least 6 characters";
                 else if (!validRegexCapital) { PasswordErr = "Password must have capital letters"; }
                 else if (!validRegexLower) { PasswordErr = "Password must have lowercase letters"; }
                 else if (!validRegexDigits) { PasswordErr = "Password must have digits"; }

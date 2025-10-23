@@ -15,32 +15,26 @@
 
                 <VerticalStackLayout>
                     <Label Text="Select School:" />
-                    <Grid>
-                        <!--<Entry Text="{Binding SchoolEntry}" />-->
-                        <Picker ItemDisplayBinding="{Binding Name}" ItemsSource="{Binding SchoolList}" />
-                        <!--<Button
-                            Command="{Binding }"
-                            HorizontalOptions="End"
-                            BackgroundColor="Transparent"
-                            BorderColor="Transparent"
-                            TextColor="Gray"
-                            Text="x"
-                        />-->
-                    </Grid>
-
-                    <Label Style="{StaticResource errLabel}" Text="{Binding SchoolErr}" />
+                    <Picker
+                        ItemDisplayBinding="{Binding Name}"
+                        ItemsSource="{Binding SchoolList}"
+                        SelectedIndex="{Binding SchoolSelectIndex}" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout>
                     <Label Text="Select a Grade:" />
-                    <Picker ItemDisplayBinding="{Binding Name}" ItemsSource="{Binding GradeList}" />
-                    <Label Style="{StaticResource errLabel}" Text="{Binding GradeErr}" />
+                    <Picker
+                        ItemDisplayBinding="{Binding Name}"
+                        ItemsSource="{Binding GradeList}"
+                        SelectedIndex="{Binding GradeSelectIndex}" />
                 </VerticalStackLayout>
 
             </VerticalStackLayout>
 
             <Button
                 Grid.Row="2"
+                Command="{Binding AssignClick_Cmd}"
+                IsEnabled="{Binding CanAssign}"
                 Style="{StaticResource ConfirmButton}"
                 Text="Assign School" />
         </Grid>

@@ -126,19 +126,17 @@ namespace regmock.ViewModels
 
             Login_Cmd = new Command(async () =>
             {
-                bool success = await Login();
+                bool success = await Service.RequestLoginAsync(EmailEntry, PasswordEntry);
                 if (success)
                 {
                     LoginErr = "Logged in";
                     LoginErrColor = Colors.Green;
 
-                    Service.LoggedInCommand.Execute(null);
-
                     // TODO: make this go to a real page later
 
-                    await Shell.Current.GoToAsync("\\\\GiveHelpPage");
-                    //await Shell.Current.GoToAsync("\\\\RequestHelpPage");
-                    //await Shell.Current.GoToAsync("\\\\PickFavoritesPage");
+                    await Shell.Current.GoToAsync("//GiveHelpPage");
+                    //await Shell.Current.GoToAsync("//RequestHelpPage");
+                    //await Shell.Current.GoToAsync("//PickFavoritesPage");
                 }
                 else
                 {
@@ -167,6 +165,14 @@ namespace regmock.ViewModels
 
         private void checkValidLogin()
         {
+            // TODO: remove this hardcoded login
+            if ((emailEntry == "idosweed121@gmail.com" || emailEntry == "info@eldan.net") && passwordEntry == "123456")
+            {
+                CanLogin = true;
+                LoginErr = "";
+                return;
+            }
+
             // TODO: verify email regex
             bool validEmail = false;
             if (EmailEntry != null)
@@ -192,20 +198,15 @@ namespace regmock.ViewModels
                 bool validRegexDigits = validateGuidRegexDigits.IsMatch(PasswordEntry);
 
                 if (PasswordEntry.Length == 0) PasswordErr = "Please enter a password";
-                //else if (!validRegexCapital) { PasswordErr = "Password must have capital letters"; }
-                //else if (!validRegexLower) { PasswordErr = "Password must have lowercase letters"; }
-                //else if (!validRegexDigits) { PasswordErr = "Password must have digits"; }
+                else if (PasswordEntry.Length < 6) PasswordErr = "Password must be at least 6 characters";
+                else if (!validRegexCapital) { PasswordErr = "Password must have capital letters"; }
+                else if (!validRegexLower) { PasswordErr = "Password must have lowercase letters"; }
+                else if (!validRegexDigits) { PasswordErr = "Password must have digits"; }
                 else { PasswordErr = ""; validPassword = true; }
             }
 
             CanLogin = validEmail && validPassword;
             LoginErr = "";
-        }
-
-        private async Task<bool> Login()
-        {
-            bool success = await Service.RequestLoginAsync(EmailEntry, PasswordEntry);
-            return success;
         }
         #endregion
     }

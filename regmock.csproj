@@ -56,6 +56,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <AndroidJavaSource Remove="Behaviors\**" />
+	  <AndroidLibrary Remove="Behaviors\**" />
+	  <AndroidNativeLibrary Remove="Behaviors\**" />
+	  <Compile Remove="Behaviors\**" />
+	  <EmbeddedResource Remove="Behaviors\**" />
+	  <JavaSourceJar Remove="Behaviors\**" />
+	  <None Remove="Behaviors\**" />
+	  <ProguardConfiguration Remove="Behaviors\**" />
+	  <TransformFile Remove="Behaviors\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <None Remove="Resources\Fonts\MaterialIcons-Regular.ttf" />
 	  <None Remove="Resources\Images\principal.png" />
 	  <None Remove="Resources\Images\student.png" />
@@ -114,10 +126,6 @@
 	  <MauiXaml Update="Views\RolePageTeacher.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Behaviors\" />
 	</ItemGroup>
 
 </Project>

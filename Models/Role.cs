@@ -5,7 +5,7 @@
         None,
         UnverifiedTeacher,
         UnverifiedPrincipal,
-        Pupil,
+        Student,
         Teacher,
         Principal,
         Admin,
