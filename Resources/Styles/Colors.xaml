@@ -4,12 +4,28 @@
 
     <!--  Note: For Android please see also Platforms\Android\Resources\values\colors.xml  -->
 
-    <Color x:Key="Primary">#512BD4</Color>
-    <Color x:Key="PrimaryDark">#ac99ea</Color>
-    <Color x:Key="PrimaryDarkText">#242424</Color>
-    <Color x:Key="Secondary">#DFD8F7</Color>
-    <Color x:Key="SecondaryDarkText">#9880e5</Color>
-    <Color x:Key="Tertiary">#2B0B98</Color>
+    <Color x:Key="Primary">#45F500</Color>
+    <Color x:Key="Secondary">#ABF500</Color>
+    <Color x:Key="Tertiary">#F51500</Color>
+
+    <Color x:Key="PrimaryDark">#288F00</Color>
+    <Color x:Key="SecondaryDark">#567F00</Color>
+    <Color x:Key="TertiaryDark">#A30F00</Color>
+
+    <!--<Color x:Key="LightBackground">#45F500</Color>
+    <Color x:Key="DarkBackground">#45F500</Color>-->
+    <LinearGradientBrush x:Key="BackgroundGradient" StartPoint="0.5,0" EndPoint="0.5,1">
+        <GradientStop Offset="0.0" Color="{AppThemeBinding Light=#FFFFFF, Dark=#101010}" />
+        <GradientStop Offset="1.0" Color="{AppThemeBinding Light=#EFEFEF, Dark=#202020}" />
+    </LinearGradientBrush>
+
+    <Color x:Key="PrimaryText">#101010</Color>
+    <Color x:Key="SecondaryText">#404040</Color>
+    <Color x:Key="TertiaryText">#707070</Color>
+
+    <Color x:Key="PrimaryDarkText">#F0F0F0</Color>
+    <Color x:Key="SecondaryDarkText">#C0C0C0</Color>
+    <Color x:Key="TertiaryDarkText">#909090</Color>
 
     <Color x:Key="White">White</Color>
     <Color x:Key="Black">Black</Color>

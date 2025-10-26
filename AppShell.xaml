@@ -35,23 +35,80 @@
     </ShellContent>
 
     <!--  DEBUG  -->
+    <ShellContent
+        Title="Give Help"
+        ContentTemplate="{DataTemplate Views:GiveHelpPage}"
+        IsVisible="true"
+        Route="GiveHelpPage">
+        <ShellContent.Icon>
+            <FontImageSource
+                FontFamily="MaterialIcons"
+                Glyph="{x:Static helper:IconFont.Handshake}"
+                Color="Black" />
+        </ShellContent.Icon>
+    </ShellContent>
+    <ShellContent
+        Title="Request Help"
+        ContentTemplate="{DataTemplate Views:RequestHelpPage}"
+        IsVisible="true"
+        Route="RequestHelpPage">
+        <ShellContent.Icon>
+            <FontImageSource
+                FontFamily="MaterialIcons"
+                Glyph="{x:Static helper:IconFont.Question_mark}"
+                Color="Black" />
+        </ShellContent.Icon>
+    </ShellContent>
+    <ShellContent
+        Title="Pick Favorites"
+        ContentTemplate="{DataTemplate Views:PickFavoritesPage}"
+        IsVisible="true"
+        Route="PickFavoritesPage">
+        <ShellContent.Icon>
+            <FontImageSource
+                FontFamily="MaterialIcons"
+                Glyph="{x:Static helper:IconFont.Favorite}"
+                Color="Black" />
+        </ShellContent.Icon>
+    </ShellContent>
     <!--  DEBUG  -->
 
     <ShellContent
         Title="Give Help"
         ContentTemplate="{DataTemplate Views:GiveHelpPage}"
         IsVisible="{Binding IsLoggedIn}"
-        Route="GiveHelpPage" />
+        Route="GiveHelpPage">
+        <ShellContent.Icon>
+            <FontImageSource
+                FontFamily="MaterialIcons"
+                Glyph="{x:Static helper:IconFont.Handshake}"
+                Color="Black" />
+        </ShellContent.Icon>
+    </ShellContent>
     <ShellContent
         Title="Request Help"
         ContentTemplate="{DataTemplate Views:RequestHelpPage}"
         IsVisible="{Binding IsLoggedIn}"
-        Route="RequestHelpPage" />
+        Route="RequestHelpPage">
+        <ShellContent.Icon>
+            <FontImageSource
+                FontFamily="MaterialIcons"
+                Glyph="{x:Static helper:IconFont.Question_mark}"
+                Color="Black" />
+        </ShellContent.Icon>
+    </ShellContent>
     <ShellContent
         Title="Pick Favorites"
         ContentTemplate="{DataTemplate Views:PickFavoritesPage}"
         IsVisible="{Binding IsLoggedIn}"
-        Route="PickFavoritesPage" />
+        Route="PickFavoritesPage">
+        <ShellContent.Icon>
+            <FontImageSource
+                FontFamily="MaterialIcons"
+                Glyph="{x:Static helper:IconFont.Favorite}"
+                Color="Black" />
+        </ShellContent.Icon>
+    </ShellContent>
 
 
     <!--<ShellContent

@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:helper="clr-namespace:regmock.Helper"
-    Title="LoginPage">
+    Title="LoginPage"
+    Background="{StaticResource BackgroundGradient}">
     <Grid Style="{StaticResource MainGridStyle}">
         <Label
             Grid.Row="0"
@@ -30,7 +31,8 @@
                             HorizontalOptions="End"
                             MaximumWidthRequest="64"
                             Text="{x:Static helper:IconFont.Close}"
-                            TextColor="Gray" />
+                            TextColor="{AppThemeBinding Light={StaticResource Tertiary},
+                                                        Dark={StaticResource TertiaryDark}}" />
                     </Grid>
 
                     <Label Style="{StaticResource errLabel}" Text="{Binding EmailErr}" />
@@ -55,7 +57,7 @@
                             HorizontalOptions="End"
                             MaximumWidthRequest="20"
                             Text="{x:Static helper:IconFont.Remove_red_eye}"
-                            TextColor="Gray" />
+                            TextColor="{StaticResource Gray500}" />
                         <Button
                             Grid.Column="2"
                             Padding="0"
@@ -66,7 +68,8 @@
                             HorizontalOptions="End"
                             MaximumWidthRequest="64"
                             Text="{x:Static helper:IconFont.Close}"
-                            TextColor="Gray" />
+                            TextColor="{AppThemeBinding Light={StaticResource Tertiary},
+                                                        Dark={StaticResource TertiaryDark}}" />
                     </Grid>
 
                     <Label Style="{StaticResource errLabel}" Text="{Binding PasswordErr}" />
