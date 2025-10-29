@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:Views="clr-namespace:regmock.Views"
     xmlns:helper="clr-namespace:regmock.Helper"
-    Title="Mockflow Beta 1.0"
+    Title="Mockflow Beta 2.0"
     Shell.FlyoutBehavior="Flyout">
 
     <!-- TODO: make this UI item more like a important button -->
