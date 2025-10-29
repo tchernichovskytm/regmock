@@ -1,4 +1,7 @@
-﻿namespace regmock
+﻿using System.Windows.Input;
+using regmock.ViewModels;
+
+namespace regmock
 {
     public partial class App : Application
     {
@@ -10,9 +13,6 @@
             {
                 FlowDirection = FlowDirection.LeftToRight,
             };
-
-            // TODO: dark theme not supported yet
-            Application.Current.UserAppTheme = AppTheme.Light;
         }
     }
 }

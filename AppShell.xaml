@@ -8,6 +8,16 @@
     Title="Mockflow Beta 1.0"
     Shell.FlyoutBehavior="Flyout">
 
+    <!-- TODO: make this UI item more like a important button -->
+    <MenuItem Command="{Binding DarkMode_Cmd}" >
+        <MenuItem.IconImageSource>
+            <FontImageSource 
+                FontFamily="MaterialIcons"
+                Glyph="{AppThemeBinding Light={x:Static helper:IconFont.Dark_mode}, Dark={x:Static helper:IconFont.Light_mode}}"
+                Color="{AppThemeBinding Light=#000000, Dark=#FFFFFF}"/>
+        </MenuItem.IconImageSource>
+    </MenuItem>
+
     <ShellContent
         Title="Register"
         ContentTemplate="{DataTemplate Views:RegisterPage}"
@@ -17,7 +27,7 @@
             <FontImageSource
                 FontFamily="MaterialIcons"
                 Glyph="{x:Static helper:IconFont.App_registration}"
-                Color="Black" />
+                Color="{AppThemeBinding Light=#000000, Dark=#FFFFFF}"/>
         </ShellContent.Icon>
     </ShellContent>
     <ShellContent
@@ -29,13 +39,13 @@
             <FontImageSource
                 FontFamily="MaterialIcons"
                 Glyph="{x:Static helper:IconFont.Login}"
-                Color="Black" />
+                Color="{AppThemeBinding Light=#000000, Dark=#FFFFFF}" />
         </ShellContent.Icon>
 
     </ShellContent>
 
     <!--  DEBUG  -->
-    <ShellContent
+    <!--<ShellContent
         Title="Give Help"
         ContentTemplate="{DataTemplate Views:GiveHelpPage}"
         IsVisible="true"
@@ -44,7 +54,7 @@
             <FontImageSource
                 FontFamily="MaterialIcons"
                 Glyph="{x:Static helper:IconFont.Handshake}"
-                Color="Black" />
+                Color="{AppThemeBinding Light=#000000, Dark=#FFFFFF}" />
         </ShellContent.Icon>
     </ShellContent>
     <ShellContent
@@ -56,7 +66,7 @@
             <FontImageSource
                 FontFamily="MaterialIcons"
                 Glyph="{x:Static helper:IconFont.Question_mark}"
-                Color="Black" />
+                Color="{AppThemeBinding Light=#000000, Dark=#FFFFFF}" />
         </ShellContent.Icon>
     </ShellContent>
     <ShellContent
@@ -68,9 +78,9 @@
             <FontImageSource
                 FontFamily="MaterialIcons"
                 Glyph="{x:Static helper:IconFont.Favorite}"
-                Color="Black" />
+                Color="{AppThemeBinding Light=#000000, Dark=#FFFFFF}" />
         </ShellContent.Icon>
-    </ShellContent>
+    </ShellContent>-->
     <!--  DEBUG  -->
 
     <ShellContent
@@ -82,7 +92,7 @@
             <FontImageSource
                 FontFamily="MaterialIcons"
                 Glyph="{x:Static helper:IconFont.Handshake}"
-                Color="Black" />
+                Color="{AppThemeBinding Light=#000000, Dark=#FFFFFF}" />
         </ShellContent.Icon>
     </ShellContent>
     <ShellContent
@@ -94,7 +104,7 @@
             <FontImageSource
                 FontFamily="MaterialIcons"
                 Glyph="{x:Static helper:IconFont.Question_mark}"
-                Color="Black" />
+                Color="{AppThemeBinding Light=#000000, Dark=#FFFFFF}" />
         </ShellContent.Icon>
     </ShellContent>
     <ShellContent
@@ -106,7 +116,7 @@
             <FontImageSource
                 FontFamily="MaterialIcons"
                 Glyph="{x:Static helper:IconFont.Favorite}"
-                Color="Black" />
+                Color="{AppThemeBinding Light=#000000, Dark=#FFFFFF}" />
         </ShellContent.Icon>
     </ShellContent>
 

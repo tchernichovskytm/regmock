@@ -10,22 +10,12 @@ namespace regmock.ViewModels
     public class ShellViewModel : ViewModelBase
     {
         #region Properties
-        private bool isNotLoggedIn;
+        private bool isLoggedIn;
 
         public bool IsNotLoggedIn
         {
-            get { return isNotLoggedIn; }
-            set
-            {
-                isNotLoggedIn = value;
-                OnPropertyChanged(nameof(IsNotLoggedIn));
-
-                isLoggedIn = !value;
-                OnPropertyChanged(nameof(IsLoggedIn));
-            }
+            get { return !isLoggedIn; }
         }
-
-        private bool isLoggedIn;
 
         public bool IsLoggedIn
         {
@@ -34,14 +24,13 @@ namespace regmock.ViewModels
             {
                 isLoggedIn = value;
                 OnPropertyChanged(nameof(IsLoggedIn));
-
-                isNotLoggedIn = !value;
                 OnPropertyChanged(nameof(IsNotLoggedIn));
             }
         }
         #endregion
 
         #region Commands
+        public ICommand DarkMode_Cmd { get; set; }
         public ICommand LoggedInCmd { get; set; }
         public ICommand LoggedOutCmd { get; set; }
         #endregion
@@ -49,6 +38,15 @@ namespace regmock.ViewModels
         #region Constructor
         public ShellViewModel()
         {
+            DarkMode_Cmd = new Command(() =>
+            {
+                // toggle dark and light
+                Application.Current.UserAppTheme =
+                Application.Current.UserAppTheme == AppTheme.Light ?
+                                                    AppTheme.Dark :
+                                                    AppTheme.Light;
+            });
+
             IsLoggedIn = false;
 
             LoggedInCmd = new Command(() =>

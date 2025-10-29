@@ -41,7 +41,7 @@
                 <VerticalStackLayout>
                     <Label Text="Password:" />
 
-                    <Grid ColumnDefinitions="*, Auto, Auto">
+                    <Grid ColumnDefinitions="*,Auto,Auto">
                         <Entry
                             Grid.ColumnSpan="3"
                             IsPassword="{Binding IsPassVisible}"
