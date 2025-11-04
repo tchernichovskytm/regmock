@@ -4,8 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:helper="clr-namespace:regmock.Helper"
-    Title="LoginPage"
     Background="{StaticResource BackgroundGradient}">
+
     <Grid Style="{StaticResource MainGridStyle}">
         <Label
             Grid.Row="0"
@@ -23,16 +23,15 @@
                         <Button
                             Grid.Column="1"
                             Padding="0"
-                            BackgroundColor="Transparent"
+                            Background="Transparent"
                             BorderColor="Transparent"
                             Command="{Binding EmailReset_Cmd}"
                             FontFamily="MaterialIcons"
                             FontSize="20"
                             HorizontalOptions="End"
                             MaximumWidthRequest="64"
-                            Text="{x:Static helper:IconFont.Close}"
-                            TextColor="{AppThemeBinding Light={StaticResource Tertiary},
-                                                        Dark={StaticResource TertiaryDark}}" />
+                            Style="{StaticResource CriticalButton}"
+                            Text="{x:Static helper:IconFont.Close}" />
                     </Grid>
 
                     <Label Style="{StaticResource errLabel}" Text="{Binding EmailErr}" />
@@ -50,26 +49,25 @@
                         <Button
                             Grid.Column="1"
                             Padding="0"
-                            BackgroundColor="Transparent"
+                            Background="Transparent"
                             Command="{Binding ShowPass_Cmd}"
                             FontFamily="MaterialIcons"
                             FontSize="20"
                             HorizontalOptions="End"
                             MaximumWidthRequest="20"
-                            Text="{x:Static helper:IconFont.Remove_red_eye}"
-                            TextColor="{StaticResource Gray500}" />
+                            Style="{StaticResource HelpingButton}"
+                            Text="{x:Static helper:IconFont.Remove_red_eye}" />
                         <Button
                             Grid.Column="2"
                             Padding="0"
-                            BackgroundColor="Transparent"
+                            Background="Transparent"
                             Command="{Binding PassReset_Cmd}"
                             FontFamily="MaterialIcons"
                             FontSize="20"
                             HorizontalOptions="End"
                             MaximumWidthRequest="64"
-                            Text="{x:Static helper:IconFont.Close}"
-                            TextColor="{AppThemeBinding Light={StaticResource Tertiary},
-                                                        Dark={StaticResource TertiaryDark}}" />
+                            Style="{StaticResource CriticalButton}"
+                            Text="{x:Static helper:IconFont.Close}" />
                     </Grid>
 
                     <Label Style="{StaticResource errLabel}" Text="{Binding PasswordErr}" />

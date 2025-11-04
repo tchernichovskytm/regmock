@@ -5,19 +5,15 @@
     <!--  Note: For Android please see also Platforms\Android\Resources\values\colors.xml  -->
 
     <Color x:Key="Primary">#45F500</Color>
-    <Color x:Key="Secondary">#ABF500</Color>
+    <Color x:Key="Secondary">#005AF0</Color>
     <Color x:Key="Tertiary">#F51500</Color>
 
     <Color x:Key="PrimaryDark">#288F00</Color>
-    <Color x:Key="SecondaryDark">#567F00</Color>
+    <Color x:Key="SecondaryDark">#0043B8</Color>
     <Color x:Key="TertiaryDark">#A30F00</Color>
 
     <!--<Color x:Key="LightBackground">#45F500</Color>
     <Color x:Key="DarkBackground">#45F500</Color>-->
-    <LinearGradientBrush x:Key="BackgroundGradient" StartPoint="0.5,0" EndPoint="0.5,1">
-        <GradientStop Offset="0.0" Color="{AppThemeBinding Light=#FFFFFF, Dark=#101010}" />
-        <GradientStop Offset="1.0" Color="{AppThemeBinding Light=#EFEFEF, Dark=#202020}" />
-    </LinearGradientBrush>
 
     <Color x:Key="PrimaryText">#101010</Color>
     <Color x:Key="SecondaryText">#404040</Color>
@@ -48,6 +44,13 @@
     <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource White}" />
     <SolidColorBrush x:Key="BlackBrush" Color="{StaticResource Black}" />
 
+    <Style x:Key="CriticalButton" TargetType="Button">
+        <Setter Property="TextColor" Value="{StaticResource Tertiary}" />
+    </Style>
+    <Style x:Key="HelpingButton" TargetType="Button">
+        <Setter Property="TextColor" Value="{StaticResource Secondary}" />
+    </Style>
+
     <SolidColorBrush x:Key="Gray100Brush" Color="{StaticResource Gray100}" />
     <SolidColorBrush x:Key="Gray200Brush" Color="{StaticResource Gray200}" />
     <SolidColorBrush x:Key="Gray300Brush" Color="{StaticResource Gray300}" />
@@ -56,4 +59,29 @@
     <SolidColorBrush x:Key="Gray600Brush" Color="{StaticResource Gray600}" />
     <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}" />
     <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}" />
+
+    <LinearGradientBrush x:Key="BackgroundGradient" StartPoint="0.5,0" EndPoint="0.5,1">
+        <GradientStop Offset="0.0" Color="{AppThemeBinding Light=#FFFFFF, Dark=#303030}" />
+        <GradientStop Offset="1.0" Color="{AppThemeBinding Light=#EFEFEF, Dark=#202020}" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="ElementGradient" StartPoint="0.5,0" EndPoint="0.5,1">
+        <GradientStop Offset="0.0" Color="{AppThemeBinding Light=#F8F8F8, Dark=#383838}" />
+        <GradientStop Offset="1.0" Color="{AppThemeBinding Light=#E8E8E8, Dark=#282828}" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="PrimaryGradient" StartPoint="0.5,0" EndPoint="0.5,1">
+        <GradientStop Offset="0.0" Color="{StaticResource Primary}" />
+        <GradientStop Offset="1.0" Color="{StaticResource PrimaryDark}" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="SecondaryGradient" StartPoint="0.5,0" EndPoint="0.5,1">
+        <GradientStop Offset="0.0" Color="{StaticResource Secondary}" />
+        <GradientStop Offset="1.0" Color="{StaticResource SecondaryDark}" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GrayGradient" StartPoint="0.5,0" EndPoint="0.5,1">
+        <GradientStop Offset="0.0" Color="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray500}}" />
+        <GradientStop Offset="1.0" Color="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}" />
+    </LinearGradientBrush>
 </ResourceDictionary>
