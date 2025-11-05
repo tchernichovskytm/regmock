@@ -45,7 +45,7 @@
                     </VisualState>
                     <VisualState x:Name="PointerOver">
                         <VisualState.Setters>
-                            <Setter Property="Background" Value="{StaticResource Primary}" />
+                            <Setter Property="Background" Value="{StaticResource SecondaryGradient}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>

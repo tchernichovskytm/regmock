@@ -84,7 +84,6 @@
                                             VerticalOptions="Center"
                                             WidthRequest="28" />
                                     </HorizontalStackLayout>
-                                    <!--  Text="{x:Static helper:IconFont.Favorite}"  -->
                                     <Label
                                         Grid.Row="0"
                                         Grid.Column="1"

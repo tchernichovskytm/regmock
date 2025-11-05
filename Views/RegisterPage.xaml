@@ -30,7 +30,7 @@
                             Text="{x:Static helper:IconFont.Close}" />
                     </Grid>
 
-                    <Label Style="{StaticResource errLabel}" Text="{Binding FullnameErr}" />
+                    <Label Style="{StaticResource CriticalText}" Text="{Binding FullnameErr}" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout>
@@ -51,7 +51,7 @@
                             Text="{x:Static helper:IconFont.Close}" />
                     </Grid>
 
-                    <Label Style="{StaticResource errLabel}" Text="{Binding PhonenumberErr}" />
+                    <Label Style="{StaticResource CriticalText}" Text="{Binding PhonenumberErr}" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout>
@@ -70,7 +70,7 @@
                             Style="{StaticResource CriticalButton}"
                             Text="{x:Static helper:IconFont.Close}" />
                     </Grid>
-                    <Label Style="{StaticResource errLabel}" Text="{Binding EmailErr}" />
+                    <Label Style="{StaticResource CriticalText}" Text="{Binding EmailErr}" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout>
@@ -105,7 +105,7 @@
                             Text="{x:Static helper:IconFont.Close}" />
                     </Grid>
 
-                    <Label Style="{StaticResource errLabel}" Text="{Binding PasswordErr}" />
+                    <Label Style="{StaticResource CriticalText}" Text="{Binding PasswordErr}" />
                 </VerticalStackLayout>
 
             </VerticalStackLayout>
@@ -114,9 +114,8 @@
         <VerticalStackLayout Grid.Row="2">
             <Label
                 HorizontalOptions="Center"
-                Text="{Binding RegisterErr}"
-                TextColor="Red" />
-            <!--  DEBUG: IsEnabled="{Binding CanRegister}  -->
+                Style="{StaticResource CriticalText}"
+                Text="{Binding RegisterErr}" />
             <Button
                 Command="{Binding Register_Cmd}"
                 IsEnabled="{Binding CanRegister}"

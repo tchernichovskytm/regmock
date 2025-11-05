@@ -34,7 +34,7 @@
                             Text="{x:Static helper:IconFont.Close}" />
                     </Grid>
 
-                    <Label Style="{StaticResource errLabel}" Text="{Binding EmailErr}" />
+                    <Label Style="{StaticResource CriticalText}" Text="{Binding EmailErr}" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout>
@@ -70,7 +70,7 @@
                             Text="{x:Static helper:IconFont.Close}" />
                     </Grid>
 
-                    <Label Style="{StaticResource errLabel}" Text="{Binding PasswordErr}" />
+                    <Label Style="{StaticResource CriticalText}" Text="{Binding PasswordErr}" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout />
