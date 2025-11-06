@@ -399,54 +399,47 @@ public static class Service
     // For toggling tickets
     public static async Task<bool> HandleTicket(Ticket updatedTicket)
     {
-        try
+        if (string.IsNullOrEmpty(updatedTicket.FirebaseKey))
         {
-            if (string.IsNullOrEmpty(updatedTicket.FirebaseKey))
+            // this is a new ticket that was created
+            ToFirebaseTicket toFirebaseTicket = new ToFirebaseTicket()
             {
-                // this is a new ticket that was created
-                ToFirebaseTicket toFirebaseTicket = new ToFirebaseTicket()
-                {
-                    SenderId = auth.User.Uid,
-                    Subject = updatedTicket.Subject.Id,
-                    IsActive = updatedTicket.IsActive,
-                };
+                SenderId = auth.User.Uid,
+                Subject = updatedTicket.Subject.Id,
+                IsActive = updatedTicket.IsActive,
+            };
 
-                Int64 firebaseTime = await GetFirebaseTime();
+            Int64 firebaseTime = await GetFirebaseTime();
 
-                var newFBTicket = await client.Child("Tickets").PostAsync<ToFirebaseTicket>(toFirebaseTicket);
+            var newFBTicket = await client.Child("Tickets").PostAsync<ToFirebaseTicket>(toFirebaseTicket);
 
-                // TODO: i dont think this is how you handle errors properly
-                if (updatedTicket.Topics.Count == 0) throw new ArgumentException("updatedTicket.Topics cannot be empty");
+            // TODO: i dont think this is how you handle errors properly
+            if (updatedTicket.Topics.Count == 0) throw new ArgumentException("updatedTicket.Topics cannot be empty");
 
-                await client.Child("Tickets").Child(newFBTicket.Key).Child("Topics").PostAsync<string>(updatedTicket.Topics.First());
-                await client.Child("Tickets").Child(newFBTicket.Key).Child("OpenTimes").PostAsync<Int64>(firebaseTime);
+            await client.Child("Tickets").Child(newFBTicket.Key).Child("Topics").PostAsync<string>(updatedTicket.Topics.First());
+            await client.Child("Tickets").Child(newFBTicket.Key).Child("OpenTimes").PostAsync<Int64>(firebaseTime);
 
-                updatedTicket.FirebaseKey = newFBTicket.Key;
-            }
-            else if (updatedTicket.FirebaseKey != "")
+            updatedTicket.FirebaseKey = newFBTicket.Key;
+        }
+        else if (updatedTicket.FirebaseKey != "")
+        {
+            // this is a ticket that already exists on firebase
+            Int64 firebaseTime = await GetFirebaseTime();
+
+            if (updatedTicket.IsActive != null)
             {
-                // this is a ticket that already exists on firebase
-                Int64 firebaseTime = await GetFirebaseTime();
-
-                if (updatedTicket.IsActive != null)
+                await client.Child("Tickets").Child(updatedTicket.FirebaseKey).Child("IsActive").PutAsync<bool>(updatedTicket.IsActive.Value);
+                if (updatedTicket.IsActive == true)
                 {
-                    await client.Child("Tickets").Child(updatedTicket.FirebaseKey).Child("IsActive").PutAsync<bool>(updatedTicket.IsActive.Value);
-                    if (updatedTicket.IsActive == true)
+                    await client.Child("Tickets").Child(updatedTicket.FirebaseKey).Child("OpenTimes").PostAsync<Int64>(firebaseTime);
+                    if (updatedTicket.Topics != null)
                     {
-                        await client.Child("Tickets").Child(updatedTicket.FirebaseKey).Child("OpenTimes").PostAsync<Int64>(firebaseTime);
-                        if (updatedTicket.Topics != null)
-                        {
-                            await client.Child("Tickets").Child(updatedTicket.FirebaseKey).Child("Topics").PostAsync<string>(updatedTicket.Topics.Last());
-                        }
+                        await client.Child("Tickets").Child(updatedTicket.FirebaseKey).Child("Topics").PostAsync<string>(updatedTicket.Topics.Last());
                     }
                 }
             }
-            return true;
         }
-        catch (Exception)
-        {
-            return false;
-        }
+        return true;
     }
 
     private static async Task<Int64> GetFirebaseTime()
@@ -516,44 +509,31 @@ public static class Service
         return true;
     }
 
+    // TODO: give back useful error message
     public static async Task<bool> RequestLoginAsync(string email, string password)
     {
         if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) return false;
 
-        try
-        {
-            var authUser = await auth.SignInWithEmailAndPasswordAsync(email, password);
-            currentAuthUser = authUser;
+        var authUser = await auth.SignInWithEmailAndPasswordAsync(email, password);
+        currentAuthUser = authUser;
 
-            LoggedInCommand.Execute(null);
-            return true;
-        }
-        catch (FirebaseAuthException)
-        {
-            return false;
-        }
+        LoggedInCommand.Execute(null);
+        return true;
     }
 
     public static async Task<bool> InitialRegisterAsync(string fullname, string phonenumber, string email, string password)
     {
         // TODO: verify email does not exist already
 
-        try
+        tempUser = new UserModel()
         {
-            tempUser = new UserModel()
-            {
-                Fullname = fullname,
-                PhoneNumber = phonenumber,
-                Email = email,
-                Password = password,
-                Role = Role.None,
-                RegistrationDate = await GetFirebaseTime(),
-            };
-        }
-        catch (Exception)
-        {
-            return false;
-        }
+            Fullname = fullname,
+            PhoneNumber = phonenumber,
+            Email = email,
+            Password = password,
+            Role = Role.None,
+            RegistrationDate = await GetFirebaseTime(),
+        };
         return true;
     }
 

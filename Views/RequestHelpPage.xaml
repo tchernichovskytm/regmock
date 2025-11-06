@@ -3,17 +3,17 @@
     x:Class="regmock.Views.RequestHelpPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:behaviors="clr-namespace:regmock.Behaviors"
-    Title="RequestHelpPage">
+    Background="{StaticResource BackgroundGradient}">
+
     <Grid Style="{StaticResource MainGridStyle}">
         <Button
             Grid.Row="0"
-            BackgroundColor="Transparent"
+            Background="Transparent"
             HorizontalOptions="Start"
             Text="Edit"
             TextColor="Blue" />
 
-        <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
+        <ScrollView Grid.Row="1">
 
             <CollectionView ItemsSource="{Binding Tickets}">
                 <CollectionView.ItemsLayout>
@@ -21,10 +21,13 @@
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <VerticalStackLayout>
+                        <Border Stroke="{StaticResource PrimaryGradient}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8" />
+                            </Border.StrokeShape>
                             <Grid
                                 Padding="6"
-                                BackgroundColor="WhiteSmoke"
+                                Background="{StaticResource ForegroundGradient}"
                                 ColumnDefinitions="*,*">
                                 <VerticalStackLayout Grid.Column="0" HorizontalOptions="Start">
                                     <Label FontSize="24" Text="{Binding Subject.Name}" />
@@ -35,19 +38,19 @@
                                         FontSize="18"
                                         Text="{Binding ServerActiveTime}"
                                         VerticalOptions="Center" />
-                                    <Switch Margin="6,0,0,0" IsToggled="{Binding IsActive}" />
+                                    <Switch Margin="0" IsToggled="{Binding IsActive}" />
                                 </HorizontalStackLayout>
                             </Grid>
-                        </VerticalStackLayout>
+                        </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-        </VerticalStackLayout>
+        </ScrollView>
 
         <Button
             Grid.Row="2"
-            BackgroundColor="Transparent"
+            Background="Transparent"
             Command="{Binding AddTicketCmd}"
             FontSize="Header"
             Text="New Ticket"

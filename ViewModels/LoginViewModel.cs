@@ -166,7 +166,7 @@ namespace regmock.ViewModels
         private void checkValidLogin()
         {
             // TODO: remove this hardcoded login
-            if ((emailEntry == "idosweed121@gmail.com" || emailEntry == "info@eldan.net") && passwordEntry == "123456")
+            if ((emailEntry == "idosweed121@gmail.com" || emailEntry == "info@eldanet.com") && passwordEntry == "123456")
             {
                 CanLogin = true;
                 LoginErr = "";

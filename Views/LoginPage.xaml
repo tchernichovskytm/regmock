@@ -7,11 +7,6 @@
     Background="{StaticResource BackgroundGradient}">
 
     <Grid Style="{StaticResource MainGridStyle}">
-        <Label
-            Grid.Row="0"
-            Style="{StaticResource TitleLabel}"
-            Text="Login" />
-
         <ScrollView Grid.Row="1">
             <VerticalStackLayout Style="{StaticResource MainStack}">
 
