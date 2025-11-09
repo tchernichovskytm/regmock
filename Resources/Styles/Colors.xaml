@@ -12,16 +12,17 @@
     <Color x:Key="SecondaryDark">#006A80</Color>
     <Color x:Key="TertiaryDark">#00806A</Color>
 
-    <Color x:Key="PrimaryActive">#20CC20</Color>
-    <Color x:Key="SecondaryActive">#20AACC</Color>
-    <Color x:Key="TertiaryActive">#20CCAA</Color>
+    <Color x:Key="PrimaryHalfDark">#00A600</Color>
+    <Color x:Key="SecondaryHalfDark">#008AA6</Color>
+    <Color x:Key="TertiaryHalfDark">#00A68A</Color>
 
-    <Color x:Key="PrimaryDarkActive">#208020</Color>
-    <Color x:Key="SecondaryDarkActive">#206A80</Color>
-    <Color x:Key="TertiaryDarkActive">#20806A</Color>
+    <Color x:Key="PrimaryActive">#50CC50</Color>
+    <Color x:Key="SecondaryActive">#50AACC</Color>
+    <Color x:Key="TertiaryActive">#50CCAA</Color>
 
-    <!--<Color x:Key="LightBackground">#45F500</Color>
-    <Color x:Key="DarkBackground">#45F500</Color>-->
+    <Color x:Key="PrimaryDarkActive">#508050</Color>
+    <Color x:Key="SecondaryDarkActive">#506A80</Color>
+    <Color x:Key="TertiaryDarkActive">#50806A</Color>
 
     <Color x:Key="PrimaryText">#101010</Color>
     <Color x:Key="SecondaryText">#404040</Color>
@@ -57,14 +58,29 @@
 
     <Color x:Key="Critical">#FF1818</Color>
     <Color x:Key="Helping">#1818FF</Color>
+
     <Style x:Key="CriticalButton" TargetType="Button">
         <Setter Property="TextColor" Value="{StaticResource Critical}" />
     </Style>
     <Style x:Key="CriticalText" TargetType="Label">
         <Setter Property="TextColor" Value="{StaticResource Critical}" />
     </Style>
+
     <Style x:Key="HelpingButton" TargetType="Button">
         <Setter Property="TextColor" Value="{StaticResource Helping}" />
+    </Style>
+    <Style x:Key="HelpingText" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource Helping}" />
+    </Style>
+
+    <Style x:Key="ActionButton" TargetType="Button">
+        <Setter Property="TextColor" Value="{StaticResource SecondaryHalfDark}" />
+    </Style>
+    <Style x:Key="ActionBorder" TargetType="Border">
+        <Setter Property="Stroke" Value="{StaticResource SecondaryGradient}" />
+    </Style>
+    <Style x:Key="ActionText" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource SecondaryHalfDark}" />
     </Style>
 
     <SolidColorBrush x:Key="Gray50Brush" Color="{StaticResource Gray50}" />
@@ -84,10 +100,10 @@
         <GradientStop Offset="1.0" Color="{AppThemeBinding Light=#EFEFEF, Dark=#202020}" />
     </LinearGradientBrush>
 
-    <LinearGradientBrush x:Key="ForegroundGradient" StartPoint="0.5,0" EndPoint="0.5,1">
+    <!--<LinearGradientBrush x:Key="ForegroundGradient" StartPoint="0.5,0" EndPoint="0.5,1">
         <GradientStop Offset="0.0" Color="{AppThemeBinding Light=#E8E8E8, Dark=#404040}" />
         <GradientStop Offset="1.0" Color="{AppThemeBinding Light=#D8D8D8, Dark=#303030}" />
-    </LinearGradientBrush>
+    </LinearGradientBrush>-->
 
     <LinearGradientBrush x:Key="ElementGradient" StartPoint="0.5,0" EndPoint="0.5,1">
         <GradientStop Offset="0.0" Color="{AppThemeBinding Light=#F0F0F0, Dark=#383838}" />

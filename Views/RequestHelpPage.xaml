@@ -4,14 +4,29 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Background="{StaticResource BackgroundGradient}">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Border">
+                <Setter Property="StrokeShape">
+                    <Setter.Value>
+                        <RoundRectangle CornerRadius="8" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <Grid Style="{StaticResource MainGridStyle}">
-        <Button
+
+        <Border
             Grid.Row="0"
-            Background="Transparent"
             HorizontalOptions="Start"
-            Text="Edit"
-            TextColor="Blue" />
+            Style="{StaticResource ActionBorder}">
+            <Button
+                Background="{StaticResource ElementGradient}"
+                Style="{StaticResource ActionButton}"
+                Text="Edit" />
+        </Border>
 
         <ScrollView Grid.Row="1">
 
@@ -22,12 +37,9 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Border Stroke="{StaticResource PrimaryGradient}">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="8" />
-                            </Border.StrokeShape>
                             <Grid
                                 Padding="6"
-                                Background="{StaticResource ForegroundGradient}"
+                                Background="{StaticResource ElementGradient}"
                                 ColumnDefinitions="*,*">
                                 <VerticalStackLayout Grid.Column="0" HorizontalOptions="Start">
                                     <Label FontSize="24" Text="{Binding Subject.Name}" />
@@ -35,6 +47,7 @@
                                 </VerticalStackLayout>
                                 <HorizontalStackLayout Grid.Column="1" HorizontalOptions="End">
                                     <Label
+                                        Margin="0,0,6,0"
                                         FontSize="18"
                                         Text="{Binding ServerActiveTime}"
                                         VerticalOptions="Center" />
@@ -48,13 +61,17 @@
 
         </ScrollView>
 
-        <Button
+        <Border
             Grid.Row="2"
-            Background="Transparent"
-            Command="{Binding AddTicketCmd}"
-            FontSize="Header"
-            Text="New Ticket"
-            TextColor="Blue" />
+            HorizontalOptions="Center"
+            Style="{StaticResource ActionBorder}">
+            <Button
+                Background="{StaticResource ElementGradient}"
+                Command="{Binding AddTicketCmd}"
+                FontSize="40"
+                Style="{StaticResource ActionButton}"
+                Text="New Ticket" />
+        </Border>
 
     </Grid>
 </ContentPage>

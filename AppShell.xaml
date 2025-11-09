@@ -21,19 +21,6 @@
     </MenuItem>
 
     <ShellContent
-        Title="Register"
-        ContentTemplate="{DataTemplate Views:RegisterPage}"
-        IsVisible="{Binding IsNotLoggedIn}"
-        Route="RegisterPage">
-        <ShellContent.Icon>
-            <FontImageSource
-                FontFamily="MaterialIcons"
-                Glyph="{x:Static helper:IconFont.App_registration}"
-                Color="{AppThemeBinding Light=#000000,
-                                        Dark=#FFFFFF}" />
-        </ShellContent.Icon>
-    </ShellContent>
-    <ShellContent
         Title="Login"
         ContentTemplate="{DataTemplate Views:LoginPage}"
         IsVisible="{Binding IsNotLoggedIn}"
@@ -45,7 +32,20 @@
                 Color="{AppThemeBinding Light=#000000,
                                         Dark=#FFFFFF}" />
         </ShellContent.Icon>
+    </ShellContent>
 
+    <ShellContent
+        Title="Register"
+        ContentTemplate="{DataTemplate Views:RegisterPage}"
+        IsVisible="{Binding IsNotLoggedIn}"
+        Route="RegisterPage">
+        <ShellContent.Icon>
+            <FontImageSource
+                FontFamily="MaterialIcons"
+                Glyph="{x:Static helper:IconFont.App_registration}"
+                Color="{AppThemeBinding Light=#000000,
+                                        Dark=#FFFFFF}" />
+        </ShellContent.Icon>
     </ShellContent>
 
     <!--  DEBUG  -->
