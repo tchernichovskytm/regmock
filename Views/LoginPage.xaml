@@ -25,11 +25,11 @@
                             FontSize="20"
                             HorizontalOptions="End"
                             MaximumWidthRequest="64"
-                            Style="{StaticResource CriticalButton}"
-                            Text="{x:Static helper:IconFont.Close}" />
+                            Text="{x:Static helper:IconFont.Close}"
+                            TextColor="{StaticResource Critical}" />
                     </Grid>
 
-                    <Label Style="{StaticResource CriticalText}" Text="{Binding EmailErr}" />
+                    <Label Text="{Binding EmailErr}" TextColor="{StaticResource Critical}" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout>
@@ -50,8 +50,8 @@
                             FontSize="20"
                             HorizontalOptions="End"
                             MaximumWidthRequest="20"
-                            Style="{StaticResource HelpingButton}"
-                            Text="{x:Static helper:IconFont.Remove_red_eye}" />
+                            Text="{x:Static helper:IconFont.Remove_red_eye}"
+                            TextColor="{StaticResource Helping}" />
                         <Button
                             Grid.Column="2"
                             Padding="0"
@@ -61,11 +61,11 @@
                             FontSize="20"
                             HorizontalOptions="End"
                             MaximumWidthRequest="64"
-                            Style="{StaticResource CriticalButton}"
-                            Text="{x:Static helper:IconFont.Close}" />
+                            Text="{x:Static helper:IconFont.Close}"
+                            TextColor="{StaticResource Critical}" />
                     </Grid>
 
-                    <Label Style="{StaticResource CriticalText}" Text="{Binding PasswordErr}" />
+                    <Label Text="{Binding PasswordErr}" TextColor="{StaticResource Critical}" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout />

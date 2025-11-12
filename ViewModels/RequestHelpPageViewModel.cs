@@ -41,10 +41,6 @@ namespace regmock.ViewModels
             {
                 ticket.IsActiveToggleCmd = (Command)TicketToggleCmd;
             }
-
-            Thread clock = new Thread(TimerDecrease);
-            clock.Start();
-
         }
 
         public RequestHelpPageViewModel()
@@ -60,6 +56,9 @@ namespace regmock.ViewModels
             });
 
             AddTicketCmd = new Command(NewTicketClick);
+
+            Thread clock = new Thread(TimerDecrease);
+            clock.Start();
         }
         #endregion
 

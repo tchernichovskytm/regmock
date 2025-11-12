@@ -4,20 +4,24 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:helper="clr-namespace:regmock.Helper"
-    Title="NewTicketPage">
+    Background="{StaticResource BackgroundGradient}">
+
     <VerticalStackLayout Margin="18">
-        <Grid RowDefinitions="64,*,75">
-            <Button
+        <Grid RowDefinitions="Auto,*,Auto">
+            <Border
                 Grid.Row="0"
-                BackgroundColor="Transparent"
-                Command="{Binding CloseCmd}"
-                FontFamily="MaterialIcons"
-                FontSize="46"
-                HeightRequest="64"
                 HorizontalOptions="End"
-                Text="{x:Static helper:IconFont.Close}"
-                TextColor="Black"
-                WidthRequest="64" />
+                Stroke="{StaticResource CriticalGradient}"
+                Style="{StaticResource RoundedBorder}">
+                <Button
+                    Padding="0"
+                    Background="{StaticResource ElementGradient}"
+                    Command="{Binding CloseCmd}"
+                    FontFamily="MaterialIcons"
+                    FontSize="46"
+                    Text="{x:Static helper:IconFont.Close}"
+                    TextColor="{StaticResource CriticalHalfDark}" />
+            </Border>
             <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
                 <VerticalStackLayout>
                     <Label Text="Select a subject" />
@@ -31,17 +35,24 @@
 
                 <VerticalStackLayout>
                     <Label Text="Details" />
-                    <Entry BackgroundColor="LightGray" Text="{Binding TopicEntry}" />
+                    <Entry Text="{Binding TopicEntry}" />
                     <Label Style="{StaticResource errLabel}" Text="{Binding TopicErr}" />
                 </VerticalStackLayout>
             </VerticalStackLayout>
-            <Button
+
+            <Border
                 Grid.Row="2"
-                Command="{Binding AddTicketCmd}"
                 HorizontalOptions="Center"
-                IsEnabled="{Binding CanAdd}"
-                Style="{StaticResource AddButton}"
-                Text="Add Ticket" />
+                Stroke="{StaticResource SecondaryGradient}"
+                Style="{StaticResource RoundedBorder}">
+                <Button
+                    Background="{StaticResource ElementGradient}"
+                    Command="{Binding AddTicketCmd}"
+                    FontSize="32"
+                    IsEnabled="{Binding CanAdd}"
+                    Text="Add Ticket"
+                    TextColor="{StaticResource SecondaryHalfDark}" />
+            </Border>
         </Grid>
     </VerticalStackLayout>
 </ContentPage>

@@ -4,31 +4,21 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Background="{StaticResource BackgroundGradient}">
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <Style TargetType="Border">
-                <Setter Property="StrokeShape">
-                    <Setter.Value>
-                        <RoundRectangle CornerRadius="8" />
-                    </Setter.Value>
-                </Setter>
-            </Style>
-        </ResourceDictionary>
-    </ContentPage.Resources>
 
     <Grid Style="{StaticResource MainGridStyle}">
-
         <Border
             Grid.Row="0"
             HorizontalOptions="Start"
-            Style="{StaticResource ActionBorder}">
+            Stroke="{StaticResource SecondaryGradient}"
+            Style="{StaticResource RoundedBorder}">
             <Button
                 Background="{StaticResource ElementGradient}"
-                Style="{StaticResource ActionButton}"
-                Text="Edit" />
+                Text="Edit"
+                TextColor="{StaticResource SecondaryHalfDark}" />
         </Border>
 
-        <ScrollView Grid.Row="1">
+        <!--  TODO: scroll bar should not touch the tickets  -->
+        <ScrollView Grid.Row="1" Margin="0,4,0,4">
 
             <CollectionView ItemsSource="{Binding Tickets}">
                 <CollectionView.ItemsLayout>
@@ -36,7 +26,7 @@
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Border Stroke="{StaticResource PrimaryGradient}">
+                        <Border Stroke="{StaticResource PrimaryGradient}" Style="{StaticResource RoundedBorder}">
                             <Grid
                                 Padding="6"
                                 Background="{StaticResource ElementGradient}"
@@ -64,13 +54,14 @@
         <Border
             Grid.Row="2"
             HorizontalOptions="Center"
-            Style="{StaticResource ActionBorder}">
+            Stroke="{StaticResource SecondaryGradient}"
+            Style="{StaticResource RoundedBorder}">
             <Button
                 Background="{StaticResource ElementGradient}"
                 Command="{Binding AddTicketCmd}"
                 FontSize="40"
-                Style="{StaticResource ActionButton}"
-                Text="New Ticket" />
+                Text="New Ticket"
+                TextColor="{StaticResource SecondaryHalfDark}" />
         </Border>
 
     </Grid>

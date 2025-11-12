@@ -56,33 +56,6 @@
     <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource White}" />
     <SolidColorBrush x:Key="BlackBrush" Color="{StaticResource Black}" />
 
-    <Color x:Key="Critical">#FF1818</Color>
-    <Color x:Key="Helping">#1818FF</Color>
-
-    <Style x:Key="CriticalButton" TargetType="Button">
-        <Setter Property="TextColor" Value="{StaticResource Critical}" />
-    </Style>
-    <Style x:Key="CriticalText" TargetType="Label">
-        <Setter Property="TextColor" Value="{StaticResource Critical}" />
-    </Style>
-
-    <Style x:Key="HelpingButton" TargetType="Button">
-        <Setter Property="TextColor" Value="{StaticResource Helping}" />
-    </Style>
-    <Style x:Key="HelpingText" TargetType="Label">
-        <Setter Property="TextColor" Value="{StaticResource Helping}" />
-    </Style>
-
-    <Style x:Key="ActionButton" TargetType="Button">
-        <Setter Property="TextColor" Value="{StaticResource SecondaryHalfDark}" />
-    </Style>
-    <Style x:Key="ActionBorder" TargetType="Border">
-        <Setter Property="Stroke" Value="{StaticResource SecondaryGradient}" />
-    </Style>
-    <Style x:Key="ActionText" TargetType="Label">
-        <Setter Property="TextColor" Value="{StaticResource SecondaryHalfDark}" />
-    </Style>
-
     <SolidColorBrush x:Key="Gray50Brush" Color="{StaticResource Gray50}" />
     <SolidColorBrush x:Key="Gray100Brush" Color="{StaticResource Gray100}" />
     <SolidColorBrush x:Key="Gray200Brush" Color="{StaticResource Gray200}" />
@@ -144,4 +117,45 @@
         <GradientStop Offset="0.0" Color="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray500}}" />
         <GradientStop Offset="1.0" Color="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}" />
     </LinearGradientBrush>
+
+    <Color x:Key="Critical">#FF1818</Color>
+    <Color x:Key="CriticalHalfDark">#DD1818</Color>
+    <Color x:Key="CriticalDark">#BB1818</Color>
+    <Color x:Key="Helping">#1818FF</Color>
+
+    <LinearGradientBrush x:Key="CriticalGradient" StartPoint="0.5,0" EndPoint="0.5,1">
+        <GradientStop Offset="0.0" Color="{StaticResource Critical}" />
+        <GradientStop Offset="1.0" Color="{StaticResource CriticalDark}" />
+    </LinearGradientBrush>
+
+    <!--<Style x:Key="CriticalButton" TargetType="Button">
+        <Setter Property="TextColor" Value="{StaticResource Critical}" />
+    </Style>
+    <Style x:Key="CriticalText" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource Critical}" />
+    </Style>
+
+    <Style x:Key="HelpingButton" TargetType="Button">
+        <Setter Property="TextColor" Value="{StaticResource Helping}" />
+    </Style>
+    <Style x:Key="HelpingText" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource Helping}" />
+    </Style>-->
+
+    <!--<Style x:Key="ActionButton" TargetType="Button">
+        <Setter Property="TextColor" Value="{StaticResource SecondaryHalfDark}" />
+    </Style>
+    <Style x:Key="ActionText" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource SecondaryHalfDark}" />
+    </Style>-->
+
+    <!--  TODO: move this to styles.xaml  -->
+    <Style x:Key="RoundedBorder" TargetType="Border">
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="8" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="StrokeThickness" Value="2" />
+    </Style>
 </ResourceDictionary>
