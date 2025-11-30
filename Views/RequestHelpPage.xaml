@@ -3,6 +3,7 @@
     x:Class="regmock.Views.RequestHelpPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helper="clr-namespace:regmock.Helper"
     Background="{StaticResource BackgroundGradient}">
 
     <Grid Style="{StaticResource MainGridStyle}">
@@ -13,6 +14,7 @@
             Style="{StaticResource RoundedBorder}">
             <Button
                 Background="{StaticResource ElementGradient}"
+                Command="{Binding EditTicketsCmd}"
                 Text="Edit"
                 TextColor="{StaticResource SecondaryHalfDark}" />
         </Border>
@@ -42,6 +44,19 @@
                                         Text="{Binding ServerActiveTime}"
                                         VerticalOptions="Center" />
                                     <Switch Margin="0" IsToggled="{Binding IsActive}" />
+                                    <Button
+                                        Grid.Column="1"
+                                        Padding="0"
+                                        Background="Transparent"
+                                        BorderColor="Transparent"
+                                        Command="{Binding DeleteCmd}"
+                                        CommandParameter="{Binding}"
+                                        IsVisible="{Binding BindingContext.IsEditing, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                        FontFamily="MaterialIcons"
+                                        FontSize="32"
+                                        HorizontalOptions="End"
+                                        Text="{x:Static helper:IconFont.Delete}"
+                                        TextColor="{StaticResource Critical}" />
                                 </HorizontalStackLayout>
                             </Grid>
                         </Border>

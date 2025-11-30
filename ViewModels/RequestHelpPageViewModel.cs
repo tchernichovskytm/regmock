@@ -19,11 +19,25 @@ namespace regmock.ViewModels
                 OnPropertyChanged(nameof(Tickets));
             }
         }
+
+        private bool isEditing;
+
+        public bool IsEditing
+        {
+            get { return isEditing; }
+            set
+            {
+                isEditing = value;
+                OnPropertyChanged(nameof(IsEditing));
+            }
+        }
         #endregion
 
         #region Commands
         public ICommand TicketToggleCmd { get; set; }
         public ICommand AddTicketCmd { get; set; }
+        public ICommand EditTicketsCmd { get; set; }
+        public ICommand DeleteTicketCmd { get; set; }
         #endregion
 
         #region Constructor
@@ -40,12 +54,12 @@ namespace regmock.ViewModels
             foreach (Ticket ticket in Tickets)
             {
                 ticket.IsActiveToggleCmd = (Command)TicketToggleCmd;
+                ticket.DeleteCmd = (Command)DeleteTicketCmd;
             }
         }
 
         public RequestHelpPageViewModel()
         {
-
             TicketToggleCmd = new Command((object obj) =>
             {
                 if (obj is Ticket)
@@ -55,7 +69,21 @@ namespace regmock.ViewModels
                 }
             });
 
+            DeleteTicketCmd = new Command((object obj) =>
+            {
+                if (obj is Ticket)
+                {
+                    Ticket ticket = (Ticket)obj;
+                    DeleteTicket(ticket);
+                }
+            });
+
             AddTicketCmd = new Command(NewTicketClick);
+
+            EditTicketsCmd = new Command(() =>
+            {
+                IsEditing = !IsEditing;
+            });
 
             Thread clock = new Thread(TimerDecrease);
             clock.Start();
@@ -63,9 +91,19 @@ namespace regmock.ViewModels
         #endregion
 
         #region Functions
+        private async void DeleteTicket(Ticket ticket)
+        {
+            var success = await Service.DeleteTicket(ticket);
+            Tickets.Remove(ticket);
+            if (!success)
+            {
+                // TODO: handle error
+            }
+        }
+
         private async void NewTicketClick()
         {
-            ICommand ticketCmd = new Command((object newTicketObj) =>
+            ICommand ticketCmd = new Command(async (object newTicketObj) =>
             {
                 Monitor.Enter(this);
                 if (newTicketObj is Ticket)
@@ -73,6 +111,11 @@ namespace regmock.ViewModels
                     Ticket newTicket = (Ticket)newTicketObj;
                     newTicket.IsActiveToggleCmd = TicketToggleCmd;
                     Tickets.Add(newTicket);
+                    var success = await Service.HandleTicket(newTicket);
+                    if (!success)
+                    {
+                        // TODO: handle error
+                    }
                 }
                 Monitor.Exit(this);
             });
@@ -117,25 +160,28 @@ namespace regmock.ViewModels
             while (true)
             {
                 await Task.Delay(1000);
-                Monitor.Enter(this);
-                foreach (Ticket ticket in Tickets)
+                if (Tickets != null)
                 {
-                    if (ticket.IsActive == false)
+                    Monitor.Enter(this);
+                    foreach (Ticket ticket in Tickets)
                     {
-                        continue;
+                        if (ticket.IsActive == false)
+                        {
+                            continue;
+                        }
+                        ticket.ActiveTimeSpan = ticket.ActiveTimeSpan -= 1000; // 1000ms == 1s
+                        if (ticket.ActiveTimeSpan <= 0)
+                        {
+                            ticket.IsActive = false;
+                            ticket.ServerActiveTime = "";
+                        }
+                        else
+                        {
+                            ticket.ServerActiveTime = Service.UnixMilisecondsToHHMMSS(ticket.ActiveTimeSpan);
+                        }
                     }
-                    ticket.ActiveTimeSpan = ticket.ActiveTimeSpan -= 1000; // 1000ms == 1s
-                    if (ticket.ActiveTimeSpan <= 0)
-                    {
-                        ticket.IsActive = false;
-                        ticket.ServerActiveTime = "";
-                    }
-                    else
-                    {
-                        ticket.ServerActiveTime = Service.UnixMilisecondsToHHMMSS(ticket.ActiveTimeSpan);
-                    }
+                    Monitor.Exit(this);
                 }
-                Monitor.Exit(this);
             }
         }
         #endregion

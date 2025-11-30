@@ -32,6 +32,7 @@ namespace regmock.Models
 
         #region BackendProperties
         public ICommand? IsActiveToggleCmd { get; set; }
+        public ICommand? DeleteCmd { get; set; }
 
         private string? serverActiveTime;
         public string? ServerActiveTime

@@ -441,6 +441,14 @@ public static class Service
         }
         return true;
     }
+    public static async Task<bool> DeleteTicket(Ticket updatedTicket)
+    {
+        if (!string.IsNullOrEmpty(updatedTicket.FirebaseKey))
+        {
+            await client.Child("Tickets").Child(updatedTicket.FirebaseKey).DeleteAsync();
+        }
+        return true;
+    }
 
     private static async Task<Int64> GetFirebaseTime()
     {
