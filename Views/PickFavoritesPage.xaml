@@ -4,75 +4,88 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:helper="clr-namespace:regmock.Helper"
-    Title="PickFavoritesPage">
+    Background="{StaticResource BackgroundGradient}">
+    
     <Grid Style="{StaticResource MainGridStyle}">
 
-        <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
+        <ScrollView Grid.Row="1" Margin="0,0,0,4">
+
+            <VerticalStackLayout Style="{StaticResource MainStack}">
 
             <CollectionView ItemsSource="{Binding HelperFavorites}">
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid
-                            Padding="6"
-                            BackgroundColor="WhiteSmoke"
-                            ColumnDefinitions="*,*">
-                            <VerticalStackLayout
+                        <DataTemplate>
+                            <Border Stroke="{StaticResource PrimaryGradient}" Style="{StaticResource RoundedBorder}">
+                                <Grid
+                                    Padding="6"
+                                    Background="{StaticResource ElementGradient}"
+                                    ColumnDefinitions="*,*">
+                                    <VerticalStackLayout
                                 Grid.Column="0"
                                 Margin="5,2,0,2"
                                 HorizontalOptions="Start"
                                 VerticalOptions="Center">
-                                <HorizontalStackLayout>
-                                    <Label FontSize="20" Text="{Binding Subject.Name}" />
-                                </HorizontalStackLayout>
-                                <HorizontalStackLayout>
-                                    <Label Text="Classes:" />
-                                    <CollectionView HeightRequest="20" ItemsSource="{Binding Grades}">
+                                        <HorizontalStackLayout>
+                                            <Label FontSize="20" Text="{Binding Subject.Name}" />
+                                        </HorizontalStackLayout>
+                                        <HorizontalStackLayout>
+                                            <Label Text="Classes:" />
+                                            <CollectionView HeightRequest="20" ItemsSource="{Binding Grades}">
 
-                                        <CollectionView.ItemsLayout>
-                                            <LinearItemsLayout Orientation="Horizontal" />
-                                        </CollectionView.ItemsLayout>
+                                                <CollectionView.ItemsLayout>
+                                                    <LinearItemsLayout Orientation="Horizontal" />
+                                                </CollectionView.ItemsLayout>
 
-                                        <CollectionView.ItemTemplate>
-                                            <DataTemplate>
-                                                <HorizontalStackLayout Padding="5,0,0,0">
-                                                    <Label FontAttributes="Bold" Text="{Binding Name}" />
-                                                </HorizontalStackLayout>
-                                            </DataTemplate>
-                                        </CollectionView.ItemTemplate>
+                                                <CollectionView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <HorizontalStackLayout Padding="5,0,0,0">
+                                                            <Label FontAttributes="Bold" Text="{Binding Name}" />
+                                                        </HorizontalStackLayout>
+                                                    </DataTemplate>
+                                                </CollectionView.ItemTemplate>
 
-                                    </CollectionView>
-                                </HorizontalStackLayout>
-                            </VerticalStackLayout>
-                            <VerticalStackLayout
+                                            </CollectionView>
+                                        </HorizontalStackLayout>
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout
                                 Grid.Column="1"
                                 HorizontalOptions="End"
                                 VerticalOptions="Center">
-                                <Button
+                                        <Button
                                     Background="Transparent"
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditFavoriteCmd}"
                                     CommandParameter="{Binding .}"
                                     FontFamily="MaterialIcons"
                                     FontSize="28"
                                     Text="{x:Static helper:IconFont.Edit}"
-                                    TextColor="Black" />
-                            </VerticalStackLayout>
-                        </Grid>
-                    </DataTemplate>
+                                    TextColor="{StaticResource Helping}" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
         </VerticalStackLayout>
 
-        <Button
+        </ScrollView>
+
+        <Border
             Grid.Row="2"
-            BackgroundColor="Transparent"
-            Command="{Binding AddFavoriteCmd}"
-            FontSize="Header"
-            Text="New Preference"
-            TextColor="Blue" />
+            HorizontalOptions="Center"
+            Stroke="{StaticResource SecondaryGradient}"
+            Style="{StaticResource RoundedBorder}">
+            <Button
+                Background="{StaticResource ElementGradient}"
+                Grid.Row="2"
+                Command="{Binding AddFavoriteCmd}"
+                FontSize="Header"
+                Text="New Preference"
+                TextColor="{StaticResource SecondaryHalfDark}" />
+        </Border>
 
     </Grid>
 </ContentPage>

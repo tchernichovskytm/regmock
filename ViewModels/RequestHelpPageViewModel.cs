@@ -2,6 +2,7 @@
 using regmock.Views;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace regmock.ViewModels
 {
@@ -58,6 +59,8 @@ namespace regmock.ViewModels
             }
         }
 
+        private Stopwatch ticketStopwatch = new Stopwatch();
+
         public RequestHelpPageViewModel()
         {
             TicketToggleCmd = new Command((object obj) =>
@@ -78,13 +81,14 @@ namespace regmock.ViewModels
                 }
             });
 
-            AddTicketCmd = new Command(NewTicketClick);
+            AddTicketCmd = new Command(HandleTicket);
 
             EditTicketsCmd = new Command(() =>
             {
                 IsEditing = !IsEditing;
             });
 
+            ticketStopwatch.Start();
             Thread clock = new Thread(TimerDecrease);
             clock.Start();
         }
@@ -94,14 +98,14 @@ namespace regmock.ViewModels
         private async void DeleteTicket(Ticket ticket)
         {
             var success = await Service.DeleteTicket(ticket);
-            Tickets.Remove(ticket);
             if (!success)
             {
                 // TODO: handle error
             }
+            Tickets.Remove(ticket);
         }
 
-        private async void NewTicketClick()
+        private async void HandleTicket()
         {
             ICommand ticketCmd = new Command(async (object newTicketObj) =>
             {
@@ -110,12 +114,12 @@ namespace regmock.ViewModels
                 {
                     Ticket newTicket = (Ticket)newTicketObj;
                     newTicket.IsActiveToggleCmd = TicketToggleCmd;
-                    Tickets.Add(newTicket);
                     var success = await Service.HandleTicket(newTicket);
                     if (!success)
                     {
                         // TODO: handle error
                     }
+                    Tickets.Add(newTicket);
                 }
                 Monitor.Exit(this);
             });
@@ -160,28 +164,30 @@ namespace regmock.ViewModels
             while (true)
             {
                 await Task.Delay(1000);
-                if (Tickets != null)
+                Int64 ellapsed = ticketStopwatch.ElapsedMilliseconds;
+                ticketStopwatch.Restart();
+                if (Tickets == null) continue;
+
+                Monitor.Enter(this);
+                foreach (Ticket ticket in Tickets)
                 {
-                    Monitor.Enter(this);
-                    foreach (Ticket ticket in Tickets)
+                    if (ticket.IsActive == false)
                     {
-                        if (ticket.IsActive == false)
-                        {
-                            continue;
-                        }
-                        ticket.ActiveTimeSpan = ticket.ActiveTimeSpan -= 1000; // 1000ms == 1s
-                        if (ticket.ActiveTimeSpan <= 0)
-                        {
-                            ticket.IsActive = false;
-                            ticket.ServerActiveTime = "";
-                        }
-                        else
-                        {
-                            ticket.ServerActiveTime = Service.UnixMilisecondsToHHMMSS(ticket.ActiveTimeSpan);
-                        }
+                        continue;
                     }
-                    Monitor.Exit(this);
+                    ticket.ActiveTimeSpan = ticket.ActiveTimeSpan -= ellapsed; // 1000ms == 1s
+                    if (ticket.ActiveTimeSpan <= 0)
+                    {
+                        ticket.IsActive = false;
+                        ticket.ServerActiveTime = "";
+                    }
+                    else
+                    {
+                        ticket.ServerActiveTime = Service.UnixMilisecondsToHHMMSS(ticket.ActiveTimeSpan);
+                    }
                 }
+                Monitor.Exit(this);
+
             }
         }
         #endregion
