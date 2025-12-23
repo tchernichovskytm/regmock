@@ -4,37 +4,36 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:helper="clr-namespace:regmock.Helper"
-    Title="EditPreferencePage">
+    Background="{StaticResource BackgroundGradient}">
+
     <VerticalStackLayout Margin="18">
-        <Grid RowDefinitions="*,*,*">
-            <Button
+        <Grid RowDefinitions="Auto,*,Auto">
+            <Border
                 Grid.Row="0"
-                BackgroundColor="Transparent"
-                Command="{Binding CloseCmd}"
-                FontFamily="MaterialIcons"
-                FontSize="46"
-                HeightRequest="64"
                 HorizontalOptions="End"
-                Text="{x:Static helper:IconFont.Close}"
-                TextColor="Black"
-                WidthRequest="64" />
+                Stroke="{StaticResource CriticalGradient}"
+                Style="{StaticResource RoundedBorder}">
+                <Button
+                    Padding="0"
+                    Background="{StaticResource ElementGradient}"
+                    Command="{Binding CloseCmd}"
+                    FontFamily="MaterialIcons"
+                    FontSize="46"
+                    Text="{x:Static helper:IconFont.Close}"
+                    TextColor="{StaticResource CriticalHalfDark}" />
+            </Border>
 
             <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
-                <!--<VerticalStackLayout>
-                    <Label Text="Select a subject" />
-                    <Picker ItemsSource="{Binding Subjects}" ItemDisplayBinding="{Binding Name}" SelectedIndex="{Binding SelectedSubjectIndex}">
-                        <Picker.Items>
-
-                        </Picker.Items>
-                    </Picker>
-                </VerticalStackLayout>-->
                 <Label Text="{Binding EditSubjectName}" />
 
                 <CollectionView ItemsSource="{Binding ToggleGrades}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <HorizontalStackLayout>
-                                <CheckBox IsChecked="{Binding Toggled}" VerticalOptions="Center" />
+                                <CheckBox
+                                    IsChecked="{Binding Toggled}"
+                                    VerticalOptions="Center"
+                                    Color="{StaticResource PrimaryHalfDark}" />
 
                                 <Label Text="{Binding Grade.Name}" VerticalOptions="Center" />
                             </HorizontalStackLayout>
@@ -47,20 +46,29 @@
                 Grid.Row="2"
                 Margin="15"
                 Spacing="64">
-                <Button
-                    Command="{Binding ApplyCmd}"
+                <Border
                     HorizontalOptions="Center"
-                    IsEnabled="{Binding CanApply}"
-                    Style="{StaticResource AddButton}"
-                    Text="Apply"
-                    WidthRequest="175" />
-                <Button
-                    BorderColor="Red"
-                    Command="{Binding DeleteCmd}"
+                    Stroke="{StaticResource SecondaryGradient}"
+                    Style="{StaticResource RoundedBorder}">
+                    <Button
+                        Background="{StaticResource ElementGradient}"
+                        Command="{Binding ApplyCmd}"
+                        FontSize="32"
+                        IsEnabled="{Binding CanApply}"
+                        Text="Apply"
+                        TextColor="{StaticResource SecondaryHalfDark}" />
+                </Border>
+                <Border
                     HorizontalOptions="Center"
-                    Style="{StaticResource AddButton}"
-                    Text="Delete"
-                    WidthRequest="175" />
+                    Stroke="{StaticResource CriticalGradient}"
+                    Style="{StaticResource RoundedBorder}">
+                    <Button
+                        Background="{StaticResource ElementGradient}"
+                        Command="{Binding DeleteCmd}"
+                        FontSize="32"
+                        Text="Delete"
+                        TextColor="{StaticResource CriticalHalfDark}" />
+                </Border>
             </VerticalStackLayout>
         </Grid>
     </VerticalStackLayout>

@@ -5,18 +5,18 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:helper="clr-namespace:regmock.Helper"
     Background="{StaticResource BackgroundGradient}">
-    
+
     <Grid Style="{StaticResource MainGridStyle}">
 
         <ScrollView Grid.Row="1" Margin="0,0,0,4">
 
             <VerticalStackLayout Style="{StaticResource MainStack}">
 
-            <CollectionView ItemsSource="{Binding HelperFavorites}">
-                <CollectionView.ItemsLayout>
-                    <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" />
-                </CollectionView.ItemsLayout>
-                <CollectionView.ItemTemplate>
+                <CollectionView ItemsSource="{Binding HelperFavorites}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Border Stroke="{StaticResource PrimaryGradient}" Style="{StaticResource RoundedBorder}">
                                 <Grid
@@ -24,10 +24,10 @@
                                     Background="{StaticResource ElementGradient}"
                                     ColumnDefinitions="*,*">
                                     <VerticalStackLayout
-                                Grid.Column="0"
-                                Margin="5,2,0,2"
-                                HorizontalOptions="Start"
-                                VerticalOptions="Center">
+                                        Grid.Column="0"
+                                        Margin="5,2,0,2"
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Center">
                                         <HorizontalStackLayout>
                                             <Label FontSize="20" Text="{Binding Subject.Name}" />
                                         </HorizontalStackLayout>
@@ -50,26 +50,29 @@
                                             </CollectionView>
                                         </HorizontalStackLayout>
                                     </VerticalStackLayout>
-                                    <VerticalStackLayout
-                                Grid.Column="1"
-                                HorizontalOptions="End"
-                                VerticalOptions="Center">
+                                    <Border
+                                        Grid.Column="1"
+                                        HorizontalOptions="End"
+                                        Stroke="{StaticResource HelpingGradient}"
+                                        Style="{StaticResource RoundedBorder}"
+                                        VerticalOptions="Center">
                                         <Button
-                                    Background="Transparent"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditFavoriteCmd}"
-                                    CommandParameter="{Binding .}"
-                                    FontFamily="MaterialIcons"
-                                    FontSize="28"
-                                    Text="{x:Static helper:IconFont.Edit}"
-                                    TextColor="{StaticResource Helping}" />
-                                    </VerticalStackLayout>
+                                            Padding="0"
+                                            Background="{StaticResource ElementGradient}"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditFavoriteCmd}"
+                                            CommandParameter="{Binding .}"
+                                            FontFamily="MaterialIcons"
+                                            FontSize="28"
+                                            Text="{x:Static helper:IconFont.Edit}"
+                                            TextColor="{StaticResource HelpingHalfDark}" />
+                                    </Border>
                                 </Grid>
                             </Border>
                         </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
 
-        </VerticalStackLayout>
+            </VerticalStackLayout>
 
         </ScrollView>
 
@@ -79,8 +82,8 @@
             Stroke="{StaticResource SecondaryGradient}"
             Style="{StaticResource RoundedBorder}">
             <Button
-                Background="{StaticResource ElementGradient}"
                 Grid.Row="2"
+                Background="{StaticResource ElementGradient}"
                 Command="{Binding AddFavoriteCmd}"
                 FontSize="Header"
                 Text="New Preference"

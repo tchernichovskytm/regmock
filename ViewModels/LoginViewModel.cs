@@ -166,12 +166,12 @@ namespace regmock.ViewModels
         private void checkValidLogin()
         {
             // TODO: remove this hardcoded login
-            if ((emailEntry == "idosweed121@gmail.com" || emailEntry == "info@eldanet.com") && passwordEntry == "123456")
-            {
-                CanLogin = true;
-                LoginErr = "";
-                return;
-            }
+            //if ((emailEntry == "idosweed121@gmail.com" || emailEntry == "info@eldanet.com") && passwordEntry == "123456")
+            //{
+            //    CanLogin = true;
+            //    LoginErr = "";
+            //    return;
+            //}
 
             // TODO: verify email regex
             bool validEmail = false;
@@ -199,9 +199,9 @@ namespace regmock.ViewModels
 
                 if (PasswordEntry.Length == 0) PasswordErr = "Please enter a password";
                 else if (PasswordEntry.Length < 6) PasswordErr = "Password must be at least 6 characters";
-                else if (!validRegexCapital) { PasswordErr = "Password must have capital letters"; }
-                else if (!validRegexLower) { PasswordErr = "Password must have lowercase letters"; }
-                else if (!validRegexDigits) { PasswordErr = "Password must have digits"; }
+                //else if (!validRegexCapital) { PasswordErr = "Password must have capital letters"; }
+                //else if (!validRegexLower) { PasswordErr = "Password must have lowercase letters"; }
+                //else if (!validRegexDigits) { PasswordErr = "Password must have digits"; }
                 else { PasswordErr = ""; validPassword = true; }
             }
 

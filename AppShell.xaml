@@ -9,7 +9,7 @@
     Shell.FlyoutBehavior="Flyout">
 
     <!--  TODO: make this UI item more like a important button  -->
-    <MenuItem Command="{Binding DarkMode_Cmd}">
+    <MenuItem Command="{Binding DarkModeCmd}">
         <MenuItem.IconImageSource>
             <FontImageSource
                 FontFamily="MaterialIcons"

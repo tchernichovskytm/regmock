@@ -4,26 +4,28 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:helper="clr-namespace:regmock.Helper"
-    Title="GiveHelpPage">
+    Background="{StaticResource BackgroundGradient}">
+
     <Grid
         Margin="18"
-        RowDefinitions="45,*"
+        RowDefinitions="Auto,*"
         RowSpacing="8">
-        <Button
+        <Border
             Grid.Row="0"
-            Margin="0,0,7,0"
-            Padding="0"
-            Background="Transparent"
-            BorderColor="Black"
-            BorderWidth="1"
-            Command="{Binding FavButtonCmd}"
-            FontFamily="MaterialIcons"
-            FontSize="20"
             HorizontalOptions="End"
             IsVisible="{Binding IsFavButtonVisible}"
-            Text="{Binding FavButtonIcon}"
-            TextColor="Black"
-            VerticalOptions="Start" />
+            Stroke="{StaticResource FavoriteGradient}"
+            Style="{StaticResource RoundedBorder}">
+            <Button
+                Padding="0"
+                Background="{StaticResource ElementGradient}"
+                Command="{Binding FavButtonCmd}"
+                FontFamily="MaterialIcons"
+                FontSize="20"
+                IsVisible="{Binding IsFavButtonVisible}"
+                Text="{Binding FavButtonIcon}"
+                TextColor="{StaticResource FavoriteHalfDark}" />
+        </Border>
 
         <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
             <VerticalStackLayout>
@@ -35,73 +37,81 @@
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <VerticalStackLayout>
-                                <Grid
-                                    Padding="6"
-                                    BackgroundColor="WhiteSmoke"
-                                    ColumnDefinitions="*,Auto"
-                                    RowDefinitions="*,*">
-                                    <HorizontalStackLayout
-                                        Grid.Row="0"
-                                        Grid.Column="0"
-                                        Padding="8,2,0,0"
-                                        Spacing="8"
-                                        VerticalOptions="Center">
-                                        <Label
-                                            FontAttributes="Bold"
-                                            HorizontalOptions="Center"
-                                            Text="{Binding Subject.Name}"
-                                            TextColor="Black"
-                                            VerticalOptions="Center" />
-                                        <Label
-                                            HorizontalOptions="Center"
-                                            Text="{Binding Topics[0]}"
-                                            TextColor="DarkGray"
-                                            VerticalOptions="Center" />
-                                    </HorizontalStackLayout>
+                                <Border Stroke="{StaticResource PrimaryGradient}" Style="{StaticResource RoundedBorder}">
+                                    <Grid
+                                        Padding="6"
+                                        Background="{StaticResource ElementGradient}"
+                                        ColumnDefinitions="*,Auto"
+                                        RowDefinitions="*,*">
+                                        <HorizontalStackLayout
+                                            Grid.Row="0"
+                                            Grid.Column="0"
+                                            Padding="8,2,0,0"
+                                            Spacing="8"
+                                            VerticalOptions="Center">
+                                            <Label
+                                                FontAttributes="Bold"
+                                                HorizontalOptions="Center"
+                                                Text="{Binding Subject.Name}"
+                                                VerticalOptions="Center" />
+                                            <Label
+                                                HorizontalOptions="Center"
+                                                Text="{Binding Topics[0]}"
+                                                TextColor="{AppThemeBinding Light={StaticResource TertiaryText},
+                                                                            Dark={StaticResource TertiaryDarkText}}"
+                                                VerticalOptions="Center" />
+                                        </HorizontalStackLayout>
 
-                                    <HorizontalStackLayout
-                                        Grid.Row="1"
-                                        Grid.Column="0"
-                                        Padding="8,0,0,2"
-                                        Spacing="8"
-                                        VerticalOptions="Center">
+                                        <HorizontalStackLayout
+                                            Grid.Row="1"
+                                            Grid.Column="0"
+                                            Padding="8,0,0,2"
+                                            Spacing="8"
+                                            VerticalOptions="Center">
+                                            <Label
+                                                HorizontalOptions="Center"
+                                                Text="{Binding Sender.Fullname}"
+                                                VerticalOptions="Center" />
+
+                                            <Border
+                                                Grid.Row="0"
+                                                HorizontalOptions="End"
+                                                IsVisible="{Binding IsFavButtonVisible}"
+                                                Stroke="{StaticResource HelpingGradient}"
+                                                Style="{StaticResource RoundedBorder}">
+                                                <Button
+                                                    Padding="0"
+                                                    Background="{StaticResource ElementGradient}"
+                                                    FontFamily="MaterialIcons"
+                                                    FontSize="20"
+                                                    HorizontalOptions="Center"
+                                                    MinimumHeightRequest="28"
+                                                    MinimumWidthRequest="28"
+                                                    Text="{x:Static helper:IconFont.Messenger}"
+                                                    TextColor="{StaticResource HelpingHalfDark}"
+                                                    VerticalOptions="Center" />
+                                            </Border>
+                                        </HorizontalStackLayout>
                                         <Label
-                                            HorizontalOptions="Center"
-                                            Text="{Binding Sender.Fullname}"
-                                            TextColor="Black"
-                                            VerticalOptions="Center" />
-                                        <Button
-                                            Padding="0"
-                                            Background="Transparent"
+                                            Grid.Row="0"
+                                            Grid.Column="1"
+                                            Padding="0,0,13,0"
                                             FontFamily="MaterialIcons"
                                             FontSize="20"
-                                            HeightRequest="28"
                                             HorizontalOptions="Center"
-                                            MinimumHeightRequest="28"
-                                            MinimumWidthRequest="28"
-                                            Text="{x:Static helper:IconFont.Messenger}"
-                                            TextColor="Green"
-                                            VerticalOptions="Center"
-                                            WidthRequest="28" />
-                                    </HorizontalStackLayout>
-                                    <Label
-                                        Grid.Row="0"
-                                        Grid.Column="1"
-                                        Padding="0,0,13,0"
-                                        FontFamily="MaterialIcons"
-                                        FontSize="20"
-                                        HorizontalOptions="Center"
-                                        Text="{Binding IsFavoriteIcon}"
-                                        VerticalOptions="Center" />
-                                    <Label
-                                        Grid.Row="1"
-                                        Grid.Column="1"
-                                        Padding="0,0,13,0"
-                                        FontSize="16"
-                                        HorizontalOptions="Center"
-                                        Text="{Binding Sender.Grade.Name}"
-                                        VerticalOptions="Center" />
-                                </Grid>
+                                            Text="{Binding IsFavoriteIcon}"
+                                            TextColor="{StaticResource FavoriteHalfDark}"
+                                            VerticalOptions="Center" />
+                                        <Label
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Padding="0,0,13,0"
+                                            FontSize="16"
+                                            HorizontalOptions="Center"
+                                            Text="{Binding Sender.Grade.Name}"
+                                            VerticalOptions="Center" />
+                                    </Grid>
+                                </Border>
                             </VerticalStackLayout>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

@@ -22,6 +22,7 @@
                     Text="{x:Static helper:IconFont.Close}"
                     TextColor="{StaticResource CriticalHalfDark}" />
             </Border>
+
             <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
                 <VerticalStackLayout>
                     <Label Text="Select a subject" />

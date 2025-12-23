@@ -73,11 +73,6 @@
         <GradientStop Offset="1.0" Color="{AppThemeBinding Light=#EFEFEF, Dark=#202020}" />
     </LinearGradientBrush>
 
-    <!--<LinearGradientBrush x:Key="ForegroundGradient" StartPoint="0.5,0" EndPoint="0.5,1">
-        <GradientStop Offset="0.0" Color="{AppThemeBinding Light=#E8E8E8, Dark=#404040}" />
-        <GradientStop Offset="1.0" Color="{AppThemeBinding Light=#D8D8D8, Dark=#303030}" />
-    </LinearGradientBrush>-->
-
     <LinearGradientBrush x:Key="ElementGradient" StartPoint="0.5,0" EndPoint="0.5,1">
         <GradientStop Offset="0.0" Color="{AppThemeBinding Light=#F0F0F0, Dark=#383838}" />
         <GradientStop Offset="1.0" Color="{AppThemeBinding Light=#E0E0E0, Dark=#282828}" />
@@ -121,33 +116,29 @@
     <Color x:Key="Critical">#FF1818</Color>
     <Color x:Key="CriticalHalfDark">#DD1818</Color>
     <Color x:Key="CriticalDark">#BB1818</Color>
-    <Color x:Key="Helping">#1818FF</Color>
+
+    <Color x:Key="Helping">#1880FF</Color>
+    <Color x:Key="HelpingHalfDark">#1870DD</Color>
+    <Color x:Key="HelpingDark">#1860BB</Color>
+
+    <Color x:Key="Favorite">#FF4040</Color>
+    <Color x:Key="FavoriteHalfDark">#DD4040</Color>
+    <Color x:Key="FavoriteDark">#BB4040</Color>
 
     <LinearGradientBrush x:Key="CriticalGradient" StartPoint="0.5,0" EndPoint="0.5,1">
         <GradientStop Offset="0.0" Color="{StaticResource Critical}" />
         <GradientStop Offset="1.0" Color="{StaticResource CriticalDark}" />
     </LinearGradientBrush>
 
-    <!--<Style x:Key="CriticalButton" TargetType="Button">
-        <Setter Property="TextColor" Value="{StaticResource Critical}" />
-    </Style>
-    <Style x:Key="CriticalText" TargetType="Label">
-        <Setter Property="TextColor" Value="{StaticResource Critical}" />
-    </Style>
+    <LinearGradientBrush x:Key="HelpingGradient" StartPoint="0.5,0" EndPoint="0.5,1">
+        <GradientStop Offset="0.0" Color="{StaticResource Helping}" />
+        <GradientStop Offset="1.0" Color="{StaticResource HelpingDark}" />
+    </LinearGradientBrush>
 
-    <Style x:Key="HelpingButton" TargetType="Button">
-        <Setter Property="TextColor" Value="{StaticResource Helping}" />
-    </Style>
-    <Style x:Key="HelpingText" TargetType="Label">
-        <Setter Property="TextColor" Value="{StaticResource Helping}" />
-    </Style>-->
-
-    <!--<Style x:Key="ActionButton" TargetType="Button">
-        <Setter Property="TextColor" Value="{StaticResource SecondaryHalfDark}" />
-    </Style>
-    <Style x:Key="ActionText" TargetType="Label">
-        <Setter Property="TextColor" Value="{StaticResource SecondaryHalfDark}" />
-    </Style>-->
+    <LinearGradientBrush x:Key="FavoriteGradient" StartPoint="0.5,0" EndPoint="0.5,1">
+        <GradientStop Offset="0.0" Color="{StaticResource Favorite}" />
+        <GradientStop Offset="1.0" Color="{StaticResource FavoriteDark}" />
+    </LinearGradientBrush>
 
     <!--  TODO: move this to styles.xaml  -->
     <Style x:Key="RoundedBorder" TargetType="Border">
