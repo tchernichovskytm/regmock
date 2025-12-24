@@ -18,6 +18,7 @@ namespace regmock
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                     fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIcons");
+                    fonts.AddFont("CustomIcons.ttf", "CustomIcons");
                 });
 
 #if DEBUG

@@ -48,45 +48,6 @@
         </ShellContent.Icon>
     </ShellContent>
 
-    <!--  DEBUG  -->
-    <!--<ShellContent
-        Title="Give Help"
-        ContentTemplate="{DataTemplate Views:GiveHelpPage}"
-        IsVisible="true"
-        Route="GiveHelpPage">
-        <ShellContent.Icon>
-            <FontImageSource
-                FontFamily="MaterialIcons"
-                Glyph="{x:Static helper:IconFont.Handshake}"
-                Color="{AppThemeBinding Light=#000000, Dark=#FFFFFF}" />
-        </ShellContent.Icon>
-    </ShellContent>
-    <ShellContent
-        Title="Request Help"
-        ContentTemplate="{DataTemplate Views:RequestHelpPage}"
-        IsVisible="true"
-        Route="RequestHelpPage">
-        <ShellContent.Icon>
-            <FontImageSource
-                FontFamily="MaterialIcons"
-                Glyph="{x:Static helper:IconFont.Question_mark}"
-                Color="{AppThemeBinding Light=#000000, Dark=#FFFFFF}" />
-        </ShellContent.Icon>
-    </ShellContent>
-    <ShellContent
-        Title="Pick Favorites"
-        ContentTemplate="{DataTemplate Views:PickFavoritesPage}"
-        IsVisible="true"
-        Route="PickFavoritesPage">
-        <ShellContent.Icon>
-            <FontImageSource
-                FontFamily="MaterialIcons"
-                Glyph="{x:Static helper:IconFont.Favorite}"
-                Color="{AppThemeBinding Light=#000000, Dark=#FFFFFF}" />
-        </ShellContent.Icon>
-    </ShellContent>-->
-    <!--  DEBUG  -->
-
     <ShellContent
         Title="Give Help"
         ContentTemplate="{DataTemplate Views:GiveHelpPage}"
@@ -127,6 +88,17 @@
         </ShellContent.Icon>
     </ShellContent>
 
+    <!--  DE  -->
+
+    <ShellContent>
+        <ShellContent.Icon>
+            <FontImageSource
+                FontFamily="CustomIcons"
+                Glyph="{x:Static helper:CustomIconsFont.GiveHelp}"
+                Color="{AppThemeBinding Light=#000000,
+                                        Dark=#FFFFFF}" />
+        </ShellContent.Icon>
+    </ShellContent>
 
     <!--<ShellContent
         Title="New Preference"
