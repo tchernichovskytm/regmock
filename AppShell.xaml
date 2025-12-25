@@ -55,8 +55,8 @@
         Route="GiveHelpPage">
         <ShellContent.Icon>
             <FontImageSource
-                FontFamily="MaterialIcons"
-                Glyph="{x:Static helper:IconFont.Handshake}"
+                FontFamily="CustomIcons"
+                Glyph="{x:Static helper:CustomIconsFont.GiveHelp}"
                 Color="{AppThemeBinding Light=#000000,
                                         Dark=#FFFFFF}" />
         </ShellContent.Icon>
@@ -68,8 +68,8 @@
         Route="RequestHelpPage">
         <ShellContent.Icon>
             <FontImageSource
-                FontFamily="MaterialIcons"
-                Glyph="{x:Static helper:IconFont.Question_mark}"
+                FontFamily="CustomIcons"
+                Glyph="{x:Static helper:CustomIconsFont.GetHelp}"
                 Color="{AppThemeBinding Light=#000000,
                                         Dark=#FFFFFF}" />
         </ShellContent.Icon>
@@ -90,7 +90,7 @@
 
     <!--  DE  -->
 
-    <ShellContent>
+    <!--<ShellContent>
         <ShellContent.Icon>
             <FontImageSource
                 FontFamily="CustomIcons"
@@ -98,22 +98,6 @@
                 Color="{AppThemeBinding Light=#000000,
                                         Dark=#FFFFFF}" />
         </ShellContent.Icon>
-    </ShellContent>
-
-    <!--<ShellContent
-        Title="New Preference"
-        ContentTemplate="{DataTemplate Views:NewPreferencePage}"
-        IsVisible="False"
-        Route="NewPreferencePage" />
-    <ShellContent
-        Title="Edit Preference"
-        ContentTemplate="{DataTemplate Views:EditPreferencePage}"
-        IsVisible="False"
-        Route="EditPreferencePage" />
-    <ShellContent
-        Title="New Ticket"
-        ContentTemplate="{DataTemplate Views:NewTicketPage}"
-        IsVisible="False"
-        Route="NewTicketPage" />-->
+    </ShellContent>-->
 
 </Shell>

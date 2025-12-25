@@ -81,6 +81,8 @@ namespace regmock.ViewModels
                 }
             });
 
+            InitializeTicketsAsync();
+
             AddTicketCmd = new Command(HandleTicket);
 
             EditTicketsCmd = new Command(() =>
@@ -114,6 +116,7 @@ namespace regmock.ViewModels
                 {
                     Ticket newTicket = (Ticket)newTicketObj;
                     newTicket.IsActiveToggleCmd = TicketToggleCmd;
+                    newTicket.DeleteCmd = (Command)DeleteTicketCmd;
                     var success = await Service.HandleTicket(newTicket);
                     if (!success)
                     {
@@ -124,29 +127,24 @@ namespace regmock.ViewModels
                 Monitor.Exit(this);
             });
             await Shell.Current.Navigation.PushModalAsync(new NewTicketPage((Command)ticketCmd), true);
-
-            // DONT: do not send ticket back to service
         }
         public async void TicketToggled(Ticket ticket)
         {
             Monitor.Enter(this);
             var success = await Service.HandleTicket(ticket);
-            if (success)
+            if (!success)
             {
-                if (ticket.IsActive == true)
-                {
-                    ticket.ActiveTimeSpan = Service.UnixMiliseconds24Hours;
-                    ticket.ServerActiveTime = Service.UnixMilisecondsToHHMMSS(ticket.ActiveTimeSpan);
-                }
-                else
-                {
-                    ticket.ActiveTimeSpan = 0;
-                    ticket.ServerActiveTime = "";
-                }
+                // TODO: handle error
+            }
+            if (ticket.IsActive == true)
+            {
+                ticket.ActiveTimeSpan = Service.UnixMiliseconds24Hours;
+                ticket.ServerActiveTime = Service.UnixMilisecondsToHHMMSS(ticket.ActiveTimeSpan);
             }
             else
             {
-                // TODO: handle error
+                ticket.ActiveTimeSpan = 0;
+                ticket.ServerActiveTime = "";
             }
             Monitor.Exit(this);
         }
