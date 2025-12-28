@@ -42,6 +42,8 @@ namespace regmock.ViewModels
 
         public PickFavoritesPageViewModel()
         {
+            InitializeFavoritesAsync();
+
             AddFavoriteCmd = new Command(async () =>
             {
                 await AddFavoriteClick();

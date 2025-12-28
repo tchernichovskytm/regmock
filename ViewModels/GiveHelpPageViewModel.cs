@@ -74,6 +74,9 @@ namespace regmock.ViewModels
         #region Constructor
         public async Task InitializeTicketsAsync()
         {
+            if (DisplayTickets != null){
+                DisplayTickets.Clear();
+            }
             // get all the items from the fb into the service
             await Service.GetAllTicketsFromFB();
             // get the new ticket list from the service
@@ -84,9 +87,7 @@ namespace regmock.ViewModels
 
             await Service.GetHelperFavoritesFromFB();
             HelperFavorites = Service.GetHelperFavorites();
-            IsFavButtonVisible = HelperFavorites.Count > 0;
-
-            PutTicketFavoriteIcons(AllTickets);
+            IsFavButtonVisible = HelperFavorites.Count > 0 && PutTicketFavoriteIcons(AllTickets) > 0;
         }
 
         public GiveHelpPageViewModel()
@@ -100,16 +101,6 @@ namespace regmock.ViewModels
         #region Functions
         public void FavButtonClick()
         {
-            //if (IsFav == false)
-            //{
-            //    FavButtonIcon = IconFont.Favorite;
-            //    IsFav = true;
-            //}
-            //else if (IsFav == true)
-            //{
-            //    FavButtonIcon = IconFont.Favorite_outline;
-            //    IsFav = false;
-            //}
             IsFav = !IsFav;
             FavButtonIcon = IsFav ? FavTrueIcon : FavFalseIcon;
             if (IsFav == true)
@@ -159,12 +150,17 @@ namespace regmock.ViewModels
             }
         }
 
-        public void PutTicketFavoriteIcons(List<Ticket> tickets)
+        public int PutTicketFavoriteIcons(List<Ticket> tickets)
         {
+            int passesFilterCount = 0;
             foreach(Ticket ticket in tickets)
             {
-                ticket.IsFavoriteIcon = PassesFilter(ticket, HelperFavorites) ? FavTrueIcon : FavFalseIcon;
+                bool passes = PassesFilter(ticket, HelperFavorites);
+                ticket.IsFavoriteIcon = passes ? FavTrueIcon : "";// FavFalseIcon;
+                if (passes) passesFilterCount++;
+            
             }
+            return passesFilterCount;
         }
         #endregion
     }

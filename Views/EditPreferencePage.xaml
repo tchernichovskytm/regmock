@@ -24,7 +24,14 @@
             </Border>
 
             <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
-                <Label Text="{Binding EditSubjectName}" />
+                <Border
+                    HorizontalOptions="Center"
+                    Stroke="{StaticResource GrayGradient}"
+                    Style="{StaticResource RoundedBorder}"
+                    >
+                    
+                <Label Padding="6,0,6,0" FontSize="28" Text="{Binding EditSubjectName}" Background="{StaticResource ElementGradient}" />
+                </Border>
 
                 <CollectionView ItemsSource="{Binding ToggleGrades}">
                     <CollectionView.ItemTemplate>

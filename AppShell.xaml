@@ -20,19 +20,23 @@
         </MenuItem.IconImageSource>
     </MenuItem>
 
-    <ShellContent
-        Title="Login"
-        ContentTemplate="{DataTemplate Views:LoginPage}"
-        IsVisible="{Binding IsNotLoggedIn}"
-        Route="LoginPage">
-        <ShellContent.Icon>
+    <!-- TODO: continue this: https://learn.microsoft.com/en-us/dotnet/maui/fundamentals/shell/flyout?view=net-maui-10.0 -->
+    <FlyoutItem Title="Login">
+        <FlyoutItem.Icon>
             <FontImageSource
-                FontFamily="MaterialIcons"
-                Glyph="{x:Static helper:IconFont.Login}"
-                Color="{AppThemeBinding Light=#000000,
-                                        Dark=#FFFFFF}" />
-        </ShellContent.Icon>
-    </ShellContent>
+                    FontFamily="MaterialIcons"
+                    Glyph="{x:Static helper:IconFont.Login}"
+                    Color="{AppThemeBinding Light={StaticResource PrimaryText},
+                                            Dark={StaticResource PrimaryDarkText}}" />
+        </FlyoutItem.Icon>
+        <Tab>
+            <ShellContent
+                ContentTemplate="{DataTemplate Views:LoginPage}"
+                IsVisible="{Binding IsNotLoggedIn}"
+                Route="LoginPage">
+            </ShellContent>
+        </Tab>
+    </FlyoutItem>
 
     <ShellContent
         Title="Register"
@@ -43,8 +47,8 @@
             <FontImageSource
                 FontFamily="MaterialIcons"
                 Glyph="{x:Static helper:IconFont.App_registration}"
-                Color="{AppThemeBinding Light=#000000,
-                                        Dark=#FFFFFF}" />
+                Color="{AppThemeBinding Light={StaticResource PrimaryText},
+                                        Dark={StaticResource PrimaryDarkText}}" />
         </ShellContent.Icon>
     </ShellContent>
 
@@ -57,8 +61,8 @@
             <FontImageSource
                 FontFamily="CustomIcons"
                 Glyph="{x:Static helper:CustomIconsFont.GiveHelp}"
-                Color="{AppThemeBinding Light=#000000,
-                                        Dark=#FFFFFF}" />
+                Color="{AppThemeBinding Light={StaticResource PrimaryText},
+                                        Dark={StaticResource PrimaryDarkText}}" />
         </ShellContent.Icon>
     </ShellContent>
     <ShellContent
@@ -70,8 +74,8 @@
             <FontImageSource
                 FontFamily="CustomIcons"
                 Glyph="{x:Static helper:CustomIconsFont.GetHelp}"
-                Color="{AppThemeBinding Light=#000000,
-                                        Dark=#FFFFFF}" />
+                Color="{AppThemeBinding Light={StaticResource PrimaryText},
+                        Dark={StaticResource PrimaryDarkText}}" />
         </ShellContent.Icon>
     </ShellContent>
     <ShellContent
@@ -83,8 +87,8 @@
             <FontImageSource
                 FontFamily="MaterialIcons"
                 Glyph="{x:Static helper:IconFont.Favorite}"
-                Color="{AppThemeBinding Light=#000000,
-                                        Dark=#FFFFFF}" />
+                Color="{AppThemeBinding Light={StaticResource PrimaryText},
+                        Dark={StaticResource PrimaryDarkText}}" />
         </ShellContent.Icon>
     </ShellContent>
 

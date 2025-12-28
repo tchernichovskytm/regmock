@@ -9,6 +9,13 @@ namespace regmock.ViewModels
     {
         #region Properties
         private Subject editSubject;
+        public string EditSubjectName
+        {
+            get
+            {
+                return editSubject.Name;
+            }
+        }
 
         private ObservableCollection<ToggleGrade> toggleGrades;
 

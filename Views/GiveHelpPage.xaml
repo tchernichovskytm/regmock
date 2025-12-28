@@ -76,7 +76,7 @@
                                             <Border
                                                 Grid.Row="0"
                                                 HorizontalOptions="End"
-                                                IsVisible="{Binding IsFavButtonVisible}"
+                                                IsVisible="{Binding BindingContext.IsFavButtonVisible, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
                                                 Stroke="{StaticResource HelpingGradient}"
                                                 Style="{StaticResource RoundedBorder}">
                                                 <Button

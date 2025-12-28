@@ -9,7 +9,7 @@ namespace regmock.ViewModels
     public class RequestHelpPageViewModel : ViewModelBase
     {
         #region Properties
-        private ObservableCollection<Ticket> tickets;
+        private static ObservableCollection<Ticket> tickets;
 
         public ObservableCollection<Ticket> Tickets
         {
@@ -32,6 +32,8 @@ namespace regmock.ViewModels
                 OnPropertyChanged(nameof(IsEditing));
             }
         }
+
+        private Stopwatch ticketStopwatch = new Stopwatch();
         #endregion
 
         #region Commands
@@ -44,6 +46,29 @@ namespace regmock.ViewModels
         #region Constructor
         public async Task InitializeTicketsAsync()
         {
+            //if (TicketToggleCmd == null)
+            //{
+            TicketToggleCmd = new Command((object obj) =>
+            {
+                if (obj is Ticket)
+                {
+                    Ticket ticket = (Ticket)obj;
+                    TicketToggled(ticket);
+                }
+            });
+            //}
+            //if (DeleteTicketCmd == null)
+            //{
+            DeleteTicketCmd = new Command((object obj) =>
+            {
+                if (obj is Ticket)
+                {
+                    Ticket ticket = (Ticket)obj;
+                    DeleteTicket(ticket);
+                }
+            });
+            //}
+
             // get all the items from the fb into the service
             await Service.GetAllTicketsFromFB();
             // get the new ticket list from the service
@@ -59,28 +84,9 @@ namespace regmock.ViewModels
             }
         }
 
-        private Stopwatch ticketStopwatch = new Stopwatch();
 
         public RequestHelpPageViewModel()
         {
-            TicketToggleCmd = new Command((object obj) =>
-            {
-                if (obj is Ticket)
-                {
-                    Ticket ticket = (Ticket)obj;
-                    TicketToggled(ticket);
-                }
-            });
-
-            DeleteTicketCmd = new Command((object obj) =>
-            {
-                if (obj is Ticket)
-                {
-                    Ticket ticket = (Ticket)obj;
-                    DeleteTicket(ticket);
-                }
-            });
-
             InitializeTicketsAsync();
 
             AddTicketCmd = new Command(HandleTicket);
@@ -97,16 +103,6 @@ namespace regmock.ViewModels
         #endregion
 
         #region Functions
-        private async void DeleteTicket(Ticket ticket)
-        {
-            var success = await Service.DeleteTicket(ticket);
-            if (!success)
-            {
-                // TODO: handle error
-            }
-            Tickets.Remove(ticket);
-        }
-
         private async void HandleTicket()
         {
             ICommand ticketCmd = new Command(async (object newTicketObj) =>
@@ -147,6 +143,15 @@ namespace regmock.ViewModels
                 ticket.ServerActiveTime = "";
             }
             Monitor.Exit(this);
+        }
+        private async void DeleteTicket(Ticket ticket)
+        {
+            var success = await Service.DeleteTicket(ticket);
+            if (!success)
+            {
+                // TODO: handle error
+            }
+            Tickets.Remove(ticket);
         }
 
         public void BringTopicsToFirst(ObservableCollection<Ticket> tickets)

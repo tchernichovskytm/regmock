@@ -32,6 +32,12 @@
     <Color x:Key="SecondaryDarkText">#C0C0C0</Color>
     <Color x:Key="TertiaryDarkText">#909090</Color>
 
+    <!--<AppThemeBinding
+        x:Key="PrimaryTextTheme"
+        Light="{StaticResource PrimaryText}"
+        Dark="{StaticResource PrimaryDarkText}"
+        />-->
+
     <Color x:Key="White">White</Color>
     <Color x:Key="Black">Black</Color>
     <Color x:Key="Magenta">#D600AA</Color>
