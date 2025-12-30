@@ -50,10 +50,10 @@
                                         BorderColor="Transparent"
                                         Command="{Binding DeleteCmd}"
                                         CommandParameter="{Binding .}"
-                                        IsVisible="{Binding BindingContext.IsEditing, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
                                         FontFamily="MaterialIcons"
                                         FontSize="32"
                                         HorizontalOptions="End"
+                                        IsVisible="{Binding BindingContext.IsEditing, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
                                         Text="{x:Static helper:IconFont.Delete}"
                                         TextColor="{StaticResource Critical}" />
                                 </HorizontalStackLayout>

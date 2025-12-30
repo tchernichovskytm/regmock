@@ -5,8 +5,80 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:Views="clr-namespace:regmock.Views"
     xmlns:helper="clr-namespace:regmock.Helper"
+    xmlns:local="clr-namespace:regmock"
     Title="Mockflow Beta 2.0"
     Shell.FlyoutBehavior="Flyout">
+
+    <!--<Shell.ItemTemplate>
+    -->
+    <!--<DataTemplate>
+            <Grid Margin="5" ColumnDefinitions="36,*">
+                <Image
+                    Margin="0,4,6,4"
+                    Aspect="Center"
+                    Source="{Binding FlyoutIcon}" />
+                <Label
+                    Grid.Column="1"
+                    FontSize="16"
+                    Text="{Binding Title}"
+                    VerticalTextAlignment="Center" />
+            </Grid>
+        </DataTemplate>-->
+    <!--
+        <DataTemplate>
+            <Grid
+                ColumnDefinitions="Auto,*"
+                HeightRequest="{OnPlatform 44,
+                                           Android=50}"
+                RowSpacing="{OnPlatform WinUI=0}">
+                <Image
+                    x:Name="FlyoutItemImage"
+                    HeightRequest="{OnPlatform Android=24,
+                                               iOS=22,
+                                               WinUI=16}"
+                    HorizontalOptions="{OnPlatform Default=Center,
+                                                   WinUI=Start}"
+                    Source="{Binding FlyoutIcon}"
+                    VerticalOptions="Center"
+                    WidthRequest="{OnPlatform Android=24,
+                                              iOS=22,
+                                              WinUI=16}">
+                    <Image.Margin>
+                        <OnPlatform x:TypeArguments="Thickness">
+                            <OnPlatform.Platforms>
+                                <On Platform="WinUI" Value="12,0,12,0" />
+                            </OnPlatform.Platforms>
+                        </OnPlatform>
+                    </Image.Margin>
+                </Image>
+                <Label
+                    x:Name="FlyoutItemLabel"
+                    Grid.Column="1"
+                    FontAttributes="{OnPlatform iOS=Bold}"
+                    FontSize="{OnPlatform Android=14,
+                                          iOS=14}"
+                    HorizontalOptions="{OnPlatform WinUI=Start}"
+                    HorizontalTextAlignment="{OnPlatform WinUI=Start}"
+                    Text="{Binding Title}"
+                    VerticalTextAlignment="Center">
+                    <Label.TextColor>
+                        <OnPlatform x:TypeArguments="Color">
+                            <OnPlatform.Platforms>
+                                <On Platform="Android" Value="{AppThemeBinding Light=Black, Dark=White}" />
+                            </OnPlatform.Platforms>
+                        </OnPlatform>
+                    </Label.TextColor>
+                    <Label.Margin>
+                        <OnPlatform x:TypeArguments="Thickness">
+                            <OnPlatform.Platforms>
+                                <On Platform="Android" Value="20, 0, 0, 0" />
+                            </OnPlatform.Platforms>
+                        </OnPlatform>
+                    </Label.Margin>
+                </Label>
+            </Grid>
+        </DataTemplate>
+    </Shell.ItemTemplate>-->
 
     <!--  TODO: make this UI item more like a important button  -->
     <MenuItem Command="{Binding DarkModeCmd}">
@@ -20,77 +92,76 @@
         </MenuItem.IconImageSource>
     </MenuItem>
 
-    <!-- TODO: continue this: https://learn.microsoft.com/en-us/dotnet/maui/fundamentals/shell/flyout?view=net-maui-10.0 -->
-    <FlyoutItem Title="Login">
-        <FlyoutItem.Icon>
-            <FontImageSource
+    <!--  TODO: continue this: https://learn.microsoft.com/en-us/dotnet/maui/fundamentals/shell/flyout?view=net-maui-10.0  -->
+    <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
+        <ShellContent
+            Title="Login"
+            ContentTemplate="{DataTemplate Views:LoginPage}"
+            IsVisible="{Binding IsNotLoggedIn}"
+            Route="LoginPage">
+            <ShellContent.Icon>
+                <FontImageSource
                     FontFamily="MaterialIcons"
                     Glyph="{x:Static helper:IconFont.Login}"
                     Color="{AppThemeBinding Light={StaticResource PrimaryText},
                                             Dark={StaticResource PrimaryDarkText}}" />
-        </FlyoutItem.Icon>
-        <Tab>
-            <ShellContent
-                ContentTemplate="{DataTemplate Views:LoginPage}"
-                IsVisible="{Binding IsNotLoggedIn}"
-                Route="LoginPage">
-            </ShellContent>
-        </Tab>
+            </ShellContent.Icon>
+        </ShellContent>
+
+        <ShellContent
+            Title="Register"
+            ContentTemplate="{DataTemplate Views:RegisterPage}"
+            IsVisible="{Binding IsNotLoggedIn}"
+            Route="RegisterPage">
+            <ShellContent.Icon>
+                <FontImageSource
+                    FontFamily="MaterialIcons"
+                    Glyph="{x:Static helper:IconFont.App_registration}"
+                    Color="{AppThemeBinding Light={StaticResource PrimaryText},
+                                            Dark={StaticResource PrimaryDarkText}}" />
+            </ShellContent.Icon>
+        </ShellContent>
+
+        <ShellContent
+            Title="Give Help"
+            ContentTemplate="{DataTemplate Views:GiveHelpPage}"
+            IsVisible="{Binding IsLoggedIn}"
+            Route="GiveHelpPage">
+            <ShellContent.Icon>
+                <FontImageSource
+                    FontFamily="CustomIcons"
+                    Glyph="{x:Static helper:CustomIconsFont.GiveHelp}"
+                    Color="{AppThemeBinding Light={StaticResource PrimaryText},
+                                            Dark={StaticResource PrimaryDarkText}}" />
+            </ShellContent.Icon>
+        </ShellContent>
+        <ShellContent
+            Title="Request Help"
+            ContentTemplate="{DataTemplate Views:RequestHelpPage}"
+            IsVisible="{Binding IsLoggedIn}"
+            Route="RequestHelpPage">
+            <ShellContent.Icon>
+                <FontImageSource
+                    FontFamily="CustomIcons"
+                    Glyph="{x:Static helper:CustomIconsFont.GetHelp}"
+                    Color="{AppThemeBinding Light={StaticResource PrimaryText},
+                                            Dark={StaticResource PrimaryDarkText}}" />
+            </ShellContent.Icon>
+        </ShellContent>
+        <ShellContent
+            Title="Pick Favorites"
+            ContentTemplate="{DataTemplate Views:PickFavoritesPage}"
+            IsVisible="{Binding IsLoggedIn}"
+            Route="PickFavoritesPage">
+            <ShellContent.Icon>
+                <FontImageSource
+                    FontFamily="MaterialIcons"
+                    Glyph="{x:Static helper:IconFont.Favorite}"
+                    Color="{AppThemeBinding Light={StaticResource PrimaryText},
+                                            Dark={StaticResource PrimaryDarkText}}" />
+            </ShellContent.Icon>
+        </ShellContent>
     </FlyoutItem>
-
-    <ShellContent
-        Title="Register"
-        ContentTemplate="{DataTemplate Views:RegisterPage}"
-        IsVisible="{Binding IsNotLoggedIn}"
-        Route="RegisterPage">
-        <ShellContent.Icon>
-            <FontImageSource
-                FontFamily="MaterialIcons"
-                Glyph="{x:Static helper:IconFont.App_registration}"
-                Color="{AppThemeBinding Light={StaticResource PrimaryText},
-                                        Dark={StaticResource PrimaryDarkText}}" />
-        </ShellContent.Icon>
-    </ShellContent>
-
-    <ShellContent
-        Title="Give Help"
-        ContentTemplate="{DataTemplate Views:GiveHelpPage}"
-        IsVisible="{Binding IsLoggedIn}"
-        Route="GiveHelpPage">
-        <ShellContent.Icon>
-            <FontImageSource
-                FontFamily="CustomIcons"
-                Glyph="{x:Static helper:CustomIconsFont.GiveHelp}"
-                Color="{AppThemeBinding Light={StaticResource PrimaryText},
-                                        Dark={StaticResource PrimaryDarkText}}" />
-        </ShellContent.Icon>
-    </ShellContent>
-    <ShellContent
-        Title="Request Help"
-        ContentTemplate="{DataTemplate Views:RequestHelpPage}"
-        IsVisible="{Binding IsLoggedIn}"
-        Route="RequestHelpPage">
-        <ShellContent.Icon>
-            <FontImageSource
-                FontFamily="CustomIcons"
-                Glyph="{x:Static helper:CustomIconsFont.GetHelp}"
-                Color="{AppThemeBinding Light={StaticResource PrimaryText},
-                        Dark={StaticResource PrimaryDarkText}}" />
-        </ShellContent.Icon>
-    </ShellContent>
-    <ShellContent
-        Title="Pick Favorites"
-        ContentTemplate="{DataTemplate Views:PickFavoritesPage}"
-        IsVisible="{Binding IsLoggedIn}"
-        Route="PickFavoritesPage">
-        <ShellContent.Icon>
-            <FontImageSource
-                FontFamily="MaterialIcons"
-                Glyph="{x:Static helper:IconFont.Favorite}"
-                Color="{AppThemeBinding Light={StaticResource PrimaryText},
-                        Dark={StaticResource PrimaryDarkText}}" />
-        </ShellContent.Icon>
-    </ShellContent>
 
     <!--  DE  -->
 

@@ -27,10 +27,13 @@
                 <Border
                     HorizontalOptions="Center"
                     Stroke="{StaticResource GrayGradient}"
-                    Style="{StaticResource RoundedBorder}"
-                    >
-                    
-                <Label Padding="6,0,6,0" FontSize="28" Text="{Binding EditSubjectName}" Background="{StaticResource ElementGradient}" />
+                    Style="{StaticResource RoundedBorder}">
+
+                    <Label
+                        Padding="6,0,6,0"
+                        Background="{StaticResource ElementGradient}"
+                        FontSize="28"
+                        Text="{Binding EditSubjectName}" />
                 </Border>
 
                 <CollectionView ItemsSource="{Binding ToggleGrades}">
