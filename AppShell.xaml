@@ -79,21 +79,32 @@
             </Grid>
         </DataTemplate>
     </Shell.ItemTemplate>-->
+    <Shell.ItemTemplate>
+        <DataTemplate>
+            <Grid ColumnDefinitions="Auto,*">
+                <Image
+                    HorizontalOptions="Center"
+                    Source="{Binding FlyoutIcon}"
+                    WidthRequest="200" />
+                <Label Grid.Column="1" Text="555" />
+            </Grid>
+        </DataTemplate>
+    </Shell.ItemTemplate>
 
-    <!--  TODO: make this UI item more like a important button  -->
-    <MenuItem Command="{Binding DarkModeCmd}">
-        <MenuItem.IconImageSource>
+    <!--  TODO: make this UI item more like an important button  -->
+    <MenuFlyoutItem Command="{Binding DarkModeCmd}">
+        <MenuFlyoutItem.IconImageSource>
             <FontImageSource
                 FontFamily="MaterialIcons"
                 Glyph="{AppThemeBinding Light={x:Static helper:IconFont.Dark_mode},
                                         Dark={x:Static helper:IconFont.Light_mode}}"
                 Color="{AppThemeBinding Light=#000000,
                                         Dark=#FFFFFF}" />
-        </MenuItem.IconImageSource>
-    </MenuItem>
+        </MenuFlyoutItem.IconImageSource>
+    </MenuFlyoutItem>
 
     <!--  TODO: continue this: https://learn.microsoft.com/en-us/dotnet/maui/fundamentals/shell/flyout?view=net-maui-10.0  -->
-    <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
+    <TabBar>
         <ShellContent
             Title="Login"
             ContentTemplate="{DataTemplate Views:LoginPage}"
@@ -161,7 +172,7 @@
                                             Dark={StaticResource PrimaryDarkText}}" />
             </ShellContent.Icon>
         </ShellContent>
-    </FlyoutItem>
+    </TabBar>
 
     <!--  DE  -->
 
