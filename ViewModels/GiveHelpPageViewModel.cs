@@ -83,7 +83,7 @@ namespace regmock.ViewModels
             AllTickets = Service.GetOthersTickets();
             BringTopicsToFirst(AllTickets);
 
-            DisplayTickets = new ObservableCollection<Ticket>(AllTickets);
+            DisplayTicketsByFavorite();
 
             await Service.GetHelperFavoritesFromFB();
             HelperFavorites = Service.GetHelperFavorites();
@@ -103,6 +103,11 @@ namespace regmock.ViewModels
         {
             IsFav = !IsFav;
             FavButtonIcon = IsFav ? FavTrueIcon : FavFalseIcon;
+            DisplayTicketsByFavorite();
+        }
+
+        public void DisplayTicketsByFavorite()
+        {
             if (IsFav == true)
             {
                 DisplayTickets = FilterTicketsByFavorites(AllTickets, HelperFavorites);

@@ -31,8 +31,13 @@ namespace regmock.ViewModels
 
         #region Commands
         public ICommand DarkModeCmd { get; set; }
+
+        // these control the visibility of buttons
         public ICommand LoggedInCmd { get; set; }
         public ICommand LoggedOutCmd { get; set; }
+
+        // this is a request to log out
+        public ICommand LogOutCmd { get; set; }
         #endregion
 
         #region Constructor
@@ -45,6 +50,15 @@ namespace regmock.ViewModels
                 Application.Current.UserAppTheme == AppTheme.Light ?
                                                     AppTheme.Dark :
                                                     AppTheme.Light;
+            });
+            LogOutCmd = new Command(async () =>
+            {
+                if (!Service.RequestLogoutAsync())
+                {
+                    // TODO: handle error
+                }
+                LoggedOutCmd.Execute(null);
+                await Shell.Current.GoToAsync("//LoginPage");
             });
 
             IsLoggedIn = false;

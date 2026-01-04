@@ -517,15 +517,35 @@ public static class Service
         return true;
     }
 
-    // TODO: give back useful error message
+    // TODO: give back useful error message | 4/1/26: this is likely not possible
     public static async Task<bool> RequestLoginAsync(string email, string password)
     {
-        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) return false;
+        try
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) return false;
 
-        var authUser = await auth.SignInWithEmailAndPasswordAsync(email, password);
-        currentAuthUser = authUser;
+            var authUser = await auth.SignInWithEmailAndPasswordAsync(email, password);
+            currentAuthUser = authUser;
 
-        LoggedInCommand.Execute(null);
+            LoggedInCommand.Execute(null);
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public static bool RequestLogoutAsync()
+    {
+        try
+        {
+            auth.SignOut();
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
         return true;
     }
 

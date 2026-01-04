@@ -9,10 +9,7 @@ namespace regmock
         {
             InitializeComponent();
 
-            MainPage = new AppShell()
-            {
-                FlowDirection = FlowDirection.LeftToRight,
-            };
+            MainPage = new AppShell();
         }
     }
 }

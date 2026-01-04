@@ -7,92 +7,11 @@
     xmlns:helper="clr-namespace:regmock.Helper"
     xmlns:local="clr-namespace:regmock"
     Title="Mockflow Beta 2.0"
+    FlowDirection="LeftToRight"
     Shell.FlyoutBehavior="Flyout">
 
-    <!--<Shell.ItemTemplate>
-    -->
-    <!--<DataTemplate>
-            <Grid Margin="5" ColumnDefinitions="36,*">
-                <Image
-                    Margin="0,4,6,4"
-                    Aspect="Center"
-                    Source="{Binding FlyoutIcon}" />
-                <Label
-                    Grid.Column="1"
-                    FontSize="16"
-                    Text="{Binding Title}"
-                    VerticalTextAlignment="Center" />
-            </Grid>
-        </DataTemplate>-->
-    <!--
-        <DataTemplate>
-            <Grid
-                ColumnDefinitions="Auto,*"
-                HeightRequest="{OnPlatform 44,
-                                           Android=50}"
-                RowSpacing="{OnPlatform WinUI=0}">
-                <Image
-                    x:Name="FlyoutItemImage"
-                    HeightRequest="{OnPlatform Android=24,
-                                               iOS=22,
-                                               WinUI=16}"
-                    HorizontalOptions="{OnPlatform Default=Center,
-                                                   WinUI=Start}"
-                    Source="{Binding FlyoutIcon}"
-                    VerticalOptions="Center"
-                    WidthRequest="{OnPlatform Android=24,
-                                              iOS=22,
-                                              WinUI=16}">
-                    <Image.Margin>
-                        <OnPlatform x:TypeArguments="Thickness">
-                            <OnPlatform.Platforms>
-                                <On Platform="WinUI" Value="12,0,12,0" />
-                            </OnPlatform.Platforms>
-                        </OnPlatform>
-                    </Image.Margin>
-                </Image>
-                <Label
-                    x:Name="FlyoutItemLabel"
-                    Grid.Column="1"
-                    FontAttributes="{OnPlatform iOS=Bold}"
-                    FontSize="{OnPlatform Android=14,
-                                          iOS=14}"
-                    HorizontalOptions="{OnPlatform WinUI=Start}"
-                    HorizontalTextAlignment="{OnPlatform WinUI=Start}"
-                    Text="{Binding Title}"
-                    VerticalTextAlignment="Center">
-                    <Label.TextColor>
-                        <OnPlatform x:TypeArguments="Color">
-                            <OnPlatform.Platforms>
-                                <On Platform="Android" Value="{AppThemeBinding Light=Black, Dark=White}" />
-                            </OnPlatform.Platforms>
-                        </OnPlatform>
-                    </Label.TextColor>
-                    <Label.Margin>
-                        <OnPlatform x:TypeArguments="Thickness">
-                            <OnPlatform.Platforms>
-                                <On Platform="Android" Value="20, 0, 0, 0" />
-                            </OnPlatform.Platforms>
-                        </OnPlatform>
-                    </Label.Margin>
-                </Label>
-            </Grid>
-        </DataTemplate>
-    </Shell.ItemTemplate>-->
-    <Shell.ItemTemplate>
-        <DataTemplate>
-            <Grid ColumnDefinitions="Auto,*">
-                <Image
-                    HorizontalOptions="Center"
-                    Source="{Binding FlyoutIcon}"
-                    WidthRequest="200" />
-                <Label Grid.Column="1" Text="555" />
-            </Grid>
-        </DataTemplate>
-    </Shell.ItemTemplate>
-
     <!--  TODO: make this UI item more like an important button  -->
-    <MenuFlyoutItem Command="{Binding DarkModeCmd}">
+    <!--<MenuFlyoutItem Command="{Binding DarkModeCmd}">
         <MenuFlyoutItem.IconImageSource>
             <FontImageSource
                 FontFamily="MaterialIcons"
@@ -101,7 +20,66 @@
                 Color="{AppThemeBinding Light=#000000,
                                         Dark=#FFFFFF}" />
         </MenuFlyoutItem.IconImageSource>
-    </MenuFlyoutItem>
+    </MenuFlyoutItem>-->
+
+    <Shell.FlyoutHeader>
+        <VerticalStackLayout Margin="8" Spacing="8">
+            <!--<Border
+                IsVisible="{Binding IsNotLoggedIna}"
+                Stroke="{StaticResource PrimaryGradient}"
+                Style="{StaticResource RoundedBorder}">
+                <Button
+                    Background="{StaticResource ElementGradient}"
+                    Command="{Binding DarkModeCmd}"
+                    FontFamily="MaterialIcons"
+                    FontSize="28"
+                    HorizontalOptions="Start"
+                    Text="{x:Static helper:IconFont.Logout}"
+                    TextColor="{StaticResource PrimaryHalfDark}" />
+            </Border>
+            <Border
+                IsVisible="{Binding IsNotLoggedIna}"
+                Stroke="{StaticResource SecondaryGradient}"
+                Style="{StaticResource RoundedBorder}">
+                <Button
+                    Background="{StaticResource ElementGradient}"
+                    Command="{Binding DarkModeCmd}"
+                    FontFamily="MaterialIcons"
+                    FontSize="28"
+                    HorizontalOptions="Start"
+                    Text="{x:Static helper:IconFont.Logout}"
+                    TextColor="{StaticResource SecondaryHalfDark}" />
+            </Border>-->
+            <Border
+                HorizontalOptions="Start"
+                Stroke="{AppThemeBinding Light={StaticResource PrimaryText},
+                                         Dark={StaticResource PrimaryDarkText}}"
+                Style="{StaticResource RoundedBorder}">
+                <Button
+                    Background="{StaticResource ElementGradient}"
+                    Command="{Binding DarkModeCmd}"
+                    FontFamily="MaterialIcons"
+                    FontSize="32"
+                    HorizontalOptions="Start"
+                    Text="{AppThemeBinding Light={x:Static helper:IconFont.Dark_mode},
+                                           Dark={x:Static helper:IconFont.Light_mode}}" />
+            </Border>
+            <Border
+                HorizontalOptions="Start"
+                IsVisible="{Binding IsLoggedIn}"
+                Stroke="{StaticResource TertiaryGradient}"
+                Style="{StaticResource RoundedBorder}">
+                <Button
+                    Background="{StaticResource ElementGradient}"
+                    Command="{Binding LogOutCmd}"
+                    FontFamily="MaterialIcons"
+                    FontSize="32"
+                    HorizontalOptions="Start"
+                    Text="{x:Static helper:IconFont.Logout}"
+                    TextColor="{StaticResource TertiaryHalfDark}" />
+            </Border>
+        </VerticalStackLayout>
+    </Shell.FlyoutHeader>
 
     <!--  TODO: continue this: https://learn.microsoft.com/en-us/dotnet/maui/fundamentals/shell/flyout?view=net-maui-10.0  -->
     <TabBar>
