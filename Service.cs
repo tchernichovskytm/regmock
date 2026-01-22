@@ -210,7 +210,6 @@ public static class Service
         //                            .OnceAsync<FromFirebaseTicket>();
 
         var ticketsFromFB = await client.Child("Tickets").OnceAsync<FromFirebaseTicket>();
-        //var ticketsFromFB = await client.Child("Tickets").Or
 
         Int64 currentFirebaseTime = await GetFirebaseTime();
 
@@ -289,29 +288,35 @@ public static class Service
 
     public static async Task<bool> GetHelperFavoritesFromFB()
     {
-        List<Favorite> fbFavorites = new List<Favorite>();
-
-        var favoritesFromFB = await client.Child("Users").Child(auth.User.Uid).Child("HelperFavorites").OnceAsync<FromFirebaseFavorite>();
-
-        if (favoritesFromFB == null) return false;
-        foreach (var favFromFB in favoritesFromFB)
+        try
         {
-            if (string.IsNullOrEmpty(favFromFB.Object.Subject) || favFromFB.Object.Grades == null) continue;
+            List<Favorite> fbFavorites = new List<Favorite>();
 
-            Favorite parsedFavorite = new Favorite()
-            {
-                Grades = new List<Grade>(),
-                FirebaseKey = favFromFB.Key,
-            };
-            parsedFavorite.Subject = FindSubjectFromId(favFromFB.Object.Subject);
+            var favoritesFromFB = await client.Child("Users").Child(auth.User.Uid).Child("HelperFavorites").OnceAsync<FromFirebaseFavorite>();
 
-            foreach (string gradeId in favFromFB.Object.Grades)
+            if (favoritesFromFB == null) return false;
+            foreach (var favFromFB in favoritesFromFB)
             {
-                parsedFavorite.Grades.Add(FindGradeFromId(gradeId));
+                if (string.IsNullOrEmpty(favFromFB.Object.Subject) || favFromFB.Object.Grades == null) continue;
+
+                Favorite parsedFavorite = new Favorite()
+                {
+                    Grades = new List<Grade>(),
+                    FirebaseKey = favFromFB.Key,
+                };
+                parsedFavorite.Subject = FindSubjectFromId(favFromFB.Object.Subject);
+
+                foreach (string gradeId in favFromFB.Object.Grades)
+                {
+                    parsedFavorite.Grades.Add(FindGradeFromId(gradeId));
+                }
+                fbFavorites.Add(parsedFavorite);
             }
-            fbFavorites.Add(parsedFavorite);
+            helperFavorites = fbFavorites;
         }
-        helperFavorites = fbFavorites;
+        catch (Exception ex) {
+            return false;
+        }
 
         return true;
     }
@@ -541,6 +546,7 @@ public static class Service
         try
         {
             auth.SignOut();
+            LoggedOutCommand.Execute(null);
         }
         catch (Exception e)
         {

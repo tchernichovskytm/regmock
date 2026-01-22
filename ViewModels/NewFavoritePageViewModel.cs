@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace regmock.ViewModels
 {
-    public class NewPreferencePageViewModel : ViewModelBase
+    public class NewFavoritePageViewModel : ViewModelBase
     {
         #region Properties
         private ObservableCollection<Subject> subjects;
@@ -65,7 +65,7 @@ namespace regmock.ViewModels
         #endregion
 
         #region Constructor
-        public NewPreferencePageViewModel(List<Subject> existingSubjects, Command favoriteCmd)
+        public NewFavoritePageViewModel(List<Subject> existingSubjects, Command favoriteCmd)
         {
             Subjects = new ObservableCollection<Subject>(Service.GetSubjects());
 

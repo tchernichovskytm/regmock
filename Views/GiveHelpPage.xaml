@@ -34,6 +34,22 @@
                         <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" />
                     </CollectionView.ItemsLayout>
 
+                    <CollectionView.EmptyView>
+                        <ContentView>
+                            <Border
+                                HorizontalOptions="Center"
+                                Stroke="{StaticResource GrayGradient}"
+                                Style="{StaticResource RoundedBorder}">
+                                <Label
+                                    Padding="8"
+                                    Background="{StaticResource BackgroundGradient}"
+                                    FontSize="28"
+                                    HorizontalOptions="Center"
+                                    Text="No tickets yet" />
+                            </Border>
+                        </ContentView>
+                    </CollectionView.EmptyView>
+
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <VerticalStackLayout>

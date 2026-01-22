@@ -137,6 +137,8 @@ namespace regmock.ViewModels
                     await Shell.Current.GoToAsync("//GiveHelpPage");
                     //await Shell.Current.GoToAsync("//RequestHelpPage");
                     //await Shell.Current.GoToAsync("//PickFavoritesPage");
+
+                    ResetLabels();
                 }
                 else
                 {
@@ -148,6 +150,12 @@ namespace regmock.ViewModels
         #endregion
 
         #region Functions
+        private void ResetLabels()
+        {
+            ResetEmail(); 
+            ResetPass();
+        }
+
         private void ResetEmail()
         {
             EmailEntry = "";

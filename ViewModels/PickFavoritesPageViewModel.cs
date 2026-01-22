@@ -83,7 +83,7 @@ namespace regmock.ViewModels
             {
                 ExistingSubjects.Add(f.Subject);
             }
-            await Shell.Current.Navigation.PushModalAsync(new NewPreferencePage(ExistingSubjects, (Command)favoriteCmd), true);
+            await Shell.Current.Navigation.PushModalAsync(new NewFavoritePage(ExistingSubjects, (Command)favoriteCmd), true);
         }
         private async Task EditFavoriteClick(Favorite favorite)
         {
@@ -132,7 +132,7 @@ namespace regmock.ViewModels
                     }
                 }
             });
-            await Shell.Current.Navigation.PushModalAsync(new EditPreferencePage(favorite, (Command)modifyFavoriteCmd), true);
+            await Shell.Current.Navigation.PushModalAsync(new EditFavoritePage(favorite, (Command)modifyFavoriteCmd), true);
         }
         #endregion
     }

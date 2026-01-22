@@ -84,8 +84,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Views\EditFavoritePage.xaml.cs">
+	    <DependentUpon>EditFavoritePage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\LoginPage.xaml.cs">
 	    <DependentUpon>LoginPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\NewFavoritePage.xaml.cs">
+	    <DependentUpon>NewFavoritePage.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Views\RegisterPage.xaml.cs">
 	    <DependentUpon>RegisterPage.xaml</DependentUpon>
@@ -93,7 +99,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Views\EditPreferencePage.xaml">
+	  <MauiXaml Update="Views\EditFavoritePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\GiveHelpPage.xaml">
@@ -102,7 +108,7 @@
 	  <MauiXaml Update="Views\LoginPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\NewPreferencePage.xaml">
+	  <MauiXaml Update="Views\NewFavoritePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\NewTicketPage.xaml">

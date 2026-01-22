@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace regmock.ViewModels
 {
-    public class ShellViewModel : ViewModelBase
+    public class AppShellViewModel : ViewModelBase
     {
         #region Properties
         private bool isLoggedIn;
@@ -41,7 +41,7 @@ namespace regmock.ViewModels
         #endregion
 
         #region Constructor
-        public ShellViewModel()
+        public AppShellViewModel()
         {
             DarkModeCmd = new Command(() =>
             {

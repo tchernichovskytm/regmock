@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace regmock.ViewModels
 {
-    public class EditPreferencePageViewModel : ViewModelBase
+    public class EditFavoritePageViewModel : ViewModelBase
     {
         #region Properties
         private Subject editSubject;
@@ -53,7 +53,7 @@ namespace regmock.ViewModels
         #endregion
 
         #region Constructor
-        public EditPreferencePageViewModel(Favorite favorite, Command favoriteCmd)
+        public EditFavoritePageViewModel(Favorite favorite, Command favoriteCmd)
         {
             OldFavorite = favorite;
             ToggleGrades = new ObservableCollection<ToggleGrade>();

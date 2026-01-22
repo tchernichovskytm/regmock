@@ -13,8 +13,10 @@
             Stroke="{StaticResource SecondaryGradient}"
             Style="{StaticResource RoundedBorder}">
             <Button
+                Padding="8"
                 Background="{StaticResource ElementGradient}"
                 Command="{Binding EditTicketsCmd}"
+                FontSize="22"
                 Text="Edit"
                 TextColor="{StaticResource SecondaryHalfDark}" />
         </Border>
@@ -26,11 +28,28 @@
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" />
                 </CollectionView.ItemsLayout>
+
+                <CollectionView.EmptyView>
+                    <ContentView>
+                        <Border
+                            HorizontalOptions="Center"
+                            Stroke="{StaticResource GrayGradient}"
+                            Style="{StaticResource RoundedBorder}">
+                            <Label
+                                Padding="8"
+                                Background="{StaticResource BackgroundGradient}"
+                                FontSize="28"
+                                HorizontalOptions="Center"
+                                Text="No tickets yet" />
+                        </Border>
+                    </ContentView>
+                </CollectionView.EmptyView>
+
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Border Stroke="{StaticResource PrimaryGradient}" Style="{StaticResource RoundedBorder}">
                             <Grid
-                                Padding="6"
+                                Padding="8"
                                 Background="{StaticResource ElementGradient}"
                                 ColumnDefinitions="*,*">
                                 <VerticalStackLayout Grid.Column="0" HorizontalOptions="Start">
@@ -43,19 +62,21 @@
                                         FontSize="18"
                                         Text="{Binding ServerActiveTime}"
                                         VerticalOptions="Center" />
-                                    <Switch Margin="0" IsToggled="{Binding IsActive}" />
-                                    <Button
-                                        Padding="0"
-                                        Background="Transparent"
-                                        BorderColor="Transparent"
-                                        Command="{Binding DeleteCmd}"
-                                        CommandParameter="{Binding .}"
-                                        FontFamily="MaterialIcons"
-                                        FontSize="32"
-                                        HorizontalOptions="End"
-                                        IsVisible="{Binding BindingContext.IsEditing, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                        Text="{x:Static helper:IconFont.Delete}"
-                                        TextColor="{StaticResource Critical}" />
+                                    <Border Stroke="{StaticResource HelpingGradient}" Style="{StaticResource RoundedBorder}">
+                                        <Switch Margin="0" IsToggled="{Binding IsActive}" />
+                                    </Border>
+                                    <Border Stroke="{StaticResource CriticalGradient}" Style="{StaticResource RoundedBorder}">
+                                        <Button
+                                            Background="{StaticResource ElementGradient}"
+                                            Command="{Binding DeleteCmd}"
+                                            CommandParameter="{Binding .}"
+                                            FontFamily="MaterialIcons"
+                                            FontSize="32"
+                                            HorizontalOptions="End"
+                                            IsVisible="{Binding BindingContext.IsEditing, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                            Text="{x:Static helper:IconFont.Delete}"
+                                            TextColor="{StaticResource CriticalHalfDark}" />
+                                    </Border>
                                 </HorizontalStackLayout>
                             </Grid>
                         </Border>
@@ -71,6 +92,7 @@
             Stroke="{StaticResource SecondaryGradient}"
             Style="{StaticResource RoundedBorder}">
             <Button
+                Padding="8"
                 Background="{StaticResource ElementGradient}"
                 Command="{Binding AddTicketCmd}"
                 FontSize="40"

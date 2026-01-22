@@ -16,6 +16,23 @@
                     <CollectionView.ItemsLayout>
                         <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" />
                     </CollectionView.ItemsLayout>
+
+                    <CollectionView.EmptyView>
+                        <ContentView>
+                            <Border
+                                HorizontalOptions="Center"
+                                Stroke="{StaticResource GrayGradient}"
+                                Style="{StaticResource RoundedBorder}">
+                                <Label
+                                    Padding="8"
+                                    Background="{StaticResource BackgroundGradient}"
+                                    FontSize="28"
+                                    HorizontalOptions="Center"
+                                    Text="No favorites yet" />
+                            </Border>
+                        </ContentView>
+                    </CollectionView.EmptyView>
+
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Border Stroke="{StaticResource PrimaryGradient}" Style="{StaticResource RoundedBorder}">
@@ -83,12 +100,12 @@
             Style="{StaticResource RoundedBorder}">
             <Button
                 Grid.Row="2"
+                Padding="8"
                 Background="{StaticResource ElementGradient}"
                 Command="{Binding AddFavoriteCmd}"
-                FontSize="Header"
-                Text="New Preference"
+                FontSize="40"
+                Text="New Favorite"
                 TextColor="{StaticResource SecondaryHalfDark}" />
         </Border>
-
     </Grid>
 </ContentPage>

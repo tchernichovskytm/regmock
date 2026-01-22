@@ -10,46 +10,8 @@
     FlowDirection="LeftToRight"
     Shell.FlyoutBehavior="Flyout">
 
-    <!--  TODO: make this UI item more like an important button  -->
-    <!--<MenuFlyoutItem Command="{Binding DarkModeCmd}">
-        <MenuFlyoutItem.IconImageSource>
-            <FontImageSource
-                FontFamily="MaterialIcons"
-                Glyph="{AppThemeBinding Light={x:Static helper:IconFont.Dark_mode},
-                                        Dark={x:Static helper:IconFont.Light_mode}}"
-                Color="{AppThemeBinding Light=#000000,
-                                        Dark=#FFFFFF}" />
-        </MenuFlyoutItem.IconImageSource>
-    </MenuFlyoutItem>-->
-
     <Shell.FlyoutHeader>
         <VerticalStackLayout Margin="8" Spacing="8">
-            <!--<Border
-                IsVisible="{Binding IsNotLoggedIna}"
-                Stroke="{StaticResource PrimaryGradient}"
-                Style="{StaticResource RoundedBorder}">
-                <Button
-                    Background="{StaticResource ElementGradient}"
-                    Command="{Binding DarkModeCmd}"
-                    FontFamily="MaterialIcons"
-                    FontSize="28"
-                    HorizontalOptions="Start"
-                    Text="{x:Static helper:IconFont.Logout}"
-                    TextColor="{StaticResource PrimaryHalfDark}" />
-            </Border>
-            <Border
-                IsVisible="{Binding IsNotLoggedIna}"
-                Stroke="{StaticResource SecondaryGradient}"
-                Style="{StaticResource RoundedBorder}">
-                <Button
-                    Background="{StaticResource ElementGradient}"
-                    Command="{Binding DarkModeCmd}"
-                    FontFamily="MaterialIcons"
-                    FontSize="28"
-                    HorizontalOptions="Start"
-                    Text="{x:Static helper:IconFont.Logout}"
-                    TextColor="{StaticResource SecondaryHalfDark}" />
-            </Border>-->
             <Border
                 HorizontalOptions="Start"
                 Stroke="{AppThemeBinding Light={StaticResource PrimaryText},

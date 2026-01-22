@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="regmock.Views.NewPreferencePage"
+    x:Class="regmock.Views.EditFavoritePage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:helper="clr-namespace:regmock.Helper"
@@ -24,15 +24,17 @@
             </Border>
 
             <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
-                <VerticalStackLayout>
-                    <Label Text="Select a subject" />
-                    <Picker
-                        ItemDisplayBinding="{Binding Name}"
-                        ItemsSource="{Binding Subjects}"
-                        SelectedIndex="{Binding SelectedSubjectIndex}">
-                        <Picker.Items />
-                    </Picker>
-                </VerticalStackLayout>
+                <Border
+                    HorizontalOptions="Center"
+                    Stroke="{StaticResource GrayGradient}"
+                    Style="{StaticResource RoundedBorder}">
+
+                    <Label
+                        Padding="8"
+                        Background="{StaticResource BackgroundGradient}"
+                        FontSize="28"
+                        Text="{Binding EditSubjectName}" />
+                </Border>
 
                 <CollectionView ItemsSource="{Binding ToggleGrades}">
                     <CollectionView.ItemTemplate>
@@ -50,19 +52,34 @@
                 </CollectionView>
             </VerticalStackLayout>
 
-            <Border
+            <VerticalStackLayout
                 Grid.Row="2"
-                HorizontalOptions="Center"
-                Stroke="{StaticResource SecondaryGradient}"
-                Style="{StaticResource RoundedBorder}">
-                <Button
-                    Background="{StaticResource ElementGradient}"
-                    Command="{Binding AddFavoriteCmd}"
-                    FontSize="32"
-                    IsEnabled="{Binding CanAdd}"
-                    Text="Add Preference"
-                    TextColor="{StaticResource SecondaryHalfDark}" />
-            </Border>
+                Margin="15"
+                Spacing="64">
+                <Border
+                    HorizontalOptions="Center"
+                    Stroke="{StaticResource SecondaryGradient}"
+                    Style="{StaticResource RoundedBorder}">
+                    <Button
+                        Background="{StaticResource ElementGradient}"
+                        Command="{Binding ApplyCmd}"
+                        FontSize="32"
+                        IsEnabled="{Binding CanApply}"
+                        Text="Apply"
+                        TextColor="{StaticResource SecondaryHalfDark}" />
+                </Border>
+                <Border
+                    HorizontalOptions="Center"
+                    Stroke="{StaticResource CriticalGradient}"
+                    Style="{StaticResource RoundedBorder}">
+                    <Button
+                        Background="{StaticResource ElementGradient}"
+                        Command="{Binding DeleteCmd}"
+                        FontSize="32"
+                        Text="Delete"
+                        TextColor="{StaticResource CriticalHalfDark}" />
+                </Border>
+            </VerticalStackLayout>
         </Grid>
     </VerticalStackLayout>
 </ContentPage>

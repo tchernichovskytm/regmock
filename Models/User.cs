@@ -11,6 +11,6 @@ namespace regmock.Models
         public School? School { get; set; }
         public Grade? Grade { get; set; }
         public Int64? RegistrationDate { get; set; } // unix milliseconds
-        public List<Favorite>? HelperFavorites { get; set; } // Helper Preferences
+        public List<Favorite>? HelperFavorites { get; set; }
     }
 }

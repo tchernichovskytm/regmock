@@ -8,7 +8,7 @@ namespace regmock
         {
             InitializeComponent();
 
-            BindingContext = new ShellViewModel();
+            BindingContext = new AppShellViewModel();
         }
     }
 }
