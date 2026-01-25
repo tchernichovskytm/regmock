@@ -44,11 +44,10 @@
     </Shell.FlyoutHeader>
 
     <!--  TODO: continue this: https://learn.microsoft.com/en-us/dotnet/maui/fundamentals/shell/flyout?view=net-maui-10.0  -->
-    <TabBar>
+    <TabBar x:Name="notTab" IsVisible="{Binding IsNotLoggedIn}">
         <ShellContent
             Title="Login"
             ContentTemplate="{DataTemplate Views:LoginPage}"
-            IsVisible="{Binding IsNotLoggedIn}"
             Route="LoginPage">
             <ShellContent.Icon>
                 <FontImageSource
@@ -62,7 +61,6 @@
         <ShellContent
             Title="Register"
             ContentTemplate="{DataTemplate Views:RegisterPage}"
-            IsVisible="{Binding IsNotLoggedIn}"
             Route="RegisterPage">
             <ShellContent.Icon>
                 <FontImageSource
@@ -72,11 +70,11 @@
                                             Dark={StaticResource PrimaryDarkText}}" />
             </ShellContent.Icon>
         </ShellContent>
-
+    </TabBar>
+    <TabBar IsVisible="{Binding IsLoggedIn}">
         <ShellContent
             Title="Give Help"
             ContentTemplate="{DataTemplate Views:GiveHelpPage}"
-            IsVisible="{Binding IsLoggedIn}"
             Route="GiveHelpPage">
             <ShellContent.Icon>
                 <FontImageSource
@@ -89,7 +87,6 @@
         <ShellContent
             Title="Request Help"
             ContentTemplate="{DataTemplate Views:RequestHelpPage}"
-            IsVisible="{Binding IsLoggedIn}"
             Route="RequestHelpPage">
             <ShellContent.Icon>
                 <FontImageSource
@@ -102,7 +99,6 @@
         <ShellContent
             Title="Pick Favorites"
             ContentTemplate="{DataTemplate Views:PickFavoritesPage}"
-            IsVisible="{Binding IsLoggedIn}"
             Route="PickFavoritesPage">
             <ShellContent.Icon>
                 <FontImageSource

@@ -21,6 +21,9 @@ public static class Service
     public static ICommand LoggedInCommand;
     public static ICommand LoggedOutCommand;
 
+    public static event EventHandler LoggedInEvent;
+    public static event EventHandler LoggedOutEvent;
+
     public const Int64 UnixMiliseconds24Hours = 24 * 60 * 60 * 1000;
 
     static UserCredential currentAuthUser = null;
@@ -533,6 +536,7 @@ public static class Service
             currentAuthUser = authUser;
 
             LoggedInCommand.Execute(null);
+            LoggedInEvent?.Invoke(null, null);
         }
         catch (Exception e)
         {
@@ -547,6 +551,10 @@ public static class Service
         {
             auth.SignOut();
             LoggedOutCommand.Execute(null);
+            LoggedOutEvent?.Invoke(null, null);
+            selfTickets.Clear();
+            othersTickets.Clear();
+            helperFavorites.Clear();
         }
         catch (Exception e)
         {
@@ -581,6 +589,7 @@ public static class Service
         var registerAuthUser = await auth.CreateUserWithEmailAndPasswordAsync(tempUser.Email, tempUser.Password, tempUser.Fullname);
         var loginAuthUser = await auth.SignInWithEmailAndPasswordAsync(tempUser.Email, tempUser.Password);
         LoggedInCommand.Execute(null);
+        LoggedInEvent?.Invoke(null, null);
         currentAuthUser = loginAuthUser;
         await client.Child("Users").Child(currentAuthUser.User.Uid).PutAsync<UserModel>(tempUser);
         return true;

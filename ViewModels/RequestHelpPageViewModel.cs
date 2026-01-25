@@ -46,8 +46,6 @@ namespace regmock.ViewModels
         #region Constructor
         public async Task InitializeTicketsAsync()
         {
-            //if (TicketToggleCmd == null)
-            //{
             TicketToggleCmd = new Command((object obj) =>
             {
                 if (obj is Ticket)
@@ -56,9 +54,6 @@ namespace regmock.ViewModels
                     TicketToggled(ticket);
                 }
             });
-            //}
-            //if (DeleteTicketCmd == null)
-            //{
             DeleteTicketCmd = new Command((object obj) =>
             {
                 if (obj is Ticket)
@@ -67,7 +62,6 @@ namespace regmock.ViewModels
                     DeleteTicket(ticket);
                 }
             });
-            //}
 
             // get all the items from the fb into the service
             await Service.GetAllTicketsFromFB();
@@ -87,6 +81,12 @@ namespace regmock.ViewModels
 
         public RequestHelpPageViewModel()
         {
+            Service.LoggedOutEvent += (object? sender, EventArgs e) =>
+            {
+                Tickets.Clear();
+            };
+
+            // TODO: this doesnt work after logging out and back in
             InitializeTicketsAsync();
 
             AddTicketCmd = new Command(HandleTicket);

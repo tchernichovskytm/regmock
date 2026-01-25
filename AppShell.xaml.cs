@@ -1,4 +1,5 @@
 ﻿using regmock.ViewModels;
+using System.ComponentModel;
 
 namespace regmock
 {

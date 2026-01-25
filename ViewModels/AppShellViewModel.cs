@@ -23,8 +23,16 @@ namespace regmock.ViewModels
             set
             {
                 isLoggedIn = value;
-                OnPropertyChanged(nameof(IsLoggedIn));
-                OnPropertyChanged(nameof(IsNotLoggedIn));
+                if (value == true)
+                {
+                    OnPropertyChanged(nameof(IsLoggedIn));
+                    OnPropertyChanged(nameof(IsNotLoggedIn));
+                }
+                else
+                {
+                    OnPropertyChanged(nameof(IsNotLoggedIn));
+                    OnPropertyChanged(nameof(IsLoggedIn));
+                }
             }
         }
         #endregion
