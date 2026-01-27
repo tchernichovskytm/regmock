@@ -24,6 +24,18 @@ public static class Service
     public static event EventHandler LoggedInEvent;
     public static event EventHandler LoggedOutEvent;
 
+    public static void OnLogIn()
+    {
+        LoggedInEvent?.Invoke(null, null);
+        GetAllUserFBObjects();
+    }
+
+    public static void OnLogOut()
+    {
+        LoggedOutEvent?.Invoke(null, null);
+        ClearAllUserFBObjects();
+    }
+
     public const Int64 UnixMiliseconds24Hours = 24 * 60 * 60 * 1000;
 
     static UserCredential currentAuthUser = null;
@@ -317,7 +329,8 @@ public static class Service
             }
             helperFavorites = fbFavorites;
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             return false;
         }
 
@@ -343,6 +356,19 @@ public static class Service
         GetAllSubjectsFromFB();
         GetAllGradesFromFB();
         GetAllSchoolsFromFB();
+    }
+
+    public static void GetAllUserFBObjects()
+    {
+        GetAllTicketsFromFB();
+        GetHelperFavoritesFromFB();
+    }
+
+    public static void ClearAllUserFBObjects()
+    {
+        selfTickets.Clear();
+        othersTickets.Clear();
+        helperFavorites.Clear();
     }
 
     // TODO: turn these into firebase functions
@@ -455,6 +481,7 @@ public static class Service
         {
             await client.Child("Tickets").Child(updatedTicket.FirebaseKey).DeleteAsync();
         }
+        selfTickets.Remove(updatedTicket);
         return true;
     }
 
@@ -536,7 +563,7 @@ public static class Service
             currentAuthUser = authUser;
 
             LoggedInCommand.Execute(null);
-            LoggedInEvent?.Invoke(null, null);
+            OnLogIn();
         }
         catch (Exception e)
         {
@@ -551,7 +578,8 @@ public static class Service
         {
             auth.SignOut();
             LoggedOutCommand.Execute(null);
-            LoggedOutEvent?.Invoke(null, null);
+            //LoggedOutEvent?.Invoke(null, null);
+            OnLogOut();
             selfTickets.Clear();
             othersTickets.Clear();
             helperFavorites.Clear();
@@ -589,7 +617,8 @@ public static class Service
         var registerAuthUser = await auth.CreateUserWithEmailAndPasswordAsync(tempUser.Email, tempUser.Password, tempUser.Fullname);
         var loginAuthUser = await auth.SignInWithEmailAndPasswordAsync(tempUser.Email, tempUser.Password);
         LoggedInCommand.Execute(null);
-        LoggedInEvent?.Invoke(null, null);
+        //LoggedInEvent?.Invoke(null, null);
+        OnLogIn();
         currentAuthUser = loginAuthUser;
         await client.Child("Users").Child(currentAuthUser.User.Uid).PutAsync<UserModel>(tempUser);
         return true;

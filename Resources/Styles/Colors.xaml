@@ -16,13 +16,13 @@
     <Color x:Key="SecondaryHalfDark">#008AA6</Color>
     <Color x:Key="TertiaryHalfDark">#00A68A</Color>
 
-    <Color x:Key="PrimaryActive">#50CC50</Color>
-    <Color x:Key="SecondaryActive">#50AACC</Color>
-    <Color x:Key="TertiaryActive">#50CCAA</Color>
+    <Color x:Key="PrimaryActive">#30CC30</Color>
+    <Color x:Key="SecondaryActive">#30AACC</Color>
+    <Color x:Key="TertiaryActive">#30CCAA</Color>
 
-    <Color x:Key="PrimaryDarkActive">#508050</Color>
-    <Color x:Key="SecondaryDarkActive">#506A80</Color>
-    <Color x:Key="TertiaryDarkActive">#50806A</Color>
+    <Color x:Key="PrimaryDarkActive">#308030</Color>
+    <Color x:Key="SecondaryDarkActive">#306A80</Color>
+    <Color x:Key="TertiaryDarkActive">#30806A</Color>
 
     <Color x:Key="PrimaryText">#101010</Color>
     <Color x:Key="SecondaryText">#404040</Color>
@@ -31,6 +31,24 @@
     <Color x:Key="PrimaryDarkText">#F0F0F0</Color>
     <Color x:Key="SecondaryDarkText">#C0C0C0</Color>
     <Color x:Key="TertiaryDarkText">#909090</Color>
+
+    <!--<AppThemeBinding
+        x:Key="PrimaryLabel"
+        x:DataType="Label"
+        Dark="{StaticResource PrimaryDarkText}"
+        Light="{StaticResource PrimaryText}" />
+
+    <AppThemeBinding
+        x:Key="SecondaryLabel"
+        x:DataType="Label"
+        Dark="{StaticResource SecondaryDarkText}"
+        Light="{StaticResource SecondaryText}" />
+
+    <AppThemeBinding
+        x:Key="TertiaryLabel"
+        x:DataType="Label"
+        Dark="{StaticResource TertiaryDarkText}"
+        Light="{StaticResource TertiaryText}" />-->
 
     <!--<AppThemeBinding
         x:Key="PrimaryTextTheme"

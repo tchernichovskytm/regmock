@@ -100,7 +100,6 @@
             Style="{StaticResource RoundedBorder}">
             <Button
                 Grid.Row="2"
-                Padding="8"
                 Background="{StaticResource ElementGradient}"
                 Command="{Binding AddFavoriteCmd}"
                 FontSize="40"

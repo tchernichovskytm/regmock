@@ -64,7 +64,7 @@ namespace regmock.ViewModels
             });
 
             // get all the items from the fb into the service
-            await Service.GetAllTicketsFromFB();
+            //await Service.GetAllTicketsFromFB();
             // get the new ticket list from the service
             Tickets = new ObservableCollection<Ticket>(Service.GetSelfTickets());
             OnPropertyChanged(nameof(Tickets));
@@ -78,16 +78,20 @@ namespace regmock.ViewModels
             }
         }
 
+        static Thread clock = null;
 
         public RequestHelpPageViewModel()
         {
-            Service.LoggedOutEvent += (object? sender, EventArgs e) =>
-            {
-                Tickets.Clear();
-            };
+            //Service.LoggedOutEvent += (object? sender, EventArgs e) =>
+            //{
+            //    Tickets.Clear();
+            //};
 
+            //Service.LoggedInEvent += (object? sender, EventArgs e) =>
+            //{
             // TODO: this doesnt work after logging out and back in
-            InitializeTicketsAsync();
+            // InitializeTicketsAsync();
+            //};
 
             AddTicketCmd = new Command(HandleTicket);
 
@@ -97,8 +101,11 @@ namespace regmock.ViewModels
             });
 
             ticketStopwatch.Start();
-            Thread clock = new Thread(TimerDecrease);
-            clock.Start();
+            if (clock == null)
+            {
+                clock = new Thread(TimerDecrease);
+                clock.Start();
+            }
         }
         #endregion
 

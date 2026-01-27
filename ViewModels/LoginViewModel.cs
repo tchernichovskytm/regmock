@@ -160,22 +160,22 @@ namespace regmock.ViewModels
 
         private void ResetEmail()
         {
-            EmailEntry = "";
+            EmailEntry = null;
         }
 
         private void ResetPass()
         {
-            PasswordEntry = "";
+            PasswordEntry = null;
         }
 
         private void ResetEmailErr()
         {
-            EmailErr = "";
+            EmailErr = null;
         }
 
         private void ResetPassErr()
         {
-            PasswordErr = "";
+            PasswordErr = null;
         }
 
         private void ShowPass()

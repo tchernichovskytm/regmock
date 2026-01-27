@@ -7,13 +7,13 @@
     Background="{StaticResource BackgroundGradient}">
 
     <Grid Style="{StaticResource MainGridStyle}">
+        <!--  TODO: Hide edit button when no tickets  -->
         <Border
             Grid.Row="0"
             HorizontalOptions="Start"
             Stroke="{StaticResource SecondaryGradient}"
             Style="{StaticResource RoundedBorder}">
             <Button
-                Padding="8"
                 Background="{StaticResource ElementGradient}"
                 Command="{Binding EditTicketsCmd}"
                 FontSize="22"
@@ -31,7 +31,7 @@
 
                 <CollectionView.EmptyView>
                     <ContentView>
-                        <Border
+                        <!--<Border
                             HorizontalOptions="Center"
                             Stroke="{StaticResource GrayGradient}"
                             Style="{StaticResource RoundedBorder}">
@@ -41,6 +41,19 @@
                                 FontSize="28"
                                 HorizontalOptions="Center"
                                 Text="No tickets yet" />
+                        </Border>-->
+                        <Border
+                            Background="{StaticResource GrayGradient}"
+                            HorizontalOptions="Center"
+                            Stroke="Transparent"
+                            Style="{StaticResource RoundedBorder}">
+                            <Label
+                                Padding="8"
+                                FontSize="28"
+                                HorizontalOptions="Center"
+                                Text="No tickets yet"
+                                TextColor="{AppThemeBinding Light={StaticResource SecondaryText},
+                                                            Dark={StaticResource SecondaryDarkText}}" />
                         </Border>
                     </ContentView>
                 </CollectionView.EmptyView>
@@ -65,7 +78,10 @@
                                     <Border Stroke="{StaticResource HelpingGradient}" Style="{StaticResource RoundedBorder}">
                                         <Switch Margin="0" IsToggled="{Binding IsActive}" />
                                     </Border>
-                                    <Border Stroke="{StaticResource CriticalGradient}" Style="{StaticResource RoundedBorder}">
+                                    <Border
+                                        IsVisible="{Binding BindingContext.IsEditing, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                        Stroke="{StaticResource CriticalGradient}"
+                                        Style="{StaticResource RoundedBorder}">
                                         <Button
                                             Background="{StaticResource ElementGradient}"
                                             Command="{Binding DeleteCmd}"
@@ -73,7 +89,6 @@
                                             FontFamily="MaterialIcons"
                                             FontSize="32"
                                             HorizontalOptions="End"
-                                            IsVisible="{Binding BindingContext.IsEditing, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
                                             Text="{x:Static helper:IconFont.Delete}"
                                             TextColor="{StaticResource CriticalHalfDark}" />
                                     </Border>
@@ -90,13 +105,18 @@
             Grid.Row="2"
             HorizontalOptions="Center"
             Stroke="{StaticResource SecondaryGradient}"
+            StrokeShape="Ellipse"
             Style="{StaticResource RoundedBorder}">
+            <!--<Border.StrokeShape>
+                <Ellipse a></Ellipse>
+            </Border.StrokeShape>-->
+
             <Button
-                Padding="8"
                 Background="{StaticResource ElementGradient}"
                 Command="{Binding AddTicketCmd}"
+                FontFamily="MaterialIcons"
                 FontSize="40"
-                Text="New Ticket"
+                Text="{x:Static helper:IconFont.Add}"
                 TextColor="{StaticResource SecondaryHalfDark}" />
         </Border>
 
