@@ -3,10 +3,21 @@
     x:Class="regmock.Views.LoginPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:Comps="clr-namespace:regmock.Components"
     xmlns:helper="clr-namespace:regmock.Helper"
     Background="{StaticResource BackgroundGradient}">
 
-    <Grid Style="{StaticResource MainGridStyle}">
+    <VerticalStackLayout>
+        <Border
+            HeightRequest="64"
+            HorizontalOptions="Center"
+            Style="{StaticResource RoundedBorder}"
+            WidthRequest="64">
+            <Comps:ToggleButton />
+        </Border>
+    </VerticalStackLayout>
+
+    <!--<Grid Style="{StaticResource MainGridStyle}">
         <ScrollView Grid.Row="1">
             <VerticalStackLayout Style="{StaticResource MainStack}">
 
@@ -85,5 +96,5 @@
                 Style="{StaticResource ConfirmButton}"
                 Text="Login" />
         </VerticalStackLayout>
-    </Grid>
+    </Grid>-->
 </ContentPage>
