@@ -44,7 +44,7 @@ namespace regmock.ViewModels
         #endregion
 
         #region Constructor
-        public async Task InitializeTicketsAsync()
+        public void FetchTickets()
         {
             TicketToggleCmd = new Command((object obj) =>
             {

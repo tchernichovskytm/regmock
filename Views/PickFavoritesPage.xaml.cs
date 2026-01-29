@@ -4,10 +4,18 @@ namespace regmock.Views;
 
 public partial class PickFavoritesPage : ContentPage
 {
+    PickFavoritesPageViewModel vm;
     public PickFavoritesPage()
     {
         InitializeComponent();
 
-        BindingContext = new PickFavoritesPageViewModel();
+        vm = new PickFavoritesPageViewModel();
+        BindingContext = vm;
+    }
+
+    protected override void OnNavigatedTo(NavigatedToEventArgs e)
+    {
+        base.OnNavigatedTo(e);
+        vm.FetchFavorites();
     }
 }

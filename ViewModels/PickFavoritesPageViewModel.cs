@@ -30,20 +30,14 @@ namespace regmock.ViewModels
         #endregion
 
         #region Constructor
-        public async Task InitializeFavoritesAsync()
+        public void FetchFavorites()
         {
-            // first get the favorites from fb into a list
-            await Service.GetHelperFavoritesFromFB();
-
-            // then get it from the saved list
             HelperFavorites = new ObservableCollection<Favorite>(Service.GetHelperFavorites());
             OnPropertyChanged(nameof(HelperFavorites));
         }
 
         public PickFavoritesPageViewModel()
         {
-            InitializeFavoritesAsync();
-
             AddFavoriteCmd = new Command(async () =>
             {
                 await AddFavoriteClick();

@@ -4,8 +4,7 @@ namespace regmock.Views;
 
 public partial class RequestHelpPage : ContentPage
 {
-    private RequestHelpPageViewModel vm;
-
+    RequestHelpPageViewModel vm;
     public RequestHelpPage()
     {
         InitializeComponent();
@@ -14,9 +13,9 @@ public partial class RequestHelpPage : ContentPage
         BindingContext = vm;
     }
 
-    protected override async void OnNavigatedTo(NavigatedToEventArgs e)
+    protected override void OnNavigatedTo(NavigatedToEventArgs e)
     {
         base.OnNavigatedTo(e);
-        await vm.InitializeTicketsAsync();
+        vm.FetchTickets();
     }
 }
