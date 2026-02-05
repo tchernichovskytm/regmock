@@ -1,5 +1,6 @@
 ﻿using System.Windows.Input;
 using regmock.ViewModels;
+using regmock.Views;
 
 namespace regmock
 {
@@ -9,7 +10,8 @@ namespace regmock
         {
             InitializeComponent();
 
-            MainPage = new AppShell();
+            //MainPage = new AppShell();
+            MainPage = new Testing();
         }
     }
 }
