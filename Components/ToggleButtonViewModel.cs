@@ -25,7 +25,9 @@ namespace regmock.Components
                 isToggled = value;
                 OnPropertyChanged(nameof(IsToggled));
 
-                MainCanvas.IsToggled = isToggled;
+                // TODO: this is a very stupid hack, but it works
+                //MainCanvas.IsToggled = isToggled;
+                MainCanvas = new ToggleCanvas { IsToggled = isToggled };
             }
         }
 
@@ -52,38 +54,35 @@ namespace regmock.Components
 
             public void Draw(ICanvas canvas, RectF dirtyRect)
             {
-                //canvas.StrokeColor = Colors.Green;
-                //canvas.StrokeSize = 2;
-                //canvas.FillColor = Colors.Green;
-                //canvas.DrawRoundedRectangle(
-                //    0, dirtyRect.Height / 4,
-                //    dirtyRect.Width, dirtyRect.Height / 2,
-                //    32
-                //);
+                // Colors:
+                //      Inside Color
+                //      Border Color
+                //      Circle Color
+                Color insideColor = IsToggled ? Colors.Green : Colors.Red;
+                Color borderColor = !IsToggled ? Colors.Green : Colors.Red;
+                Color circleColor = Colors.White;
 
-                SolidPaint solidPaint = new SolidPaint(Colors.Green);
-                if (IsToggled == false) solidPaint = new SolidPaint(Colors.Red);
-
-                RectF solidRectangle = new RectF(
+                float rectRadius = dirtyRect.Height / 4;
+                canvas.FillColor = insideColor;
+                canvas.FillRoundedRectangle(
                     0, dirtyRect.Height / 4,
-                    dirtyRect.Width, dirtyRect.Height / 2
+                    dirtyRect.Width, dirtyRect.Height / 2,
+                    rectRadius
                 );
-                canvas.SetFillPaint(solidPaint, solidRectangle);
-                //canvas.SetShadow(new SizeF(0, 0), 10, Colors.Grey);
-                canvas.FillRoundedRectangle(solidRectangle, dirtyRect.Height / 4);
 
-                canvas.SetFillPaint(new SolidPaint(Colors.Aqua), RectF.Zero);
-                canvas.FillCircle(dirtyRect.Width / 2, dirtyRect.Height / 2, (float)(dirtyRect.Height / 4 / 1.5));
-                //canvas.DrawCircle(dirtyRect.Width / 2, dirtyRect.Height / 2, (float)(dirtyRect.Height / 4 / 1.5));
+                float borderSize = 16;
+                canvas.StrokeColor = borderColor;
+                canvas.StrokeSize = borderSize;
+                canvas.DrawRoundedRectangle(
+                    0, dirtyRect.Height / 4,
+                    dirtyRect.Width + borderSize / 2, dirtyRect.Height / 2 + borderSize / 2,
+                    rectRadius
+                );
 
-                //PathF path = new PathF();
-                //path.MoveTo(40, 10);
-                //path.LineTo(70, 80);
-                //path.LineTo(10, 50);
-                //path.Close();
-                //canvas.StrokeColor = Colors.Green;
-                //canvas.StrokeSize = 1;
-                //canvas.DrawPath(path);
+                float circleRadius = dirtyRect.Height / 4 / 1.5f;
+                float circleX = IsToggled ? dirtyRect.Width - (circleRadius + rectRadius / 2) : (circleRadius + rectRadius / 2);
+                canvas.FillColor = circleColor;
+                canvas.FillCircle(circleX, dirtyRect.Height / 2, circleRadius);
 
                 // Read more here: https://learn.microsoft.com/en-us/dotnet/maui/user-interface/graphics/draw?view=net-maui-10.0
             }
@@ -91,16 +90,20 @@ namespace regmock.Components
         #endregion
 
         #region Commands
+        public Command ToggleCmd { get; set; }
         #endregion
 
         #region Constructor
-        public ToggleButtonViewModel()
+        public ToggleButtonViewModel(Command ToggleCmd)
         {
             MainCanvas = new ToggleCanvas();
+
+            this.ToggleCmd = ToggleCmd;
         }
         #endregion
 
         #region Functions
+
         #endregion
     }
 }
