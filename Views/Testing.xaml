@@ -7,8 +7,9 @@
     Title="Testing">
 
     <VerticalStackLayout>
-        <Border HorizontalOptions="Center" Style="{StaticResource RoundedBorder}">
+        <Border HorizontalOptions="Fill" Style="{StaticResource RoundedBorder}">
             <Comps:ToggleButton IsToggled="{Binding BindingContext.MyBool, Source={RelativeSource AncestorType={x:Type ContentPage}}}" />
         </Border>
+        <Button Text="Hello" TextColor="{StaticResource PrimaryDarkText}" />
     </VerticalStackLayout>
 </ContentPage>

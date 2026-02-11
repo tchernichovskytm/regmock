@@ -62,27 +62,47 @@ namespace regmock.Components
                 Color borderColor = !IsToggled ? Colors.Green : Colors.Red;
                 Color circleColor = Colors.White;
 
-                float rectRadius = dirtyRect.Height / 4;
+                float x = 0;
+                float y = 0;
+                float width = dirtyRect.Width;
+                float height = dirtyRect.Height;
+                float borderSize = 6;
+                float rectRadius = 16;
+
+                // Calculations
+                {
+                    x += borderSize;
+                    y += borderSize;
+                    width -= borderSize * 2;
+                    height -= borderSize * 2;
+                }
+
+                float circleRadius = height / 2 * 0.75f;
+                float circleX = x + circleRadius + rectRadius / 2;
+
                 canvas.FillColor = insideColor;
-                canvas.FillRoundedRectangle(
-                    0, dirtyRect.Height / 4,
-                    dirtyRect.Width, dirtyRect.Height / 2,
-                    rectRadius
+                //canvas.FillRoundedRectangle(
+                //    x, y,
+                //    width, height,
+                //    rectRadius
+                //);
+                canvas.FillRectangle(
+                    x, y,
+                    width, height
                 );
 
-                float borderSize = 16;
                 canvas.StrokeColor = borderColor;
                 canvas.StrokeSize = borderSize;
                 canvas.DrawRoundedRectangle(
-                    0, dirtyRect.Height / 4,
-                    dirtyRect.Width + borderSize / 2, dirtyRect.Height / 2 + borderSize / 2,
+                    x - borderSize / 2, y - borderSize / 2,
+                    width + borderSize, height + borderSize,
                     rectRadius
                 );
 
-                float circleRadius = dirtyRect.Height / 4 / 1.5f;
-                float circleX = IsToggled ? dirtyRect.Width - (circleRadius + rectRadius / 2) : (circleRadius + rectRadius / 2);
+                if (IsToggled) circleX = width + borderSize * 2 - circleX;
+
                 canvas.FillColor = circleColor;
-                canvas.FillCircle(circleX, dirtyRect.Height / 2, circleRadius);
+                canvas.FillCircle(circleX, y + height / 2, circleRadius);
 
                 // Read more here: https://learn.microsoft.com/en-us/dotnet/maui/user-interface/graphics/draw?view=net-maui-10.0
             }
@@ -90,7 +110,7 @@ namespace regmock.Components
         #endregion
 
         #region Commands
-        public Command ToggleCmd { get; set; }
+        public ICommand ToggleCmd { get; set; }
         #endregion
 
         #region Constructor

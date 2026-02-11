@@ -4,8 +4,11 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <Grid MinimumHeightRequest="64" MinimumWidthRequest="64">
-        <GraphicsView Drawable="{Binding MainCanvas}" />
+    <Grid MinimumHeightRequest="44">
+        <GraphicsView
+            Drawable="{Binding MainCanvas}"
+            HorizontalOptions="Fill"
+            VerticalOptions="Fill" />
         <Button Background="Transparent" Command="{Binding ToggleCmd}" />
     </Grid>
 </ContentView>
