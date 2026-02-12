@@ -5,10 +5,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <Grid MinimumHeightRequest="44">
-        <GraphicsView
-            Drawable="{Binding MainCanvas}"
-            HorizontalOptions="Fill"
-            VerticalOptions="Fill" />
-        <Button Background="Transparent" Command="{Binding ToggleCmd}" />
+        <GraphicsView x:Name="GFX" Drawable="{Binding MainCanvas}" />
+        <Button
+            Padding="0"
+            Background="Transparent"
+            Command="{Binding ToggleCmd}" />
     </Grid>
 </ContentView>
