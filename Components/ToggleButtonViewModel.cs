@@ -25,9 +25,7 @@ namespace regmock.Components
                 isToggled = value;
                 OnPropertyChanged(nameof(IsToggled));
 
-                // TODO: this is a very stupid hack, but it works
                 MainCanvas.IsToggled = isToggled;
-                //MainCanvas = new ToggleCanvas { IsToggled = isToggled };
             }
         }
 
@@ -101,6 +99,8 @@ namespace regmock.Components
         #region Classes
         public class ToggleCanvas : IDrawable
         {
+            private float positionX = 0.0f; // 0 to 1
+
             public bool IsToggled { get; set; }
             public float RectRadius { get; set; }
             public Paint OnBackground { get; set; }
@@ -125,12 +125,13 @@ namespace regmock.Components
                 Color borderColor = !IsToggled ? Colors.Green : Colors.Red;
                 Color circleColor = Colors.White;
 
+                float borderSize = 0;
+                float rectRadius = RectRadius;
+
                 float x = 0;
                 float y = 0;
                 float width = dirtyRect.Width;
                 float height = dirtyRect.Height;
-                float borderSize = 0;
-                float rectRadius = RectRadius;
 
                 // Calculations
                 {
@@ -139,9 +140,6 @@ namespace regmock.Components
                     width -= borderSize * 2;
                     height -= borderSize * 2;
                 }
-
-                float circleRadius = height / 2 * 0.666f;
-                float circleX = x + circleRadius + rectRadius / 2;
 
                 //canvas.FillColor = insideColor;
                 canvas.SetFillPaint(IsToggled ? OnBackground : OffBackground, dirtyRect);
@@ -159,12 +157,39 @@ namespace regmock.Components
                 //    rectRadius
                 //);
 
-                if (IsToggled) circleX = width + borderSize * 2 - circleX;
+                float circleRadius = height / 2 * 0.666f;
+                float circleXStart = x + circleRadius + rectRadius / 2;
+                float circleXEnd = x + width - circleRadius - rectRadius / 2;
+
+                float xInterpolator = positionX;
+                // not sure about this
+                if (IsToggled) xInterpolator = 1 - xInterpolator;
+
+                float circleX = circleXStart + (circleXEnd - circleXStart) * xInterpolator;
 
                 canvas.FillColor = circleColor;
                 canvas.FillCircle(circleX, y + height / 2, circleRadius);
 
                 // Read more here: https://learn.microsoft.com/en-us/dotnet/maui/user-interface/graphics/draw?view=net-maui-10.0
+            }
+
+            private float positionOfTime(float time)
+            {
+                // 0 <= time <= 1
+                return (float)Math.Sin(time * Math.PI / 2.0f);
+            }
+
+            private float timeOfPosition(float x)
+            {
+                // 0 <= x <= 1
+                return (float)((float)Math.Asin(x) * 2.0f / Math.PI);
+            }
+
+            private float SmoothStep(float x, float deltaTime)
+            {
+                // 0 <= x <= 1
+                // 0 <= deltaTime <= 1
+                return positionOfTime(Math.Clamp(timeOfPosition(x) + deltaTime, 0, 1));
             }
         }
         #endregion
