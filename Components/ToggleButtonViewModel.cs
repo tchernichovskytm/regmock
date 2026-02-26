@@ -2,6 +2,7 @@
 using regmock.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -99,20 +100,69 @@ namespace regmock.Components
         #region Classes
         public class ToggleCanvas : IDrawable
         {
-            private float positionX = 0.0f; // 0 to 1
+            private Thread interpolateThread;
+            public ToggleCanvas()
+            {
+                interpolateThread = new Thread(UpdateLoop);
+                interpolateThread.Start();
 
-            public bool IsToggled { get; set; }
+                positionX = isToggled ? 1.0f : 0.0f;
+            }
+
+            public event Action? RequestCanvasRedraw;
+
+            private void Redraw()
+            {
+                RequestCanvasRedraw?.Invoke();
+            }
+
+            private void UpdateLoop()
+            {
+                Stopwatch stopwatch = Stopwatch.StartNew();
+                UInt64 last = (UInt64)stopwatch.ElapsedTicks;
+                while (true)
+                {
+                    UInt64 cur = (UInt64)stopwatch.ElapsedTicks;
+                    double deltaTime = (double)(cur - last) / Stopwatch.Frequency / 1000;
+                    //double deltaTime = 0.05;
+                    bool redraw = false;
+                    if (positionX < targetX)
+                    {
+                        positionX = SmoothStep(positionX, deltaTime, StepMode.Forward);
+                        redraw = true;
+                    }
+                    else if (positionX > targetX)
+                    {
+                        positionX = SmoothStep(positionX, deltaTime, StepMode.Backward);
+                        redraw = true;
+                    }
+                    if (redraw) Redraw();
+                    Thread.Sleep(1);
+                }
+            }
+
+            private float positionX = 0.0f; // 0 to 1
+            private float targetX = 0.0f; // 0 to 1
+
+            private bool isToggled;
+            public bool IsToggled
+            {
+                get
+                {
+                    return isToggled;
+                }
+                set
+                {
+                    isToggled = value;
+                    targetX = value ? 1.0f : 0.0f;
+                }
+            }
             public float RectRadius { get; set; }
             public Paint OnBackground { get; set; }
             public Paint OffBackground { get; set; }
 
             public void Draw(ICanvas canvas, RectF dirtyRect)
             {
-                // Colors:
-                //      Inside Color
-                //      Border Color
-                //      Circle Color
-                //Color insideColor = IsToggled ? Colors.Green : Colors.Red;
                 LinearGradientPaint insideGradient = new LinearGradientPaint()
                 {
                     StartColor = Colors.Green,
@@ -120,55 +170,29 @@ namespace regmock.Components
                     StartPoint = new Point(0, 0),
                     EndPoint = new Point(0, 1),
                 };
-                //insideGradient.AddOffset(0.0f, Colors.Green);
-                //insideGradient.AddOffset(1.0f, Colors.Aqua);
+
                 Color borderColor = !IsToggled ? Colors.Green : Colors.Red;
                 Color circleColor = Colors.White;
 
-                float borderSize = 0;
-                float rectRadius = RectRadius;
-
-                float x = 0;
-                float y = 0;
                 float width = dirtyRect.Width;
                 float height = dirtyRect.Height;
+                float rectRadius = RectRadius;
 
-                // Calculations
-                {
-                    x += borderSize;
-                    y += borderSize;
-                    width -= borderSize * 2;
-                    height -= borderSize * 2;
-                }
-
-                //canvas.FillColor = insideColor;
                 canvas.SetFillPaint(IsToggled ? OnBackground : OffBackground, dirtyRect);
                 canvas.FillRoundedRectangle(
-                    x, y,
+                    0, 0,
                     width, height,
                     rectRadius
                 );
 
-                //canvas.StrokeColor = borderColor;
-                //canvas.StrokeSize = borderSize;
-                //canvas.DrawRoundedRectangle(
-                //    x - borderSize / 2, y - borderSize / 2,
-                //    width + borderSize, height + borderSize,
-                //    rectRadius
-                //);
-
                 float circleRadius = height / 2 * 0.666f;
-                float circleXStart = x + circleRadius + rectRadius / 2;
-                float circleXEnd = x + width - circleRadius - rectRadius / 2;
+                float circleXStart = circleRadius + rectRadius / 2;
+                float circleXEnd = width - circleRadius - rectRadius / 2;
 
-                float xInterpolator = positionX;
-                // not sure about this
-                if (IsToggled) xInterpolator = 1 - xInterpolator;
-
-                float circleX = circleXStart + (circleXEnd - circleXStart) * xInterpolator;
+                float circleX = circleXStart + (circleXEnd - circleXStart) * positionX;
 
                 canvas.FillColor = circleColor;
-                canvas.FillCircle(circleX, y + height / 2, circleRadius);
+                canvas.FillCircle(circleX, height / 2, circleRadius);
 
                 // Read more here: https://learn.microsoft.com/en-us/dotnet/maui/user-interface/graphics/draw?view=net-maui-10.0
             }
@@ -185,11 +209,21 @@ namespace regmock.Components
                 return (float)((float)Math.Asin(x) * 2.0f / Math.PI);
             }
 
-            private float SmoothStep(float x, float deltaTime)
+            enum StepMode
+            {
+                Forward,
+                Backward,
+            }
+
+            private float SmoothStep(float x, double deltaTime, StepMode mode)
             {
                 // 0 <= x <= 1
                 // 0 <= deltaTime <= 1
-                return positionOfTime(Math.Clamp(timeOfPosition(x) + deltaTime, 0, 1));
+                if (mode == StepMode.Backward)
+                {
+                    deltaTime = -deltaTime;
+                }
+                return positionOfTime((float)Math.Clamp(timeOfPosition(x) + deltaTime, 0, 1));
             }
         }
         #endregion
