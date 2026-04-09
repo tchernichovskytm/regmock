@@ -10,8 +10,8 @@ namespace regmock
         {
             InitializeComponent();
 
-            //MainPage = new AppShell();
-            MainPage = new Testing();
+            MainPage = new AppShell();
+            //MainPage = new Testing();
         }
     }
 }

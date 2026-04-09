@@ -229,8 +229,8 @@ namespace regmock.ViewModels
             bool validFullname = false;
             if (FullnameEntry == null) FullnameErr = "";
             else if (FullnameEntry.Length == 0) FullnameErr = "Please enter a user name";
-            else if (FullnameEntry.Length < 3) FullnameErr = "Too short";
-            else if (FullnameEntry.Length > 12) FullnameErr = "Too long";
+            //else if (FullnameEntry.Length < 3) FullnameErr = "Too short";
+            //else if (FullnameEntry.Length > 12) FullnameErr = "Too long";
             else { FullnameErr = ""; validFullname = true; }
 
             bool validPhone = false;

@@ -593,6 +593,8 @@ public static class Service
 
     public static async Task<bool> InitialRegisterAsync(string fullname, string phonenumber, string email, string password)
     {
+        // TODO(9/4/2026 11:27am): the new design is that the user will pick a role FIRST then register fully, so these whole functions need to change
+
         // TODO: verify email does not exist already
 
         tempUser = new UserModel()
@@ -607,21 +609,28 @@ public static class Service
         return true;
     }
 
-    public static async Task<bool> StudentRegisterAsync(School school, Grade grade)
+    public static async Task<(bool, string)> StudentRegisterAsync(School school, Grade grade)
     {
-        tempUser.Role = Role.Student;
-        tempUser.School = school;
-        tempUser.Grade = grade;
+        try
+        {
+            tempUser.Role = Role.Student;
+            tempUser.School = school;
+            tempUser.Grade = grade;
 
-        // TODO: verify that the 2 users are the same and there are no errors
-        var registerAuthUser = await auth.CreateUserWithEmailAndPasswordAsync(tempUser.Email, tempUser.Password, tempUser.Fullname);
-        var loginAuthUser = await auth.SignInWithEmailAndPasswordAsync(tempUser.Email, tempUser.Password);
-        LoggedInCommand.Execute(null);
-        //LoggedInEvent?.Invoke(null, null);
-        OnLogIn();
-        currentAuthUser = loginAuthUser;
-        await client.Child("Users").Child(currentAuthUser.User.Uid).PutAsync<UserModel>(tempUser);
-        return true;
+            // TODO: verify that the 2 users are the same and there are no errors
+            var registerAuthUser = await auth.CreateUserWithEmailAndPasswordAsync(tempUser.Email, tempUser.Password, tempUser.Fullname);
+            var loginAuthUser = await auth.SignInWithEmailAndPasswordAsync(tempUser.Email, tempUser.Password);
+            LoggedInCommand.Execute(null);
+            //LoggedInEvent?.Invoke(null, null);
+            OnLogIn();
+            currentAuthUser = loginAuthUser;
+            await client.Child("Users").Child(currentAuthUser.User.Uid).PutAsync<UserModel>(tempUser);
+        }
+        catch (FirebaseAuthException e)
+        {
+            return (false, e.Reason.ToString());
+        }
+        return (true, "");
     }
 
     //public static async Task<bool> RequestRegisterAsync(string fullname, string phonenumber, string email, string password)

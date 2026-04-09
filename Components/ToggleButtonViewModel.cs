@@ -191,7 +191,7 @@ namespace regmock.Components
 
                 float circleX = circleXStart + (circleXEnd - circleXStart) * positionX;
 
-                canvas.FillColor = circleColor;
+                canvas.SetFillPaint(new SolidPaint(circleColor), dirtyRect);
                 canvas.FillCircle(circleX, height / 2, circleRadius);
 
                 // Read more here: https://learn.microsoft.com/en-us/dotnet/maui/user-interface/graphics/draw?view=net-maui-10.0
