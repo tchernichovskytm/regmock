@@ -60,8 +60,8 @@
 
         <ShellContent
             Title="Register"
-            ContentTemplate="{DataTemplate Views:RegisterPage}"
-            Route="RegisterPage">
+            ContentTemplate="{DataTemplate Views:RolePage}"
+            Route="RolePage">
             <ShellContent.Icon>
                 <FontImageSource
                     FontFamily="MaterialIcons"
@@ -71,6 +71,7 @@
             </ShellContent.Icon>
         </ShellContent>
     </TabBar>
+
     <TabBar IsVisible="{Binding IsLoggedIn}">
         <ShellContent
             Title="Give Help"

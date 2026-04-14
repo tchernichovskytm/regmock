@@ -91,8 +91,7 @@ namespace regmock.ViewModels
             {
                 await Service.StudentRegisterAsync(SchoolList[SchoolSelectIndex], GradeList[GradeSelectIndex]);
 
-                // TODO: add a welcome page and go to it
-                await Shell.Current.GoToAsync("//RequestHelpPage");
+                await Shell.Current.GoToAsync("//RegisterPage");
             });
         }
 

@@ -591,37 +591,20 @@ public static class Service
         return true;
     }
 
-    public static async Task<bool> InitialRegisterAsync(string fullname, string phonenumber, string email, string password)
+
+    public static async Task<(bool, string)> FinalRegisterAsync(string fullname, string phonenumber, string email, string password)
     {
-        // TODO(9/4/2026 11:27am): the new design is that the user will pick a role FIRST then register fully, so these whole functions need to change
+        tempUser.Fullname = fullname;
+        tempUser.PhoneNumber = phonenumber;
+        tempUser.Email = email;
+        tempUser.Password = password;
+        tempUser.RegistrationDate = await GetFirebaseTime();
 
-        // TODO: verify email does not exist already
-
-        tempUser = new UserModel()
-        {
-            Fullname = fullname,
-            PhoneNumber = phonenumber,
-            Email = email,
-            Password = password,
-            Role = Role.None,
-            RegistrationDate = await GetFirebaseTime(),
-        };
-        return true;
-    }
-
-    public static async Task<(bool, string)> StudentRegisterAsync(School school, Grade grade)
-    {
         try
         {
-            tempUser.Role = Role.Student;
-            tempUser.School = school;
-            tempUser.Grade = grade;
-
-            // TODO: verify that the 2 users are the same and there are no errors
             var registerAuthUser = await auth.CreateUserWithEmailAndPasswordAsync(tempUser.Email, tempUser.Password, tempUser.Fullname);
             var loginAuthUser = await auth.SignInWithEmailAndPasswordAsync(tempUser.Email, tempUser.Password);
             LoggedInCommand.Execute(null);
-            //LoggedInEvent?.Invoke(null, null);
             OnLogIn();
             currentAuthUser = loginAuthUser;
             await client.Child("Users").Child(currentAuthUser.User.Uid).PutAsync<UserModel>(tempUser);
@@ -630,7 +613,17 @@ public static class Service
         {
             return (false, e.Reason.ToString());
         }
-        return (true, "");
+        return (true, null);
+    }
+
+    public static async Task StudentRegisterAsync(School school, Grade grade)
+    {
+        tempUser = new UserModel()
+        {
+            Role = Role.Student,
+            School = school,
+            Grade = grade,
+        };
     }
 
     //public static async Task<bool> RequestRegisterAsync(string fullname, string phonenumber, string email, string password)

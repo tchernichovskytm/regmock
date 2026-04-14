@@ -186,15 +186,16 @@ namespace regmock.ViewModels
             PhoneReset_Cmd = new Command(ResetPhone);
             Register_Cmd = new Command(async () =>
             {
-                bool success = await Service.InitialRegisterAsync(FullnameEntry, PhonenumberEntry, EmailEntry, PasswordEntry);
-                if (success)
+                (bool, string) result = await Service.FinalRegisterAsync(FullnameEntry, PhonenumberEntry, EmailEntry, PasswordEntry);
+                if (result.Item1)
                 {
-                    await Shell.Current.Navigation.PushModalAsync(new RolePage(), true);
+                    // TODO: go to a real welcome page
+                    await Shell.Current.GoToAsync("//RequestHelpPage");
                     RegisterErr = "Success";
                 }
                 else
                 {
-                    RegisterErr = "Failed to Register";
+                    RegisterErr = $"Failed to Register: {result.Item2}";
                 }
             });
 
