@@ -590,6 +590,17 @@ public static class Service
         return true;
     }
 
+    class ToFirebaseUser
+    {
+        public string? Fullname { get; set; }
+        public string? Password { get; set; }
+        public string? PhoneNumber { get; set; }
+        public string? Email { get; set; }
+        public Role? Role { get; set; }
+        public string? School { get; set; }
+        public string? Grade { get; set; }
+        public Int64? RegistrationDate { get; set; }
+    }
 
     public static async Task<(bool, string)> FinalRegisterAsync(string fullname, string phonenumber, string email, string password)
     {
@@ -597,7 +608,6 @@ public static class Service
         tempUser.PhoneNumber = phonenumber;
         tempUser.Email = email;
         tempUser.Password = password;
-        tempUser.RegistrationDate = await GetFirebaseTime();
 
         try
         {
@@ -606,6 +616,19 @@ public static class Service
             LoggedInCommand.Execute(null);
             OnLogIn();
             currentAuthUser = loginAuthUser;
+
+            ToFirebaseUser toFirebaseUser = new ToFirebaseUser()
+            {
+                Fullname = tempUser.Fullname,
+                Password = tempUser.Password,
+                PhoneNumber = tempUser.PhoneNumber,
+                Email = tempUser.Email,
+                Role = tempUser.Role,
+                School = tempUser.School.Id,
+                Grade = tempUser.Grade.Id,
+                RegistrationDate = await GetFirebaseTime(),
+            };
+
             await client.Child("Users").Child(currentAuthUser.User.Uid).PutAsync<UserModel>(tempUser);
         }
         catch (FirebaseAuthException e)
