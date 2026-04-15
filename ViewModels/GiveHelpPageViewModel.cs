@@ -72,9 +72,10 @@ namespace regmock.ViewModels
         #endregion
 
         #region Constructor
-        public async Task InitializeTicketsAsync()
+        public async Task FetchTicketsAsync()
         {
-            if (DisplayTickets != null){
+            if (DisplayTickets != null)
+            {
                 DisplayTickets.Clear();
             }
             // get all the items from the fb into the service
@@ -158,12 +159,12 @@ namespace regmock.ViewModels
         public int PutTicketFavoriteIcons(List<Ticket> tickets)
         {
             int passesFilterCount = 0;
-            foreach(Ticket ticket in tickets)
+            foreach (Ticket ticket in tickets)
             {
                 bool passes = PassesFilter(ticket, HelperFavorites);
                 ticket.IsFavoriteIcon = passes ? FavTrueIcon : "";// FavFalseIcon;
                 if (passes) passesFilterCount++;
-            
+
             }
             return passesFilterCount;
         }

@@ -13,9 +13,9 @@ public partial class RequestHelpPage : ContentPage
         BindingContext = vm;
     }
 
-    protected override void OnNavigatedTo(NavigatedToEventArgs e)
+    protected override async void OnNavigatedTo(NavigatedToEventArgs e)
     {
         base.OnNavigatedTo(e);
-        vm.FetchTickets();
+        await vm.FetchTicketsAsync();
     }
 }

@@ -16,6 +16,6 @@ public partial class GiveHelpPage : ContentPage
     protected override async void OnNavigatedTo(NavigatedToEventArgs e)
     {
         base.OnNavigatedTo(e);
-        await viewModel.InitializeTicketsAsync();
+        await viewModel.FetchTicketsAsync();
     }
 }

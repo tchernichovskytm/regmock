@@ -287,11 +287,11 @@ public static class Service
 
                 fbOthersTickets.Add(parsedTicket);
             }
-            // this is done because the tickets may fail reading halfway in
-            // so we only want to save the tickets after they all passed
-            selfTickets = fbSelfTickets;
-            othersTickets = fbOthersTickets;
         }
+        // this is done because the tickets may fail reading halfway in
+        // so we only want to save the tickets after they all passed
+        selfTickets = fbSelfTickets;
+        othersTickets = fbOthersTickets;
         return true;
     }
 
@@ -552,24 +552,23 @@ public static class Service
         return true;
     }
 
-    // TODO: give back useful error message | 4/1/26: this is likely not possible
-    public static async Task<bool> RequestLoginAsync(string email, string password)
+    public static async Task<(bool, string)> RequestLoginAsync(string email, string password)
     {
+        if (string.IsNullOrEmpty(email)) return (false, "Empty Email");
+        if (string.IsNullOrEmpty(password)) return (false, "Empty Password");
         try
         {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) return false;
-
             var authUser = await auth.SignInWithEmailAndPasswordAsync(email, password);
             currentAuthUser = authUser;
 
             LoggedInCommand.Execute(null);
             OnLogIn();
         }
-        catch (Exception e)
+        catch (FirebaseAuthException e)
         {
-            return false;
+            return (false, e.Reason.ToString());
         }
-        return true;
+        return (true, null);
     }
 
     public static bool RequestLogoutAsync()

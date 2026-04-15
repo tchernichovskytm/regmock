@@ -126,8 +126,8 @@ namespace regmock.ViewModels
 
             Login_Cmd = new Command(async () =>
             {
-                bool success = await Service.RequestLoginAsync(EmailEntry, PasswordEntry);
-                if (success)
+                (bool, string) result = await Service.RequestLoginAsync(EmailEntry, PasswordEntry);
+                if (result.Item1)
                 {
                     LoginErr = "Logged in";
                     LoginErrColor = Colors.Green;
@@ -142,7 +142,7 @@ namespace regmock.ViewModels
                 }
                 else
                 {
-                    LoginErr = "Failed to Login, Please try again";
+                    LoginErr = $"Failed to Login: {result.Item2}";
                     LoginErrColor = Colors.Red;
                 }
             });
