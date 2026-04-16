@@ -44,7 +44,7 @@ namespace regmock.ViewModels
         #endregion
 
         #region Constructor
-        public async Task FetchTicketsAsync()
+        public void InitializeTickets()
         {
             TicketToggleCmd = new Command((object obj) =>
             {
@@ -64,7 +64,7 @@ namespace regmock.ViewModels
             });
 
             // get all the items from the fb into the service
-            await Service.GetAllTicketsFromFB();
+            //await Service.GetAllTicketsFromFB();
             // get the new ticket list from the service
             Tickets = new ObservableCollection<Ticket>(Service.GetSelfTickets());
             OnPropertyChanged(nameof(Tickets));
@@ -76,6 +76,13 @@ namespace regmock.ViewModels
                 ticket.IsActiveToggleCmd = (Command)TicketToggleCmd;
                 ticket.DeleteCmd = (Command)DeleteTicketCmd;
             }
+        }
+        public void DeinitializeTickets()
+        {
+            TicketToggleCmd = null;
+            DeleteTicketCmd = null;
+            Tickets = null;
+            OnPropertyChanged(nameof(Tickets));
         }
 
         static Thread clock = null;
@@ -120,7 +127,7 @@ namespace regmock.ViewModels
                     Ticket newTicket = (Ticket)newTicketObj;
                     newTicket.IsActiveToggleCmd = TicketToggleCmd;
                     newTicket.DeleteCmd = (Command)DeleteTicketCmd;
-                    var success = await Service.HandleTicket(newTicket);
+                    bool success = await Service.HandleTicket(newTicket);
                     if (!success)
                     {
                         // TODO: handle error

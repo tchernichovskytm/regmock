@@ -11,11 +11,21 @@ public partial class RequestHelpPage : ContentPage
 
         vm = new RequestHelpPageViewModel();
         BindingContext = vm;
+
+        vm.InitializeTickets();
+        Service.LoggedInEvent += () =>
+        {
+            vm.InitializeTickets();
+        };
+        Service.LoggedOutEvent += () =>
+        {
+            vm.DeinitializeTickets();
+        };
     }
 
-    protected override async void OnNavigatedTo(NavigatedToEventArgs e)
+    protected override void OnNavigatedTo(NavigatedToEventArgs e)
     {
         base.OnNavigatedTo(e);
-        await vm.FetchTicketsAsync();
+        //vm.InitializeTicketsAsync();
     }
 }

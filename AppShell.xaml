@@ -72,20 +72,6 @@
         </ShellContent>
     </TabBar>
 
-    <ShellContent
-        IsVisible="False"
-        Title="Register"
-        ContentTemplate="{DataTemplate Views:RegisterPage}"
-        Route="RegisterPage">
-        <ShellContent.Icon>
-            <FontImageSource
-                FontFamily="MaterialIcons"
-                Glyph="{x:Static helper:IconFont.App_registration}"
-                Color="{AppThemeBinding Light={StaticResource PrimaryText},
-                                        Dark={StaticResource PrimaryDarkText}}" />
-        </ShellContent.Icon>
-    </ShellContent>
-
     <TabBar IsVisible="{Binding IsLoggedIn}">
         <ShellContent
             Title="Give Help"

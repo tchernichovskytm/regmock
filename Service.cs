@@ -21,19 +21,21 @@ public static class Service
     public static ICommand LoggedInCommand;
     public static ICommand LoggedOutCommand;
 
-    public static event EventHandler LoggedInEvent;
-    public static event EventHandler LoggedOutEvent;
+    public static event Action LoggedInEvent;
+    public static event Action LoggedOutEvent;
 
-    public static void OnLogIn()
+    public static async void OnLogIn()
     {
-        LoggedInEvent?.Invoke(null, null);
-        GetAllUserFBObjects();
+        LoggedInCommand.Execute(null);
+        await GetAllUserFBObjects();
+        LoggedInEvent?.Invoke();
     }
 
     public static void OnLogOut()
     {
-        LoggedOutEvent?.Invoke(null, null);
+        LoggedOutCommand.Execute(null);
         ClearAllUserFBObjects();
+        LoggedOutEvent?.Invoke();
     }
 
     public const Int64 UnixMiliseconds24Hours = 24 * 60 * 60 * 1000;
@@ -351,17 +353,17 @@ public static class Service
         return $"{(days * 24 + hours):00}:{minutes:00}:{seconds:00}";
     }
 
-    public static void GetAllStaticFBObjects()
+    public static async Task GetAllStaticFBObjects()
     {
-        GetAllSubjectsFromFB();
-        GetAllGradesFromFB();
-        GetAllSchoolsFromFB();
+        await GetAllSubjectsFromFB();
+        await GetAllGradesFromFB();
+        await GetAllSchoolsFromFB();
     }
 
-    public static void GetAllUserFBObjects()
+    public static async Task GetAllUserFBObjects()
     {
-        GetAllTicketsFromFB();
-        GetHelperFavoritesFromFB();
+        await GetAllTicketsFromFB();
+        await GetHelperFavoritesFromFB();
     }
 
     public static void ClearAllUserFBObjects()
@@ -561,7 +563,6 @@ public static class Service
             var authUser = await auth.SignInWithEmailAndPasswordAsync(email, password);
             currentAuthUser = authUser;
 
-            LoggedInCommand.Execute(null);
             OnLogIn();
         }
         catch (FirebaseAuthException e)
@@ -576,8 +577,6 @@ public static class Service
         try
         {
             auth.SignOut();
-            LoggedOutCommand.Execute(null);
-            //LoggedOutEvent?.Invoke(null, null);
             OnLogOut();
             selfTickets.Clear();
             othersTickets.Clear();
@@ -613,7 +612,6 @@ public static class Service
         {
             var registerAuthUser = await auth.CreateUserWithEmailAndPasswordAsync(tempUser.Email, tempUser.Password, tempUser.Fullname);
             var loginAuthUser = await auth.SignInWithEmailAndPasswordAsync(tempUser.Email, tempUser.Password);
-            LoggedInCommand.Execute(null);
             OnLogIn();
             currentAuthUser = loginAuthUser;
 
@@ -629,7 +627,7 @@ public static class Service
                 RegistrationDate = await GetFirebaseTime(),
             };
 
-            await client.Child("Users").Child(currentAuthUser.User.Uid).PutAsync<UserModel>(tempUser);
+            await client.Child("Users").Child(currentAuthUser.User.Uid).PutAsync<ToFirebaseUser>(toFirebaseUser);
         }
         catch (FirebaseAuthException e)
         {

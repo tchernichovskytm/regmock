@@ -1,4 +1,5 @@
 ﻿using regmock.Models;
+using regmock.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -91,7 +92,7 @@ namespace regmock.ViewModels
             {
                 await Service.StudentRegisterAsync(SchoolList[SchoolSelectIndex], GradeList[GradeSelectIndex]);
 
-                await Shell.Current.GoToAsync("//RegisterPage");
+                await Shell.Current.Navigation.PushModalAsync(new RegisterPage(), true);
             });
         }
 
