@@ -11,17 +11,16 @@ public partial class ToggleButton : ContentView
         {
             IsToggled = !IsToggled;
         });
-        vm = new ToggleButtonViewModel(ViewModelToggleCmd);
+        vm = new ToggleButtonViewModel(ViewModelToggleCmd, GFX);
         vm.MainCanvas.RequestCanvasRedraw += () =>
         {
-            try
-            {
-                this.GFX.Invalidate();
-            }
-            catch
-            {
+            //try
+            //{
+            //}
+            //catch
+            //{
 
-            }
+            //}
         };
         BindingContext = vm;
     }
@@ -71,6 +70,30 @@ public partial class ToggleButton : ContentView
         var toggleButton = (ToggleButton)bindable;
 
         toggleButton.vm.RectRadius = (float)newValue;
+        toggleButton.GFX.Invalidate();
+    }
+
+    public float CircleRadius
+    {
+        get => (float)GetValue(CircleRadiusProperty);
+        set => SetValue(CircleRadiusProperty, value);
+    }
+
+    public static readonly BindableProperty CircleRadiusProperty =
+          BindableProperty.Create(
+              propertyName: nameof(CircleRadius),
+              returnType: typeof(float),
+              declaringType: typeof(ToggleButton),
+              defaultValue: 0.0f,
+              defaultBindingMode: BindingMode.TwoWay,
+              propertyChanged: OnCircleRadiusChanged
+          );
+
+    private static void OnCircleRadiusChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var toggleButton = (ToggleButton)bindable;
+
+        toggleButton.vm.CircleRadius = (float)newValue;
         toggleButton.GFX.Invalidate();
     }
 

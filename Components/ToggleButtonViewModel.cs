@@ -31,7 +31,6 @@ namespace regmock.Components
         }
 
         private float rectRadius;
-
         public float RectRadius
         {
             get
@@ -44,6 +43,22 @@ namespace regmock.Components
                 OnPropertyChanged(nameof(RectRadius));
 
                 MainCanvas.RectRadius = rectRadius;
+            }
+        }
+
+        private float circleRadius;
+        public float CircleRadius
+        {
+            get
+            {
+                return circleRadius;
+            }
+            set
+            {
+                circleRadius = value;
+                OnPropertyChanged(nameof(CircleRadius));
+
+                MainCanvas.CircleRadius = circleRadius;
             }
         }
 
@@ -100,46 +115,7 @@ namespace regmock.Components
         #region Classes
         public class ToggleCanvas : IDrawable
         {
-            private Thread interpolateThread;
-            public ToggleCanvas()
-            {
-                interpolateThread = new Thread(UpdateLoop);
-                interpolateThread.Start();
-
-                positionX = isToggled ? 1.0f : 0.0f;
-            }
-
-            public event Action? RequestCanvasRedraw;
-
-            private void Redraw()
-            {
-                RequestCanvasRedraw?.Invoke();
-            }
-
-            private void UpdateLoop()
-            {
-                Stopwatch stopwatch = Stopwatch.StartNew();
-                UInt64 last = (UInt64)stopwatch.ElapsedTicks;
-                while (true)
-                {
-                    UInt64 cur = (UInt64)stopwatch.ElapsedTicks;
-                    double deltaTime = (double)(cur - last) / Stopwatch.Frequency / 1000;
-                    //double deltaTime = 0.05;
-                    bool redraw = false;
-                    if (positionX < targetX)
-                    {
-                        positionX = SmoothStep(positionX, deltaTime, StepMode.Forward);
-                        redraw = true;
-                    }
-                    else if (positionX > targetX)
-                    {
-                        positionX = SmoothStep(positionX, deltaTime, StepMode.Backward);
-                        redraw = true;
-                    }
-                    if (redraw) Redraw();
-                    Thread.Sleep(1);
-                }
-            }
+            private GraphicsView GFX { get; set; }
 
             private float positionX = 0.0f; // 0 to 1
             private float targetX = 0.0f; // 0 to 1
@@ -155,11 +131,57 @@ namespace regmock.Components
                 {
                     isToggled = value;
                     targetX = value ? 1.0f : 0.0f;
+                    if (GFX.IsLoaded)
+                    {
+                        AnimateTo(targetX);
+                    }
+                    else
+                    {
+                        positionX = targetX;
+                    }
                 }
             }
             public float RectRadius { get; set; }
+            public float CircleRadius { get; set; }
             public Paint OnBackground { get; set; }
             public Paint OffBackground { get; set; }
+
+            public ToggleCanvas(GraphicsView GFX)
+            {
+                this.GFX = GFX;
+
+                positionX = isToggled ? 1.0f : 0.0f;
+            }
+
+            public void AnimateTo(float target)
+            {
+                float start = positionX;
+
+                var animation = new Animation(
+                    v =>
+                    {
+                        positionX = (float)v;
+                        Redraw();
+                    },
+                    start,
+                    target
+                );
+
+                animation.Commit(
+                    owner: this.GFX,
+                    name: "ToggleAnim",
+                    length: 500, // milliseconds
+                    easing: Easing.SinInOut
+                );
+            }
+
+            public event Action? RequestCanvasRedraw;
+
+            private void Redraw()
+            {
+                //RequestCanvasRedraw?.Invoke();
+                this.GFX.Invalidate();
+            }
 
             public void Draw(ICanvas canvas, RectF dirtyRect)
             {
@@ -185,7 +207,15 @@ namespace regmock.Components
                     rectRadius
                 );
 
-                float circleRadius = height / 2 * 0.666f;
+                float circleRadius;
+                if (CircleRadius == 0)
+                {
+                    circleRadius = height / 2 * 0.666f;
+                }
+                else
+                {
+                    circleRadius = CircleRadius;
+                }
                 float circleXStart = circleRadius + rectRadius / 2;
                 float circleXEnd = width - circleRadius - rectRadius / 2;
 
@@ -196,35 +226,6 @@ namespace regmock.Components
 
                 // Read more here: https://learn.microsoft.com/en-us/dotnet/maui/user-interface/graphics/draw?view=net-maui-10.0
             }
-
-            private float positionOfTime(float time)
-            {
-                // 0 <= time <= 1
-                return (float)Math.Sin(time * Math.PI / 2.0f);
-            }
-
-            private float timeOfPosition(float x)
-            {
-                // 0 <= x <= 1
-                return (float)((float)Math.Asin(x) * 2.0f / Math.PI);
-            }
-
-            enum StepMode
-            {
-                Forward,
-                Backward,
-            }
-
-            private float SmoothStep(float x, double deltaTime, StepMode mode)
-            {
-                // 0 <= x <= 1
-                // 0 <= deltaTime <= 1
-                if (mode == StepMode.Backward)
-                {
-                    deltaTime = -deltaTime;
-                }
-                return positionOfTime((float)Math.Clamp(timeOfPosition(x) + deltaTime, 0, 1));
-            }
         }
         #endregion
 
@@ -233,9 +234,9 @@ namespace regmock.Components
         #endregion
 
         #region Constructor
-        public ToggleButtonViewModel(Command ToggleCmd)
+        public ToggleButtonViewModel(Command ToggleCmd, GraphicsView GFX)
         {
-            MainCanvas = new ToggleCanvas();
+            MainCanvas = new ToggleCanvas(GFX);
 
             this.ToggleCmd = ToggleCmd;
         }
