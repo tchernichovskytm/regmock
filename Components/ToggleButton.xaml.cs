@@ -12,7 +12,8 @@ public partial class ToggleButton : ContentView
             IsToggled = !IsToggled;
         });
         vm = new ToggleButtonViewModel(ViewModelToggleCmd, GFX);
-        BindingContext = vm;
+        // no idea why "GFX." fixes the binding of IsToggled
+        GFX.BindingContext = vm;
     }
 
     public bool IsToggled

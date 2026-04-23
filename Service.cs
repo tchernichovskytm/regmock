@@ -231,7 +231,8 @@ public static class Service
         Int64 currentFirebaseTime = await GetFirebaseTime();
 
         // TODO: not finished
-        //var validTicketsFromFB = ticketsFromFB.Where(ticket => TicketRemainingTime(ticket.Object.OpenTimes.Values.Last(), currentFirebaseTime, UnixMiliseconds24Hours) >= 0);
+        // (23/4/2026): why is it not finished? i dont remember
+        var validTicketsFromFB = ticketsFromFB.Where(ticket => TicketRemainingTime(ticket.Object.OpenTimes.Values.Last(), currentFirebaseTime, UnixMiliseconds24Hours) >= 0);
 
         if (ticketsFromFB == null) return false;
 
