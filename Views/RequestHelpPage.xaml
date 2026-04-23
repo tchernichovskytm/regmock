@@ -77,14 +77,16 @@
                                         Text="{Binding ServerActiveTime}"
                                         VerticalOptions="Center" />
                                     <Border Stroke="{StaticResource HelpingGradient}" Style="{StaticResource RoundedBorder}">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="25" />
+                                        </Border.StrokeShape>
                                         <!--<Switch Margin="0" IsToggled="{Binding IsActive}" />-->
                                         <Comps:ToggleButton
-                                            WidthRequest="80"
+                                            WidthRequest="100"
                                             IsToggled="{Binding IsActive}" 
                                             OffBackground="{StaticResource GrayGradient}"
                                             OnBackground="{StaticResource PrimaryGradient}"
-                                            RectRadius="20"
-                                            CircleRadius="12"
+                                            RectRadius="25"
                                         />
                                     </Border>
                                     <Border
@@ -116,9 +118,6 @@
             Stroke="{StaticResource SecondaryGradient}"
             StrokeShape="Ellipse"
             Style="{StaticResource RoundedBorder}">
-            <!--<Border.StrokeShape>
-                <Ellipse a></Ellipse>
-            </Border.StrokeShape>-->
 
             <Button
                 Background="{StaticResource ElementGradient}"

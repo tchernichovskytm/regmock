@@ -175,11 +175,8 @@ namespace regmock.Components
                 );
             }
 
-            public event Action? RequestCanvasRedraw;
-
             private void Redraw()
             {
-                //RequestCanvasRedraw?.Invoke();
                 this.GFX.Invalidate();
             }
 
@@ -210,19 +207,20 @@ namespace regmock.Components
                 float circleRadius;
                 if (CircleRadius == 0)
                 {
-                    circleRadius = height / 2 * 0.666f;
+                    circleRadius = height * 0.333f;
                 }
                 else
                 {
                     circleRadius = CircleRadius;
                 }
-                float circleXStart = circleRadius + rectRadius / 2;
-                float circleXEnd = width - circleRadius - rectRadius / 2;
+                float padding = (height - 2.0f * circleRadius) / 2.0f;
+                float circleXStart = circleRadius + padding;
+                float circleXEnd = width - circleXStart;
 
                 float circleX = circleXStart + (circleXEnd - circleXStart) * positionX;
 
                 canvas.SetFillPaint(new SolidPaint(circleColor), dirtyRect);
-                canvas.FillCircle(circleX, height / 2, circleRadius);
+                canvas.FillCircle(circleX, height / 2.0f, circleRadius);
 
                 // Read more here: https://learn.microsoft.com/en-us/dotnet/maui/user-interface/graphics/draw?view=net-maui-10.0
             }

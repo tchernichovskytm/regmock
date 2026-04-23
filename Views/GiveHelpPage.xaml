@@ -92,7 +92,6 @@
                                             <Border
                                                 Grid.Row="0"
                                                 HorizontalOptions="End"
-                                                IsVisible="{Binding BindingContext.IsFavButtonVisible, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
                                                 Stroke="{StaticResource HelpingGradient}"
                                                 Style="{StaticResource RoundedBorder}">
                                                 <Button
@@ -115,6 +114,7 @@
                                             FontFamily="MaterialIcons"
                                             FontSize="20"
                                             HorizontalOptions="Center"
+                                            IsVisible="{Binding BindingContext.IsFavButtonVisible, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
                                             Text="{Binding IsFavoriteIcon}"
                                             TextColor="{StaticResource FavoriteHalfDark}"
                                             VerticalOptions="Center" />

@@ -20,63 +20,63 @@
         <Comps:ToggleButton
             OffBackground="{StaticResource GrayGradient}"
             OnBackground="{StaticResource PrimaryGradient}"
-            RectRadius="22" />
+            RectRadius="0" />
         <Comps:ToggleButton
             OffBackground="{StaticResource GrayGradient}"
             OnBackground="{StaticResource PrimaryGradient}"
-            RectRadius="22" />
+            RectRadius="5" />
         <Comps:ToggleButton
             OffBackground="{StaticResource GrayGradient}"
             OnBackground="{StaticResource PrimaryGradient}"
-            RectRadius="22" />
+            RectRadius="10" />
         <Comps:ToggleButton
             OffBackground="{StaticResource GrayGradient}"
             OnBackground="{StaticResource PrimaryGradient}"
-            RectRadius="22" />
+            RectRadius="15" />
         <Comps:ToggleButton
             OffBackground="{StaticResource GrayGradient}"
             OnBackground="{StaticResource PrimaryGradient}"
-            RectRadius="22" />
+            RectRadius="20" />
         <Comps:ToggleButton
             OffBackground="{StaticResource GrayGradient}"
             OnBackground="{StaticResource PrimaryGradient}"
-            RectRadius="22" />
+            RectRadius="25" />
         <Comps:ToggleButton
             OffBackground="{StaticResource GrayGradient}"
             OnBackground="{StaticResource PrimaryGradient}"
-            RectRadius="22" />
+            RectRadius="30" />
         <Comps:ToggleButton
             OffBackground="{StaticResource GrayGradient}"
             OnBackground="{StaticResource PrimaryGradient}"
-            RectRadius="22" />
+            RectRadius="35" />
         <Comps:ToggleButton
             OffBackground="{StaticResource GrayGradient}"
             OnBackground="{StaticResource PrimaryGradient}"
-            RectRadius="22" />
+            RectRadius="40" />
         <Comps:ToggleButton
             OffBackground="{StaticResource GrayGradient}"
             OnBackground="{StaticResource PrimaryGradient}"
-            RectRadius="22" />
+            RectRadius="45" />
         <Comps:ToggleButton
             OffBackground="{StaticResource GrayGradient}"
             OnBackground="{StaticResource PrimaryGradient}"
-            RectRadius="22" />
+            RectRadius="50" />
         <Comps:ToggleButton
             OffBackground="{StaticResource GrayGradient}"
             OnBackground="{StaticResource PrimaryGradient}"
-            RectRadius="22" />
+            RectRadius="55" />
         <Comps:ToggleButton
             OffBackground="{StaticResource GrayGradient}"
             OnBackground="{StaticResource PrimaryGradient}"
-            RectRadius="22" />
+            RectRadius="60" />
         <Comps:ToggleButton
             OffBackground="{StaticResource GrayGradient}"
             OnBackground="{StaticResource PrimaryGradient}"
-            RectRadius="22" />
+            RectRadius="65" />
         <Comps:ToggleButton
             OffBackground="{StaticResource GrayGradient}"
             OnBackground="{StaticResource PrimaryGradient}"
-            RectRadius="22" />
+            RectRadius="70" />
         <Button Text="Hello" TextColor="{StaticResource PrimaryDarkText}" />
     </VerticalStackLayout>
 </ContentPage>

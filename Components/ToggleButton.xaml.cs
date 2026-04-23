@@ -12,16 +12,6 @@ public partial class ToggleButton : ContentView
             IsToggled = !IsToggled;
         });
         vm = new ToggleButtonViewModel(ViewModelToggleCmd, GFX);
-        vm.MainCanvas.RequestCanvasRedraw += () =>
-        {
-            //try
-            //{
-            //}
-            //catch
-            //{
-
-            //}
-        };
         BindingContext = vm;
     }
 
