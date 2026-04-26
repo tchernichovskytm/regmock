@@ -61,6 +61,10 @@ namespace regmock.ViewModels
             });
             LogOutCmd = new Command(async () =>
             {
+                //bool answer = await DisplayAlert();
+                bool answer = await Application.Current.MainPage.DisplayAlert("Log Out", "Are you sure?", "Yes", "No");
+                if (answer == false) return;
+
                 if (!Service.RequestLogoutAsync())
                 {
                     // TODO: handle error

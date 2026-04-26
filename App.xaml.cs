@@ -9,7 +9,7 @@ namespace regmock
         public App()
         {
             InitializeComponent();
-
+            
             MainPage = new AppShell();
             //MainPage = new Testing();
         }

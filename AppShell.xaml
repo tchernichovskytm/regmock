@@ -44,7 +44,7 @@
     </Shell.FlyoutHeader>
 
     <!--  TODO: continue this: https://learn.microsoft.com/en-us/dotnet/maui/fundamentals/shell/flyout?view=net-maui-10.0  -->
-    <TabBar x:Name="notTab" IsVisible="{Binding IsNotLoggedIn}">
+    <TabBar IsVisible="{Binding IsNotLoggedIn}">
         <ShellContent
             Title="Login"
             ContentTemplate="{DataTemplate Views:LoginPage}"
