@@ -10,6 +10,6 @@
             Padding="0"
             Background="Transparent"
             Command="{Binding BindingContext.ToggleCmd, Source={x:Reference GFX}}" />
-        <!--no idea why "GFX." fixes the binding of IsToggled-->
+        <!--  no idea why "GFX." fixes the binding of IsToggled  -->
     </Grid>
 </ContentView>

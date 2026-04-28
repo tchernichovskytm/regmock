@@ -3,8 +3,8 @@
     x:Class="regmock.Views.RequestHelpPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:helper="clr-namespace:regmock.Helper"
     xmlns:Comps="clr-namespace:regmock.Components"
+    xmlns:helper="clr-namespace:regmock.Helper"
     Background="{StaticResource BackgroundGradient}">
 
     <Grid Style="{StaticResource MainGridStyle}">
@@ -68,26 +68,24 @@
                                 ColumnDefinitions="*,*">
                                 <VerticalStackLayout Grid.Column="0" HorizontalOptions="Start">
                                     <Label FontSize="24" Text="{Binding Subject.Name}" />
-                                    <Label FontSize="14" Text="{Binding Topics[0]}" />
+                                    <Label FontSize="16" Text="{Binding Topics[0]}" />
                                 </VerticalStackLayout>
                                 <HorizontalStackLayout Grid.Column="1" HorizontalOptions="End">
                                     <Label
                                         Margin="0,0,6,0"
-                                        FontSize="18"
+                                        FontSize="22"
                                         Text="{Binding ServerActiveTime}"
                                         VerticalOptions="Center" />
                                     <Border Stroke="{StaticResource HelpingGradient}" Style="{StaticResource RoundedBorder}">
                                         <Border.StrokeShape>
                                             <RoundRectangle CornerRadius="25" />
                                         </Border.StrokeShape>
-                                        <!--<Switch Margin="0" IsToggled="{Binding IsActive}" />-->
                                         <Comps:ToggleButton
-                                            WidthRequest="100"
-                                            IsToggled="{Binding IsActive}" 
+                                            IsToggled="{Binding IsActive}"
                                             OffBackground="{StaticResource GrayGradient}"
                                             OnBackground="{StaticResource PrimaryGradient}"
                                             RectRadius="25"
-                                        />
+                                            WidthRequest="100" />
                                     </Border>
                                     <Border
                                         IsVisible="{Binding BindingContext.IsEditing, Source={RelativeSource AncestorType={x:Type ContentPage}}}"

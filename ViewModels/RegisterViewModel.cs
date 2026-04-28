@@ -155,6 +155,7 @@ namespace regmock.ViewModels
         #endregion
 
         #region Commands
+        public ICommand CloseCmd { get; set; }
         public ICommand FullnameReset_Cmd { get; set; }
         public ICommand EmailReset_Cmd { get; set; }
         public ICommand PassReset_Cmd { get; set; }
@@ -179,6 +180,7 @@ namespace regmock.ViewModels
             CanRegister = false;
             IsPassVisible = true;
 
+            CloseCmd = new Command(CloseClick);
             ShowPass_Cmd = new Command(ShowPass);
             FullnameReset_Cmd = new Command(ResetFullname);
             EmailReset_Cmd = new Command(ResetEmail);
@@ -204,6 +206,11 @@ namespace regmock.ViewModels
         #endregion
 
         #region Functions
+        public async void CloseClick()
+        {
+            await Shell.Current.Navigation.PopModalAsync(true);
+        }
+
         private void ResetFullname()
         {
             FullnameEntry = "";
@@ -255,27 +262,42 @@ namespace regmock.ViewModels
             }
 
             bool validPassword = false;
+            //if (PasswordEntry != null)
+            //{
+            //    // Regex validateGuidRegex = new Regex("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
+            //    Regex validateGuidRegexCapital = new Regex("^(?=.*?[A-Z]).{1,}$");
+            //    bool validRegexCapital = validateGuidRegexCapital.IsMatch(PasswordEntry);
+
+            //    Regex validateGuidRegexLower = new Regex("^(?=.*?[a-z]).{1,}$");
+            //    bool validRegexLower = validateGuidRegexLower.IsMatch(PasswordEntry);
+
+            //    Regex validateGuidRegexDigits = new Regex("^(?=.*?[0-9]).{1,}$");
+            //    bool validRegexDigits = validateGuidRegexDigits.IsMatch(PasswordEntry);
+
+            //    if (PasswordEntry.Length == 0) PasswordErr = "Please enter a password";
+            //    else if (PasswordEntry.Length < 6) PasswordErr = "Password must be at least 6 characters";
+            //    else if (!validRegexCapital) { PasswordErr = "Password must have capital letters"; }
+            //    else if (!validRegexLower) { PasswordErr = "Password must have lowercase letters"; }
+            //    else if (!validRegexDigits) { PasswordErr = "Password must have digits"; }
+            //    else { PasswordErr = ""; validPassword = true; }
+            //}
             if (PasswordEntry != null)
             {
-                // Regex validateGuidRegex = new Regex("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
-                Regex validateGuidRegexCapital = new Regex("^(?=.*?[A-Z]).{1,}$");
-                bool validRegexCapital = validateGuidRegexCapital.IsMatch(PasswordEntry);
-
-                Regex validateGuidRegexLower = new Regex("^(?=.*?[a-z]).{1,}$");
-                bool validRegexLower = validateGuidRegexLower.IsMatch(PasswordEntry);
-
-                Regex validateGuidRegexDigits = new Regex("^(?=.*?[0-9]).{1,}$");
-                bool validRegexDigits = validateGuidRegexDigits.IsMatch(PasswordEntry);
-
-                if (PasswordEntry.Length == 0) PasswordErr = "Please enter a password";
-                else if (PasswordEntry.Length < 6) PasswordErr = "Password must be at least 6 characters";
-                else if (!validRegexCapital) { PasswordErr = "Password must have capital letters"; }
-                else if (!validRegexLower) { PasswordErr = "Password must have lowercase letters"; }
-                else if (!validRegexDigits) { PasswordErr = "Password must have digits"; }
-                else { PasswordErr = ""; validPassword = true; }
+                Service.PasswordResult passwordResult = Service.CheckValidPassword(PasswordEntry);
+                switch (passwordResult)
+                {
+                    case Service.PasswordResult.Empty: PasswordErr = "Please enter a password"; break;
+                    case Service.PasswordResult.TooShort: PasswordErr = $"Password must be at least {Service.PasswordMinimumLength} characters"; break;
+                    case Service.PasswordResult.NoUppercase: PasswordErr = "Password must have capital letters"; break;
+                    case Service.PasswordResult.NoLowercase: PasswordErr = "Password must have lowercase letters"; break;
+                    case Service.PasswordResult.NoDigits: PasswordErr = "Password must have digits"; break;
+                    default: PasswordErr = ""; break;
+                }
+                validPassword = passwordResult == Service.PasswordResult.Valid;
             }
 
             CanRegister = validFullname && validPhone && validEmail && validPassword;
+            RegisterErr = "";
         }
         #endregion
     }

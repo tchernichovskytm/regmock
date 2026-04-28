@@ -152,7 +152,7 @@ namespace regmock.ViewModels
         #region Functions
         private void ResetLabels()
         {
-            ResetEmail(); 
+            ResetEmail();
             ResetPass();
             ResetEmailErr();
             ResetPassErr();
@@ -185,14 +185,6 @@ namespace regmock.ViewModels
 
         private void checkValidLogin()
         {
-            // TODO: remove this hardcoded login
-            //if ((emailEntry == "idosweed121@gmail.com" || emailEntry == "info@eldanet.com") && passwordEntry == "123456")
-            //{
-            //    CanLogin = true;
-            //    LoginErr = "";
-            //    return;
-            //}
-
             // TODO: verify email regex
             bool validEmail = false;
             if (EmailEntry != null)
@@ -205,24 +197,37 @@ namespace regmock.ViewModels
             }
 
             bool validPassword = false;
+            //if (PasswordEntry != null)
+            //{
+            //    Regex validateGuidRegexCapital = new Regex("^(?=.*?[A-Z]).{1,}$");
+            //    bool validRegexCapital = validateGuidRegexCapital.IsMatch(PasswordEntry);
+
+            //    Regex validateGuidRegexLower = new Regex("^(?=.*?[a-z]).{1,}$");
+            //    bool validRegexLower = validateGuidRegexLower.IsMatch(PasswordEntry);
+
+            //    Regex validateGuidRegexDigits = new Regex("^(?=.*?[0-9]).{1,}$");
+            //    bool validRegexDigits = validateGuidRegexDigits.IsMatch(PasswordEntry);
+
+            //    if (PasswordEntry.Length == 0) PasswordErr = "Please enter a password";
+            //    else if (PasswordEntry.Length < 6) PasswordErr = "Password must be at least 6 characters";
+            //    //else if (!validRegexCapital) { PasswordErr = "Password must have capital letters"; }
+            //    //else if (!validRegexLower) { PasswordErr = "Password must have lowercase letters"; }
+            //    //else if (!validRegexDigits) { PasswordErr = "Password must have digits"; }
+            //    else { PasswordErr = ""; validPassword = true; }
+            //}
             if (PasswordEntry != null)
             {
-                // Regex validateGuidRegex = new Regex("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
-                Regex validateGuidRegexCapital = new Regex("^(?=.*?[A-Z]).{1,}$");
-                bool validRegexCapital = validateGuidRegexCapital.IsMatch(PasswordEntry);
-
-                Regex validateGuidRegexLower = new Regex("^(?=.*?[a-z]).{1,}$");
-                bool validRegexLower = validateGuidRegexLower.IsMatch(PasswordEntry);
-
-                Regex validateGuidRegexDigits = new Regex("^(?=.*?[0-9]).{1,}$");
-                bool validRegexDigits = validateGuidRegexDigits.IsMatch(PasswordEntry);
-
-                if (PasswordEntry.Length == 0) PasswordErr = "Please enter a password";
-                else if (PasswordEntry.Length < 6) PasswordErr = "Password must be at least 6 characters";
-                //else if (!validRegexCapital) { PasswordErr = "Password must have capital letters"; }
-                //else if (!validRegexLower) { PasswordErr = "Password must have lowercase letters"; }
-                //else if (!validRegexDigits) { PasswordErr = "Password must have digits"; }
-                else { PasswordErr = ""; validPassword = true; }
+                Service.PasswordResult passwordResult = Service.CheckValidPassword(PasswordEntry);
+                switch (passwordResult)
+                {
+                    case Service.PasswordResult.Empty: PasswordErr = "Please enter a password"; break;
+                    case Service.PasswordResult.TooShort: PasswordErr = $"Password must be at least {Service.PasswordMinimumLength} characters"; break;
+                    case Service.PasswordResult.NoUppercase: PasswordErr = "Password must have capital letters"; break;
+                    case Service.PasswordResult.NoLowercase: PasswordErr = "Password must have lowercase letters"; break;
+                    case Service.PasswordResult.NoDigits: PasswordErr = "Password must have digits"; break;
+                    default: PasswordErr = ""; break;
+                }
+                validPassword = passwordResult == Service.PasswordResult.Valid;
             }
 
             CanLogin = validEmail && validPassword;

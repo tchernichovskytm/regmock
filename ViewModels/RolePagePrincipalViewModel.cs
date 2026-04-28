@@ -1,54 +1,68 @@
 ﻿using regmock.Models;
+using regmock.Views;
+using System.Windows.Input;
 
 namespace regmock.ViewModels
 {
     public class RolePagePrincipalViewModel : ViewModelBase
     {
         #region Properties
-        private List<School> schoolList;
-        public List<School> SchoolList
+        private bool canAssign;
+        public bool CanAssign
         {
-            get { return schoolList; }
+            get { return canAssign; }
             set
             {
-                schoolList = value;
-                OnPropertyChanged(nameof(SchoolList));
+                canAssign = value;
+                OnPropertyChanged(nameof(CanAssign));
             }
         }
 
-        private string schoolErr;
-        public string SchoolErr
+        private string schoolEntry;
+
+        public string SchoolEntry
         {
-            get { return schoolErr; }
+            get { return schoolEntry; }
             set
             {
-                schoolErr = value;
-                OnPropertyChanged(nameof(SchoolErr));
+                schoolEntry = value;
+                OnPropertyChanged(nameof(SchoolEntry));
+                CheckCanAssign();
             }
         }
+
         #endregion
 
         #region Commands
+        public ICommand CloseCmd { get; set; }
+        public ICommand AssignClickCmd { get; set; }
         #endregion
 
         #region Constructor
         public RolePagePrincipalViewModel()
         {
-            GetFullNameSchoolList();
-            SchoolErr = string.Empty;
+            CloseCmd = new Command(CloseClick);
 
+            AssignClickCmd = new Command(() =>
+            {
+                // TODO: send to page that says "request pending" or somrthin g
+                //await Shell.Current.Navigation.PushModalAsync(new RegisterPage(), true);
+            });
         }
         #endregion
 
         #region Functions
-        private void GetFullNameSchoolList()
+        public async void CloseClick()
         {
-            List<School> tmp = Service.GetSchools();
-            SchoolList = new List<School>();
-            foreach (School s in tmp)
+            await Shell.Current.Navigation.PopModalAsync(true);
+        }
+
+        public void CheckCanAssign()
+        {
+            // TODO: a regex can be added for verification
+            if (!string.IsNullOrEmpty(SchoolEntry))
             {
-                School school = new School() { Name = s.Name + " (" + s.City + ")", Id = s.Id, City = s.City };
-                SchoolList.Add(school);
+                CanAssign = true;
             }
         }
         #endregion

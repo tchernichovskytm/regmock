@@ -1,19 +1,18 @@
-﻿using regmock.Models;
-using System;
-using System.Text.Json;
-
-using Firebase.Auth;
+﻿using Firebase.Auth;
 using Firebase.Auth.Providers;
 using Firebase.Auth.Repository;
 using Firebase.Database;
 using Firebase.Database.Query;
-
-using UserModel = regmock.Models.User;
+using regmock.Models;
 using regmock.ViewModels;
+using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Globalization;
+using System.Linq;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
+using UserModel = regmock.Models.User;
 
 public static class Service
 {
@@ -227,16 +226,20 @@ public static class Service
         //                            .OnceAsync<FromFirebaseTicket>();
 
         var ticketsFromFB = await client.Child("Tickets").OnceAsync<FromFirebaseTicket>();
+        if (ticketsFromFB == null) return false;
 
         Int64 currentFirebaseTime = await GetFirebaseTime();
 
         // TODO: not finished
         // (23/4/2026): why is it not finished? i dont remember
-        var validTicketsFromFB = ticketsFromFB.Where(ticket => TicketRemainingTime(ticket.Object.OpenTimes.Values.Last(), currentFirebaseTime, UnixMiliseconds24Hours) >= 0);
+        var validTicketsFromFB = ticketsFromFB.Where(
+            ticket =>
+                (ticket.Object.SenderId == auth.User.Uid)
+                ||
+                (TicketRemainingTime(ticket.Object.OpenTimes.Values.Last(), currentFirebaseTime, UnixMiliseconds24Hours) >= 0)
+        );
 
-        if (ticketsFromFB == null) return false;
-
-        foreach (var tickFromFB in ticketsFromFB)
+        foreach (var tickFromFB in validTicketsFromFB)
         {
             if (tickFromFB.Object.IsActive == false && tickFromFB.Object.SenderId != auth.User.Uid) continue;
 
@@ -590,6 +593,35 @@ public static class Service
         return true;
     }
 
+    public static async Task StudentRegisterAsync(School school, Grade grade)
+    {
+        tempUser = new UserModel()
+        {
+            Role = Role.Student,
+            School = school,
+            Grade = grade,
+        };
+    }
+
+    public static async Task TeacherRegisterAsync(School school)
+    {
+        tempUser = new UserModel()
+        {
+            Role = Role.UnverifiedTeacher,
+            School = school,
+            // TODO: add a grade for teachers
+        };
+    }
+
+    public static async Task PrincipalRegisterAsync(School school)
+    {
+        tempUser = new UserModel()
+        {
+            Role = Role.UnverifiedPrincipal,
+            // TODO: add a grade for principals
+        };
+    }
+
     class ToFirebaseUser
     {
         public string? Fullname { get; set; }
@@ -637,16 +669,6 @@ public static class Service
         return (true, null);
     }
 
-    public static async Task StudentRegisterAsync(School school, Grade grade)
-    {
-        tempUser = new UserModel()
-        {
-            Role = Role.Student,
-            School = school,
-            Grade = grade,
-        };
-    }
-
     //public static async Task<bool> RequestRegisterAsync(string fullname, string phonenumber, string email, string password)
     //{
     //    if (string.IsNullOrEmpty(fullname) || string.IsNullOrEmpty(phonenumber) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) return false;
@@ -689,5 +711,39 @@ public static class Service
         users.Add(new UserModel() { Fullname = fullname, PhoneNumber = phonenumber, Email = email, Password = password });
 
         return true;
+    }
+
+    public const int PasswordMinimumLength = 6;
+
+    public enum PasswordResult
+    {
+        Valid,
+        Empty,
+        TooShort,
+        NoUppercase,
+        NoLowercase,
+        NoDigits,
+    }
+
+    public static PasswordResult CheckValidPassword(string password)
+    {
+        bool validPassword = false;
+        if (string.IsNullOrEmpty(password)) return PasswordResult.Empty;
+        if (password.Length == 0) return PasswordResult.Empty;
+        if (password.Length < PasswordMinimumLength) return PasswordResult.TooShort;
+
+        //Regex validateGuidRegexCapital = new Regex("^(?=.*?[A-Z]).{1,}$");
+        //bool validRegexCapital = validateGuidRegexCapital.IsMatch(password);
+        // if (!validRegexCapital) return PasswordResult.NoUppercase;
+
+        //Regex validateGuidRegexLower = new Regex("^(?=.*?[a-z]).{1,}$");
+        //bool validRegexLower = validateGuidRegexLower.IsMatch(password);
+        // if (!validRegexCapital) return PasswordResult.NoLowercase;
+
+        //Regex validateGuidRegexDigits = new Regex("^(?=.*?[0-9]).{1,}$");
+        //bool validRegexDigits = validateGuidRegexDigits.IsMatch(password);
+        // if (!validRegexCapital) return PasswordResult.NoDigits;
+
+        return PasswordResult.Valid;
     }
 }

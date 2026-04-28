@@ -1,4 +1,6 @@
 ﻿using regmock.Models;
+using regmock.Views;
+using System.Windows.Input;
 
 namespace regmock.ViewModels
 {
@@ -17,34 +19,69 @@ namespace regmock.ViewModels
             }
         }
 
-        private string schoolErr;
-        public string SchoolErr
+        private int schoolSelectIndex;
+        public int SchoolSelectIndex
         {
-            get { return schoolErr; }
+            get { return schoolSelectIndex; }
             set
             {
-                schoolErr = value;
-                OnPropertyChanged(nameof(SchoolErr));
+                schoolSelectIndex = value;
+                OnPropertyChanged(nameof(SchoolSelectIndex));
+                CheckCanAssign();
             }
         }
 
+        private bool canAssign;
+        public bool CanAssign
+        {
+            get { return canAssign; }
+            set
+            {
+                canAssign = value;
+                OnPropertyChanged(nameof(CanAssign));
+            }
+        }
         #endregion
 
         #region Commands
+        public ICommand CloseCmd { get; set; }
+        public ICommand AssignClickCmd { get; set; }
         #endregion
 
         #region Constructor
 
         public RolePageTeacherViewModel()
         {
-            GetFullNameSchoolList();
-            SchoolErr = string.Empty;
+            CloseCmd = new Command(CloseClick);
 
+            SchoolList = Service.GetSchools();
+            //GetFullNameSchoolList();
+            SchoolSelectIndex = -1;
+
+            AssignClickCmd = new Command(async () =>
+            {
+                await Service.TeacherRegisterAsync(SchoolList[SchoolSelectIndex]);
+
+                await Shell.Current.Navigation.PushModalAsync(new RegisterPage(), true);
+            });
         }
 
         #endregion
 
         #region Functions
+        public async void CloseClick()
+        {
+            await Shell.Current.Navigation.PopModalAsync(true);
+        }
+
+        public void CheckCanAssign()
+        {
+            if (SchoolSelectIndex >= 0)
+            {
+                CanAssign = true;
+            }
+        }
+
         private void GetFullNameSchoolList()
         {
             List<School> tmp = Service.GetSchools();

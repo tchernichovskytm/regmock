@@ -6,13 +6,25 @@
     xmlns:helper="clr-namespace:regmock.Helper"
     Background="{StaticResource BackgroundGradient}">
 
-    <Grid Style="{StaticResource MainGridStyle}">
-        <!--<Label Grid.Row="0" Text="Register" Style="{StaticResource TitleLabel}" />-->
-        <!--  TODO: remove later  -->
+    <Grid Margin="18" RowDefinitions="Auto,*,Auto">
+        <Border
+            Grid.Row="0"
+            HorizontalOptions="End"
+            Stroke="{StaticResource CriticalGradient}"
+            Style="{StaticResource RoundedBorder}">
+            <Button
+                Padding="0"
+                Background="{StaticResource ElementGradient}"
+                Command="{Binding CloseCmd}"
+                FontFamily="MaterialIcons"
+                FontSize="46"
+                Text="{x:Static helper:IconFont.Close}"
+                TextColor="{StaticResource CriticalHalfDark}" />
+        </Border>
 
         <ScrollView Grid.Row="1">
 
-            <VerticalStackLayout Style="{StaticResource MainStack}">
+            <VerticalStackLayout Spacing="16">
                 <VerticalStackLayout>
                     <Label Text="Full Name:" />
                     <Grid>

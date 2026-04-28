@@ -37,7 +37,6 @@ namespace regmock.ViewModels
         }
 
         private List<Grade> gradeList;
-
         public List<Grade> GradeList
         {
             get { return gradeList; }
@@ -74,13 +73,16 @@ namespace regmock.ViewModels
         #endregion
 
         #region Commands
-        public ICommand AssignClick_Cmd { get; set; }
+        public ICommand CloseCmd { get; set; }
+        public ICommand AssignClickCmd { get; set; }
         #endregion
 
         #region Constructor
 
         public RolePageStudentViewModel()
         {
+            CloseCmd = new Command(CloseClick);
+
             SchoolList = Service.GetSchools();
             //GetFullNameSchoolList();
             SchoolSelectIndex = -1;
@@ -88,7 +90,7 @@ namespace regmock.ViewModels
             GradeList = Service.GetGrades();
             GradeSelectIndex = -1;
 
-            AssignClick_Cmd = new Command(async () =>
+            AssignClickCmd = new Command(async () =>
             {
                 await Service.StudentRegisterAsync(SchoolList[SchoolSelectIndex], GradeList[GradeSelectIndex]);
 
@@ -99,6 +101,10 @@ namespace regmock.ViewModels
         #endregion
 
         #region Functions
+        public async void CloseClick()
+        {
+            await Shell.Current.Navigation.PopModalAsync(true);
+        }
         public void CheckCanAssign()
         {
             if (SchoolSelectIndex >= 0 && GradeSelectIndex >= 0)

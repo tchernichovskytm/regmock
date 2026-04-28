@@ -3,23 +3,34 @@
     x:Class="regmock.Views.RolePageTeacher"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="RolePageTeacher">
-    <ScrollView>
-        <Grid Style="{StaticResource MainGridStyle}">
-            <Label
+    xmlns:helper="clr-namespace:regmock.Helper"
+    Background="{StaticResource BackgroundGradient}">
+
+    <ScrollView Margin="18">
+        <Grid RowDefinitions="Auto,*,Auto">
+            <Border
                 Grid.Row="0"
-                Style="{StaticResource TitleLabel}"
-                Text="Select School" />
+                HorizontalOptions="End"
+                Stroke="{StaticResource CriticalGradient}"
+                Style="{StaticResource RoundedBorder}">
+                <Button
+                    Padding="0"
+                    Background="{StaticResource ElementGradient}"
+                    Command="{Binding CloseCmd}"
+                    FontFamily="MaterialIcons"
+                    FontSize="46"
+                    Text="{x:Static helper:IconFont.Close}"
+                    TextColor="{StaticResource CriticalHalfDark}" />
+            </Border>
 
             <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
 
                 <VerticalStackLayout>
                     <Label Text="Select School:" />
-                    <Grid>
-                        <Picker ItemDisplayBinding="{Binding Name}" ItemsSource="{Binding SchoolList}" />
-                    </Grid>
-
-                    <Label Style="{StaticResource errLabel}" Text="{Binding SchoolErr}" />
+                    <Picker
+                        ItemDisplayBinding="{Binding Name}"
+                        ItemsSource="{Binding SchoolList}"
+                        SelectedIndex="{Binding SchoolSelectIndex}" />
                 </VerticalStackLayout>
 
 
@@ -27,8 +38,10 @@
 
             <Button
                 Grid.Row="2"
+                Command="{Binding AssignClickCmd}"
+                IsEnabled="{Binding CanAssign}"
                 Style="{StaticResource ConfirmButton}"
-                Text="Send Request" />
+                Text="Assign School" />
         </Grid>
     </ScrollView>
 </ContentPage>

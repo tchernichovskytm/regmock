@@ -98,6 +98,7 @@ namespace regmock.ViewModels
         {
             await Shell.Current.Navigation.PopModalAsync(true);
         }
+
         public async void AddTicketClick()
         {
             Ticket NewTicket = new Ticket()
