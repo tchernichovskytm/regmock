@@ -97,13 +97,14 @@
             Grid.Row="2"
             HorizontalOptions="Center"
             Stroke="{StaticResource SecondaryGradient}"
+            StrokeShape="Ellipse"
             Style="{StaticResource RoundedBorder}">
             <Button
-                Grid.Row="2"
                 Background="{StaticResource ElementGradient}"
                 Command="{Binding AddFavoriteCmd}"
+                FontFamily="MaterialIcons"
                 FontSize="40"
-                Text="New Favorite"
+                Text="{x:Static helper:IconFont.Add}"
                 TextColor="{StaticResource SecondaryHalfDark}" />
         </Border>
     </Grid>

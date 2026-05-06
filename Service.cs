@@ -9,6 +9,7 @@ using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
@@ -16,6 +17,13 @@ using UserModel = regmock.Models.User;
 
 public static class Service
 {
+    public enum ServiceResult
+    {
+        Ok,
+        TODO,
+        InvalidParameter
+    }
+
     // given by ShellViewModel
     public static ICommand LoggedInCommand;
     public static ICommand LoggedOutCommand;
@@ -211,94 +219,97 @@ public static class Service
     }
 
     // get tickets from everyone
-    public static async Task<bool> GetAllTicketsFromFB()
+    public static async Task<ServiceResult> GetAllTicketsFromFB()
     {
-        List<Ticket> fbSelfTickets = new List<Ticket>();
-        List<Ticket> fbOthersTickets = new List<Ticket>();
-
-        // TODO: we need to switch the date time saved in tickets to unix miliseconds in order to query them easialy,
-        //       this requires changing a bunch of code, after that i need to query the tickets like this:
-        //                            var ticketsQuery = await client
-        //                            .Child("Tickets")
-        //                            .OrderBy("lastOpened")              // Order by the lastOpened timestamp (Unix milliseconds)
-        //                            .StartAt(twentyFourHoursAgoMillis)  // Only get tickets with lastOpened >= 24 hours ago
-        //                            .EndAt(currentMillis)               // Optionally, limit to the current time (you may omit this if not necessary)
-        //                            .OnceAsync<FromFirebaseTicket>();
-
-        var ticketsFromFB = await client.Child("Tickets").OnceAsync<FromFirebaseTicket>();
-        if (ticketsFromFB == null) return false;
-
-        Int64 currentFirebaseTime = await GetFirebaseTime();
-
-        // TODO: not finished
-        // (23/4/2026): why is it not finished? i dont remember
-        var validTicketsFromFB = ticketsFromFB.Where(
-            ticket =>
-                (ticket.Object.SenderId == auth.User.Uid)
-                ||
-                (TicketRemainingTime(ticket.Object.OpenTimes.Values.Last(), currentFirebaseTime, UnixMiliseconds24Hours) >= 0)
-        );
-
-        foreach (var tickFromFB in validTicketsFromFB)
+        try
         {
-            if (tickFromFB.Object.IsActive == false && tickFromFB.Object.SenderId != auth.User.Uid) continue;
+            List<Ticket> fbSelfTickets = new List<Ticket>();
+            List<Ticket> fbOthersTickets = new List<Ticket>();
 
-            Ticket parsedTicket = new Ticket()
+            var ticketsFromFB = await client.Child("Tickets").OnceAsync<FromFirebaseTicket>();
+
+            (ServiceResult, Int64) firebaseTimeResult = await GetFirebaseTime();
+            ServiceResult result = firebaseTimeResult.Item1;
+            Int64 currentFirebaseTime = firebaseTimeResult.Item2;
+            if (result != ServiceResult.Ok)
             {
-                // in order to update tickets in firebase i saved the key to it
-                FirebaseKey = tickFromFB.Key,
-                IsActive = tickFromFB.Object.IsActive,
-                Topics = new List<string>(tickFromFB.Object.Topics.Values),
-            };
-
-            // PARSE SUBJECT
-            parsedTicket.Subject = FindSubjectFromId(tickFromFB.Object.Subject);
-
-            if (tickFromFB.Object.SenderId == auth.User.Uid)
-            {
-                // PARSE OPEN TIMES
-                parsedTicket.OpenTimes = new List<Int64>(tickFromFB.Object.OpenTimes.Values);
-
-                Int64 remainingActiveTime = TicketRemainingTime(parsedTicket.OpenTimes.Last(), currentFirebaseTime, UnixMiliseconds24Hours);
-                if (remainingActiveTime <= 0)
-                {
-                    // TODO: this is problematic, firebase is not a good enough server
-                    //       it should mark tickets as inactive by itself
-                    parsedTicket.IsActive = false;
-                    remainingActiveTime = 0;
-                    await client.Child("Tickets").Child(tickFromFB.Key).Child("IsActive").PutAsync<bool>(false);
-                }
-
-                parsedTicket.ActiveTimeSpan = remainingActiveTime;
-                if (parsedTicket.IsActive == true)
-                {
-                    parsedTicket.ServerActiveTime = UnixMilisecondsToHHMMSS(parsedTicket.ActiveTimeSpan);
-                }
-                else
-                {
-                    parsedTicket.ServerActiveTime = "";
-                }
-
-                fbSelfTickets.Add(parsedTicket);
+                // TODO: handle the error maybe or maybe not idk
+                return result;
             }
-            else // tickFromFB.Object.SenderId != auth.User.Uid
+
+            // TODO: not finished
+            // (23/4/2026): why is it not finished? i dont remember
+            var validTicketsFromFB = ticketsFromFB.Where(
+                ticket =>
+                    (ticket.Object.SenderId == auth.User.Uid)
+                    ||
+                    (TicketRemainingTime(ticket.Object.OpenTimes.Values.Last(), currentFirebaseTime, UnixMiliseconds24Hours) >= 0)
+            );
+
+            foreach (var tickFromFB in validTicketsFromFB)
             {
-                // PARSE SENDER (only need it's fullname and grade)
-                // the ticket only saves the ID of the sender so we find it in Users
-                var fbSender = await client.Child("Users").Child(tickFromFB.Object.SenderId).OnceSingleAsync<FromFirebaseUserDisplay>();
+                if (tickFromFB.Object.IsActive == false && tickFromFB.Object.SenderId != auth.User.Uid) continue;
 
-                if (fbSender == null) return false;
-                parsedTicket.Sender = new UserModel() { Fullname = fbSender.Fullname };
-                parsedTicket.Sender.Grade = FindGradeFromId(fbSender.Grade);
+                Ticket parsedTicket = new Ticket()
+                {
+                    // in order to update tickets in firebase i saved the key to it
+                    FirebaseKey = tickFromFB.Key,
+                    IsActive = tickFromFB.Object.IsActive,
+                    Topics = new List<string>(tickFromFB.Object.Topics.Values),
+                };
 
-                fbOthersTickets.Add(parsedTicket);
+                // PARSE SUBJECT
+                parsedTicket.Subject = FindSubjectFromId(tickFromFB.Object.Subject);
+
+                if (tickFromFB.Object.SenderId == auth.User.Uid)
+                {
+                    // PARSE OPEN TIMES
+                    parsedTicket.OpenTimes = new List<Int64>(tickFromFB.Object.OpenTimes.Values);
+
+                    Int64 remainingActiveTime = TicketRemainingTime(parsedTicket.OpenTimes.Last(), currentFirebaseTime, UnixMiliseconds24Hours);
+                    if (remainingActiveTime <= 0)
+                    {
+                        // TODO: this is problematic, firebase is not a good enough server
+                        //       it should mark tickets as inactive by itself
+                        parsedTicket.IsActive = false;
+                        remainingActiveTime = 0;
+                        await client.Child("Tickets").Child(tickFromFB.Key).Child("IsActive").PutAsync<bool>(false);
+                    }
+
+                    parsedTicket.ActiveTimeSpan = remainingActiveTime;
+                    if (parsedTicket.IsActive == true)
+                    {
+                        parsedTicket.ServerActiveTime = UnixMilisecondsToHHMMSS(parsedTicket.ActiveTimeSpan);
+                    }
+                    else
+                    {
+                        parsedTicket.ServerActiveTime = "";
+                    }
+
+                    fbSelfTickets.Add(parsedTicket);
+                }
+                else // tickFromFB.Object.SenderId != auth.User.Uid
+                {
+                    // PARSE SENDER (only need it's fullname and grade)
+                    // the ticket only saves the ID of the sender so we find it in Users
+                    var fbSender = await client.Child("Users").Child(tickFromFB.Object.SenderId).OnceSingleAsync<FromFirebaseUserDisplay>();
+
+                    parsedTicket.Sender = new UserModel() { Fullname = fbSender.Fullname };
+                    parsedTicket.Sender.Grade = FindGradeFromId(fbSender.Grade);
+
+                    fbOthersTickets.Add(parsedTicket);
+                }
             }
+            // this is done because the tickets may fail reading halfway in
+            // so we only want to save the tickets after they all passed
+            selfTickets = fbSelfTickets;
+            othersTickets = fbOthersTickets;
         }
-        // this is done because the tickets may fail reading halfway in
-        // so we only want to save the tickets after they all passed
-        selfTickets = fbSelfTickets;
-        othersTickets = fbOthersTickets;
-        return true;
+        catch (FirebaseException e)
+        {
+            return ServiceResult.TODO;
+        }
+        return ServiceResult.Ok;
     }
 
     class FromFirebaseFavorite
@@ -307,7 +318,7 @@ public static class Service
         public List<string>? Grades { get; set; }
     }
 
-    public static async Task<bool> GetHelperFavoritesFromFB()
+    public static async Task<ServiceResult> GetHelperFavoritesFromFB()
     {
         try
         {
@@ -315,7 +326,6 @@ public static class Service
 
             var favoritesFromFB = await client.Child("Users").Child(auth.User.Uid).Child("HelperFavorites").OnceAsync<FromFirebaseFavorite>();
 
-            if (favoritesFromFB == null) return false;
             foreach (var favFromFB in favoritesFromFB)
             {
                 if (string.IsNullOrEmpty(favFromFB.Object.Subject) || favFromFB.Object.Grades == null) continue;
@@ -335,17 +345,16 @@ public static class Service
             }
             helperFavorites = fbFavorites;
         }
-        catch (Exception ex)
+        catch (FirebaseException ex)
         {
-            return false;
+            return ServiceResult.TODO;
         }
 
-        return true;
+        return ServiceResult.Ok;
     }
 
     public static string UnixMilisecondsToHHMMSS(Int64 unixMilis)
     {
-        //return $"{(ts.Days * 24 + ts.Hours).ToString("00")}:{ts.Minutes.ToString("00")}:{ts.Seconds.ToString("00")}";
         unixMilis /= 1000;
         Int64 seconds = unixMilis % 60;
         unixMilis /= 60;
@@ -398,32 +407,47 @@ public static class Service
         return toFirebaseFavorite;
     }
 
-    public static async Task<bool> RemoveFavorite(Favorite favorite)
+    public static async Task<ServiceResult> RemoveFavorite(Favorite favorite)
     {
-        if (string.IsNullOrEmpty(favorite.FirebaseKey)) return false;
-
-        await client.Child("Users").Child(auth.User.Uid).Child("HelperFavorites").Child(favorite.FirebaseKey).DeleteAsync();
-
-        return true;
+        try
+        {
+            if (string.IsNullOrEmpty(favorite.FirebaseKey)) return ServiceResult.InvalidParameter;
+            await client.Child("Users").Child(auth.User.Uid).Child("HelperFavorites").Child(favorite.FirebaseKey).DeleteAsync();
+        }
+        catch (FirebaseException e)
+        {
+            return ServiceResult.TODO;
+        }
+        return ServiceResult.Ok;
     }
 
-    public static async Task<bool> EditFavorite(Favorite oldFavorite, Favorite newFavorite)
+    public static async Task<ServiceResult> EditFavorite(Favorite oldFavorite, Favorite newFavorite)
     {
-        ToFirebaseFavorite toFirebaseFavorite = FavoriteToFirebaseObject(newFavorite);
-
-        await client.Child("Users").Child(auth.User.Uid).Child("HelperFavorites").Child(oldFavorite.FirebaseKey).PatchAsync<ToFirebaseFavorite>(toFirebaseFavorite);
-
-        return true;
+        try
+        {
+            ToFirebaseFavorite toFirebaseFavorite = FavoriteToFirebaseObject(newFavorite);
+            await client.Child("Users").Child(auth.User.Uid).Child("HelperFavorites").Child(oldFavorite.FirebaseKey).PatchAsync<ToFirebaseFavorite>(toFirebaseFavorite);
+        }
+        catch (FirebaseException e)
+        {
+            return ServiceResult.TODO;
+        }
+        return ServiceResult.Ok;
     }
 
-    public static async Task<bool> AddFavorite(Favorite favorite)
+    public static async Task<ServiceResult> AddFavorite(Favorite favorite)
     {
-        ToFirebaseFavorite toFirebaseFavorite = FavoriteToFirebaseObject(favorite);
-
-        var newFBFavorite = await client.Child("Users").Child(auth.User.Uid).Child("HelperFavorites").PostAsync<ToFirebaseFavorite>(toFirebaseFavorite);
-        favorite.FirebaseKey = newFBFavorite.Key;
-
-        return true;
+        try
+        {
+            ToFirebaseFavorite toFirebaseFavorite = FavoriteToFirebaseObject(favorite);
+            var newFBFavorite = await client.Child("Users").Child(auth.User.Uid).Child("HelperFavorites").PostAsync<ToFirebaseFavorite>(toFirebaseFavorite);
+            favorite.FirebaseKey = newFBFavorite.Key;
+        }
+        catch (FirebaseException e)
+        {
+            return ServiceResult.TODO;
+        }
+        return ServiceResult.Ok;
     }
 
     class ToFirebaseTicket
@@ -437,7 +461,7 @@ public static class Service
     }
 
     // For toggling tickets
-    public static async Task<bool> HandleTicket(Ticket updatedTicket)
+    public static async Task<ServiceResult> HandleTicket(Ticket updatedTicket)
     {
         if (string.IsNullOrEmpty(updatedTicket.FirebaseKey))
         {
@@ -449,7 +473,14 @@ public static class Service
                 IsActive = updatedTicket.IsActive,
             };
 
-            Int64 firebaseTime = await GetFirebaseTime();
+            (ServiceResult, Int64) firebaseTimeResult = await GetFirebaseTime();
+            ServiceResult result = firebaseTimeResult.Item1;
+            Int64 firebaseTime = firebaseTimeResult.Item2;
+            if (result != ServiceResult.Ok)
+            {
+                // TODO: handle the error maybe or maybe not idk
+                return result;
+            }
 
             var newFBTicket = await client.Child("Tickets").PostAsync<ToFirebaseTicket>(toFirebaseTicket);
 
@@ -464,7 +495,14 @@ public static class Service
         else if (updatedTicket.FirebaseKey != "")
         {
             // this is a ticket that already exists on firebase
-            Int64 firebaseTime = await GetFirebaseTime();
+            (ServiceResult, Int64) firebaseTimeResult = await GetFirebaseTime();
+            ServiceResult result = firebaseTimeResult.Item1;
+            Int64 firebaseTime = firebaseTimeResult.Item2;
+            if (result != ServiceResult.Ok)
+            {
+                // TODO: handle the error maybe or maybe not idk
+                return result;
+            }
 
             if (updatedTicket.IsActive != null)
             {
@@ -479,24 +517,39 @@ public static class Service
                 }
             }
         }
-        return true;
+        return ServiceResult.Ok;
     }
-    public static async Task<bool> DeleteTicket(Ticket updatedTicket)
+    public static async Task<ServiceResult> DeleteTicket(Ticket updatedTicket)
     {
-        if (!string.IsNullOrEmpty(updatedTicket.FirebaseKey))
+        try
         {
-            await client.Child("Tickets").Child(updatedTicket.FirebaseKey).DeleteAsync();
+            if (!string.IsNullOrEmpty(updatedTicket.FirebaseKey))
+            {
+                await client.Child("Tickets").Child(updatedTicket.FirebaseKey).DeleteAsync();
+            }
+            selfTickets.Remove(updatedTicket);
         }
-        selfTickets.Remove(updatedTicket);
-        return true;
+        catch (FirebaseException e)
+        {
+            return ServiceResult.TODO;
+        }
+        return ServiceResult.Ok;
     }
 
-    private static async Task<Int64> GetFirebaseTime()
+    private static async Task<(ServiceResult, Int64)> GetFirebaseTime()
     {
-        await client.Child("ServerTime").PutAsync(new Dictionary<string, object> { { ".sv", "timestamp" } });
-        var millis = await client.Child("ServerTime").OnceSingleAsync<Int64>();
+        Int64 ms = 0;
+        try
+        {
+            await client.Child("ServerTime").PutAsync(new Dictionary<string, object> { { ".sv", "timestamp" } });
+            ms = await client.Child("ServerTime").OnceSingleAsync<Int64>();
+        }
+        catch (FirebaseException e)
+        {
+            return (ServiceResult.TODO, ms);
+        }
         //var firebaseTime = DateTimeOffset.FromUnixTimeMilliseconds(millis).UtcDateTime;
-        return millis;
+        return (ServiceResult.Ok, ms);
     }
 
     public static List<Ticket> GetSelfTickets()
@@ -534,7 +587,6 @@ public static class Service
         return helperFavorites;
     }
 
-
     public static bool RequestFakeLogin(string email, string password)
     {
         UserModel foundUser = null;
@@ -558,10 +610,10 @@ public static class Service
         return true;
     }
 
-    public static async Task<(bool, string)> RequestLoginAsync(string email, string password)
+    public static async Task<(ServiceResult, string)> RequestLoginAsync(string email, string password)
     {
-        if (string.IsNullOrEmpty(email)) return (false, "Empty Email");
-        if (string.IsNullOrEmpty(password)) return (false, "Empty Password");
+        if (string.IsNullOrEmpty(email)) return (ServiceResult.InvalidParameter, "Empty Email");
+        if (string.IsNullOrEmpty(password)) return (ServiceResult.InvalidParameter, "Empty Password");
         try
         {
             var authUser = await auth.SignInWithEmailAndPasswordAsync(email, password);
@@ -571,12 +623,12 @@ public static class Service
         }
         catch (FirebaseAuthException e)
         {
-            return (false, e.Reason.ToString());
+            return (ServiceResult.TODO, e.Reason.ToString());
         }
-        return (true, null);
+        return (ServiceResult.Ok, null);
     }
 
-    public static bool RequestLogoutAsync()
+    public static bool RequestLogout()
     {
         try
         {
@@ -593,7 +645,7 @@ public static class Service
         return true;
     }
 
-    public static async Task StudentRegisterAsync(School school, Grade grade)
+    public static void StudentRegister(School school, Grade grade)
     {
         tempUser = new UserModel()
         {
@@ -603,7 +655,7 @@ public static class Service
         };
     }
 
-    public static async Task TeacherRegisterAsync(School school)
+    public static void TeacherRegister(School school)
     {
         tempUser = new UserModel()
         {
@@ -613,7 +665,7 @@ public static class Service
         };
     }
 
-    public static async Task PrincipalRegisterAsync(School school)
+    public static void PrincipalRegister(School school)
     {
         tempUser = new UserModel()
         {
@@ -634,7 +686,7 @@ public static class Service
         public Int64? RegistrationDate { get; set; }
     }
 
-    public static async Task<(bool, string)> FinalRegisterAsync(string fullname, string phonenumber, string email, string password)
+    public static async Task<(ServiceResult, string)> FinalRegisterAsync(string fullname, string phonenumber, string email, string password)
     {
         tempUser.Fullname = fullname;
         tempUser.PhoneNumber = phonenumber;
@@ -648,6 +700,15 @@ public static class Service
             OnLogIn();
             currentAuthUser = loginAuthUser;
 
+            (ServiceResult, Int64) firebaseTimeResult = await GetFirebaseTime();
+            ServiceResult result = firebaseTimeResult.Item1;
+            Int64 firebaseTime = firebaseTimeResult.Item2;
+            if (result != ServiceResult.Ok)
+            {
+                // TODO: handle the error maybe or maybe not idk
+                return (result, null);
+            }
+
             ToFirebaseUser toFirebaseUser = new ToFirebaseUser()
             {
                 Fullname = tempUser.Fullname,
@@ -657,45 +718,17 @@ public static class Service
                 Role = tempUser.Role,
                 School = tempUser.School.Id,
                 Grade = tempUser.Grade.Id,
-                RegistrationDate = await GetFirebaseTime(),
+                RegistrationDate = firebaseTime,
             };
 
             await client.Child("Users").Child(currentAuthUser.User.Uid).PutAsync<ToFirebaseUser>(toFirebaseUser);
         }
         catch (FirebaseAuthException e)
         {
-            return (false, e.Reason.ToString());
+            return (ServiceResult.TODO, e.Reason.ToString());
         }
-        return (true, null);
+        return (ServiceResult.Ok, null);
     }
-
-    //public static async Task<bool> RequestRegisterAsync(string fullname, string phonenumber, string email, string password)
-    //{
-    //    if (string.IsNullOrEmpty(fullname) || string.IsNullOrEmpty(phonenumber) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) return false;
-
-    //    try
-    //    {
-    //        var authUser = await auth.CreateUserWithEmailAndPasswordAsync(email, password, fullname);
-    //        UserModel newUser = new UserModel()
-    //        {
-    //            Fullname = fullname,
-    //            PhoneNumber = phonenumber,
-    //            Email = email,
-    //            Password = password,
-    //            UserType = Role.None,
-    //            RegistrationDate = await GetFirebaseTime(),
-    //        };
-    //        tempUser = newUser;
-
-    //        //client.Child("Users").Child(authUser.User.Uid).PostAsync<UserModel>(authUser);
-
-    //        return true;
-    //    }
-    //    catch (FirebaseAuthException)
-    //    {
-    //        return false;
-    //    }
-    //}
 
     public static bool RequestFakeRegister(string fullname, string phonenumber, string email, string password)
     {

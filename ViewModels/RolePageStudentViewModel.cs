@@ -92,7 +92,7 @@ namespace regmock.ViewModels
 
             AssignClickCmd = new Command(async () =>
             {
-                await Service.StudentRegisterAsync(SchoolList[SchoolSelectIndex], GradeList[GradeSelectIndex]);
+                Service.StudentRegister(SchoolList[SchoolSelectIndex], GradeList[GradeSelectIndex]);
 
                 await Shell.Current.Navigation.PushModalAsync(new RegisterPage(), true);
             });

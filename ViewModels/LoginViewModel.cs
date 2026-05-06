@@ -126,7 +126,7 @@ namespace regmock.ViewModels
 
             Login_Cmd = new Command(async () =>
             {
-                (bool, string) result = await Service.RequestLoginAsync(EmailEntry, PasswordEntry);
+                (Service.ServiceResult, string) result = await Service.RequestLoginAsync(EmailEntry, PasswordEntry);
                 if (result.Item1)
                 {
                     LoginErr = "Logged in";

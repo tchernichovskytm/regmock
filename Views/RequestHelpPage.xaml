@@ -116,7 +116,6 @@
             Stroke="{StaticResource SecondaryGradient}"
             StrokeShape="Ellipse"
             Style="{StaticResource RoundedBorder}">
-
             <Button
                 Background="{StaticResource ElementGradient}"
                 Command="{Binding AddTicketCmd}"
@@ -125,6 +124,5 @@
                 Text="{x:Static helper:IconFont.Add}"
                 TextColor="{StaticResource SecondaryHalfDark}" />
         </Border>
-
     </Grid>
 </ContentPage>
