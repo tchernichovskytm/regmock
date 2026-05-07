@@ -35,19 +35,21 @@
                     </CollectionView.ItemsLayout>
 
                     <CollectionView.EmptyView>
-                        <ContentView>
+                        <VerticalStackLayout>
                             <Border
+                                Background="{StaticResource GrayGradient}"
                                 HorizontalOptions="Center"
-                                Stroke="{StaticResource GrayGradient}"
+                                Stroke="Transparent"
                                 Style="{StaticResource RoundedBorder}">
                                 <Label
                                     Padding="8"
-                                    Background="{StaticResource BackgroundGradient}"
                                     FontSize="28"
                                     HorizontalOptions="Center"
-                                    Text="No tickets yet" />
+                                    Text="No tickets yet"
+                                    TextColor="{AppThemeBinding Light={StaticResource SecondaryText},
+                                                                Dark={StaticResource SecondaryDarkText}}" />
                             </Border>
-                        </ContentView>
+                        </VerticalStackLayout>
                     </CollectionView.EmptyView>
 
                     <CollectionView.ItemTemplate>

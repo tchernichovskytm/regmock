@@ -3,8 +3,9 @@
     x:Class="regmock.Views.RolePage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="RolePage">
-    <Grid Style="{StaticResource MainGridStyle}">
+    Background="{StaticResource BackgroundGradient}">
+
+    <Grid Margin="18" RowDefinitions="Auto,*,Auto">
         <Label
             Grid.Row="0"
             Style="{StaticResource TitleLabel}"
@@ -15,14 +16,21 @@
             Margin="24"
             RowDefinitions="*,*,*"
             RowSpacing="50">
-            <Frame
-                Grid.Row="0"
-                Padding="0"
-                BackgroundColor="LightGray"
-                BorderColor="Transparent"
-                CornerRadius="25">
-                <Grid Padding="12" RowDefinitions="Auto,*">
 
+            <Border
+                Grid.Row="0"
+                Background="{StaticResource GrayGradient}"
+                StrokeThickness="3">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="25" />
+                </Border.StrokeShape>
+                <Grid Padding="12" RowDefinitions="Auto,*">
+                    <Grid.Background>
+                        <LinearGradientBrush EndPoint="0,1">
+                            <GradientStop Offset="0" Color="LightGray" />
+                            <GradientStop Offset="1" Color="Gray" />
+                        </LinearGradientBrush>
+                    </Grid.Background>
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding StudentClick_Cmd}" />
                     </Grid.GestureRecognizers>
@@ -30,18 +38,26 @@
                         Grid.Row="0"
                         FontSize="24"
                         HorizontalOptions="Center"
-                        Text="Student" />
+                        Text="Student"
+                        TextColor="{StaticResource PrimaryText}" />
                     <Image Grid.Row="1" Source="student.png" />
                 </Grid>
-            </Frame>
+            </Border>
 
-            <Frame
+            <Border
                 Grid.Row="1"
-                Padding="0"
-                BackgroundColor="LightGreen"
-                BorderColor="Transparent"
-                CornerRadius="25">
+                Background="{StaticResource GrayGradient}"
+                StrokeThickness="3">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="25" />
+                </Border.StrokeShape>
                 <Grid Padding="12" RowDefinitions="Auto,*">
+                    <Grid.Background>
+                        <LinearGradientBrush EndPoint="0,1">
+                            <GradientStop Offset="0" Color="LightGreen" />
+                            <GradientStop Offset="1" Color="ForestGreen" />
+                        </LinearGradientBrush>
+                    </Grid.Background>
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding TeacherClick_Cmd}" />
                     </Grid.GestureRecognizers>
@@ -49,18 +65,26 @@
                         Grid.Row="0"
                         FontSize="24"
                         HorizontalOptions="Center"
-                        Text="Teacher" />
+                        Text="Teacher"
+                        TextColor="{StaticResource PrimaryText}" />
                     <Image Grid.Row="1" Source="teacher.png" />
                 </Grid>
-            </Frame>
+            </Border>
 
-            <Frame
+            <Border
                 Grid.Row="2"
-                Padding="0"
-                BackgroundColor="SandyBrown"
-                BorderColor="Transparent"
-                CornerRadius="25">
+                Background="{StaticResource GrayGradient}"
+                StrokeThickness="3">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="25" />
+                </Border.StrokeShape>
                 <Grid Padding="12" RowDefinitions="Auto,*">
+                    <Grid.Background>
+                        <LinearGradientBrush EndPoint="0,1">
+                            <GradientStop Offset="0" Color="SandyBrown" />
+                            <GradientStop Offset="1" Color="SaddleBrown" />
+                        </LinearGradientBrush>
+                    </Grid.Background>
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding PrincipalClick_Cmd}" />
                     </Grid.GestureRecognizers>
@@ -68,10 +92,11 @@
                         Grid.Row="0"
                         FontSize="24"
                         HorizontalOptions="Center"
-                        Text="Principal" />
+                        Text="Principal"
+                        TextColor="{StaticResource PrimaryText}" />
                     <Image Grid.Row="1" Source="principal.png" />
                 </Grid>
-            </Frame>
+            </Border>
         </Grid>
 
     </Grid>

@@ -21,8 +21,12 @@ namespace regmock.ViewModels
             }
         }
 
-        private bool isEditing;
+        public bool CanEdit
+        {
+            get { return tickets != null && tickets.Count > 0; }
+        }
 
+        private bool isEditing;
         public bool IsEditing
         {
             get { return isEditing; }
@@ -127,12 +131,15 @@ namespace regmock.ViewModels
                     Ticket newTicket = (Ticket)newTicketObj;
                     newTicket.IsActiveToggleCmd = TicketToggleCmd;
                     newTicket.DeleteCmd = (Command)DeleteTicketCmd;
-                    bool success = await Service.HandleTicket(newTicket);
-                    if (!success)
+                    ServiceResult success = await Service.HandleTicket(newTicket);
+                    if (success == ServiceResult.Ok)
+                    {
+                        Tickets.Add(newTicket);
+                    }
+                    else
                     {
                         // TODO: handle error
                     }
-                    Tickets.Add(newTicket);
                 }
                 Monitor.Exit(this);
             });
@@ -142,9 +149,10 @@ namespace regmock.ViewModels
         {
             Monitor.Enter(this);
             var success = await Service.HandleTicket(ticket);
-            if (!success)
+            if (success != ServiceResult.Ok)
             {
                 // TODO: handle error
+                return;
             }
             if (ticket.IsActive == true)
             {
@@ -161,11 +169,14 @@ namespace regmock.ViewModels
         private async void DeleteTicket(Ticket ticket)
         {
             var success = await Service.DeleteTicket(ticket);
-            if (!success)
+            if (success == ServiceResult.Ok)
+            {
+                Tickets.Remove(ticket);
+            }
+            else
             {
                 // TODO: handle error
             }
-            Tickets.Remove(ticket);
         }
 
         public void BringTopicsToFirst(ObservableCollection<Ticket> tickets)

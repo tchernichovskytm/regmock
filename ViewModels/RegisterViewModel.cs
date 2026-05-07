@@ -188,8 +188,8 @@ namespace regmock.ViewModels
             PhoneReset_Cmd = new Command(ResetPhone);
             Register_Cmd = new Command(async () =>
             {
-                (bool, string) result = await Service.FinalRegisterAsync(FullnameEntry, PhonenumberEntry, EmailEntry, PasswordEntry);
-                if (result.Item1)
+                (ServiceResult, string) result = await Service.FinalRegisterAsync(FullnameEntry, PhonenumberEntry, EmailEntry, PasswordEntry);
+                if (result.Item1 == ServiceResult.Ok)
                 {
                     // TODO: go to a real welcome page
                     await Shell.Current.GoToAsync("//RequestHelpPage");

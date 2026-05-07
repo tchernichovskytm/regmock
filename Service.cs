@@ -15,15 +15,15 @@ using System.Text.RegularExpressions;
 using System.Windows.Input;
 using UserModel = regmock.Models.User;
 
+public enum ServiceResult
+{
+    Ok,
+    TODO,
+    InvalidParameter
+}
+
 public static class Service
 {
-    public enum ServiceResult
-    {
-        Ok,
-        TODO,
-        InvalidParameter
-    }
-
     // given by ShellViewModel
     public static ICommand LoggedInCommand;
     public static ICommand LoggedOutCommand;

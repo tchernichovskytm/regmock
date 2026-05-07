@@ -60,8 +60,8 @@ namespace regmock.ViewModels
                 if (obj is Favorite)
                 {
                     Favorite newFavorite = (Favorite)obj;
-                    var success = await Service.AddFavorite(newFavorite);
-                    if (success)
+                    ServiceResult success = await Service.AddFavorite(newFavorite);
+                    if (success == ServiceResult.Ok)
                     {
                         HelperFavorites.Add(newFavorite);
                     }
@@ -98,8 +98,8 @@ namespace regmock.ViewModels
                     {
                         if (newFavorite == null)
                         {
-                            var success = await Service.RemoveFavorite(fav);
-                            if (success)
+                            ServiceResult success = await Service.RemoveFavorite(fav);
+                            if (success == ServiceResult.Ok)
                             {
                                 HelperFavorites.Remove(fav);
                             }
@@ -111,8 +111,8 @@ namespace regmock.ViewModels
                         }
                         else
                         {
-                            var success = await Service.EditFavorite(fav, newFavorite);
-                            if (success)
+                            ServiceResult success = await Service.EditFavorite(fav, newFavorite);
+                            if (success == ServiceResult.Ok)
                             {
                                 fav.Subject = newFavorite.Subject;
                                 fav.Grades = newFavorite.Grades;
