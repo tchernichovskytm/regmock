@@ -21,7 +21,7 @@
 		<Nullable>enable</Nullable>
 
 		<!-- Display name -->
-		<ApplicationTitle>Help2Learn</ApplicationTitle>
+		<ApplicationTitle>regmock</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.regmock</ApplicationId>
@@ -41,10 +41,11 @@
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\Appicon\appicon.png" ForegroundFile="Resources\Appicon\appicon.png" ForegroundScale="0.75" Color="#FFFFFF" BaseSize="128,128" />
+		<!--<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />-->
+		<MauiIcon ForegroundFile="Resources\AppIcon\appicon.svg" ForegroundScale="0.75" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.png" Color="#FFFFFF" BaseSize="128,128" />
+		<MauiSplashScreen Include="Resources\Splash\logo.png" Color="#FFFFFF" BaseSize="128,128" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -73,6 +74,11 @@
 	  <None Remove="Resources\Images\principal.png" />
 	  <None Remove="Resources\Images\student.png" />
 	  <None Remove="Resources\Images\teacher.png" />
+	  <None Remove="Resources\Splash\logo.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiSplashScreen Include="Resources\Splash\logo.png" />
 	</ItemGroup>
 
 	<ItemGroup>
