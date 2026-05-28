@@ -170,10 +170,37 @@ public static class Service
         }
     }
 
-    class FromFirebaseUserDisplay
+    public class FromFirebaseUser
     {
         public string? Fullname { get; set; }
+        public string? Password { get; set; }
+        public string? PhoneNumber { get; set; }
+        public string? Email { get; set; }
+        public Role? Role { get; set; }
+        public string? School { get; set; }
         public string? Grade { get; set; }
+        public Int64? RegistrationDate { get; set; }
+        //public List<FromFirebaseFavorite>? HelperFavorites { get; set; }
+    }
+    public static UserModel UserFromFirebaseUser(FromFirebaseUser fromFirebaseUser)
+    {
+        UserModel user = new UserModel()
+        {
+            Fullname = fromFirebaseUser.Fullname,
+            Password = fromFirebaseUser.Password,
+            PhoneNumber = fromFirebaseUser.PhoneNumber,
+            Email = fromFirebaseUser.Email,
+            Role = fromFirebaseUser.Role,
+            School = FindSchoolFromId(fromFirebaseUser.School),
+            Grade = FindGradeFromId(fromFirebaseUser.Grade),
+            RegistrationDate = fromFirebaseUser.RegistrationDate,
+            //HelperFavorites = new List<Favorite>(),
+        };
+        //foreach (FromFirebaseFavorite fromFirebaseFavorite in fromFirebaseUser.HelperFavorites)
+        //{
+        //    user.HelperFavorites.Add(FavoriteFromFirebaseFavorite(fromFirebaseFavorite));
+        //}
+        return user;
     }
 
     class FromFirebaseTicket
@@ -208,6 +235,19 @@ public static class Service
             if (grade.Id == gradeId)
             {
                 return grade;
+            }
+        }
+        return null;
+    }
+
+    public static School FindSchoolFromId(string schoolId)
+    {
+        if (string.IsNullOrEmpty(schoolId)) return null;
+        foreach (School school in schools)
+        {
+            if (school.Id == schoolId)
+            {
+                return school;
             }
         }
         return null;
@@ -290,12 +330,13 @@ public static class Service
                 }
                 else // tickFromFB.Object.SenderId != auth.User.Uid
                 {
-                    // PARSE SENDER (only need it's fullname and grade)
+                    // PARSE SENDER
                     // the ticket only saves the ID of the sender so we find it in Users
-                    var fbSender = await client.Child("Users").Child(tickFromFB.Object.SenderId).OnceSingleAsync<FromFirebaseUserDisplay>();
+                    var fbSender = await client.Child("Users").Child(tickFromFB.Object.SenderId).OnceSingleAsync<FromFirebaseUser>();
 
-                    parsedTicket.Sender = new UserModel() { Fullname = fbSender.Fullname };
-                    parsedTicket.Sender.Grade = FindGradeFromId(fbSender.Grade);
+                    //parsedTicket.Sender = new UserModel() { Fullname = fbSender.Fullname };
+                    //parsedTicket.Sender.Grade = FindGradeFromId(fbSender.Grade);
+                    parsedTicket.Sender = UserFromFirebaseUser(fbSender);
 
                     fbOthersTickets.Add(parsedTicket);
                 }
@@ -312,10 +353,24 @@ public static class Service
         return ServiceResult.Ok;
     }
 
-    class FromFirebaseFavorite
+    public class FromFirebaseFavorite
     {
         public string? Subject { get; set; }
         public List<string>? Grades { get; set; }
+    }
+
+    public static Favorite FavoriteFromFirebaseFavorite(FromFirebaseFavorite fromFirebaseFavorite)
+    {
+        Favorite favorite = new Favorite()
+        {
+            Subject = FindSubjectFromId(fromFirebaseFavorite.Subject),
+            Grades = new List<Grade>(),
+        };
+        foreach (string gradeId in fromFirebaseFavorite.Grades)
+        {
+            favorite.Grades.Add(FindGradeFromId(gradeId));
+        }
+        return favorite;
     }
 
     public static async Task<ServiceResult> GetHelperFavoritesFromFB()

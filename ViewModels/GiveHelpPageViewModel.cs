@@ -4,6 +4,13 @@ using regmock.Helper;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 using Microsoft.Maui.Animations;
+using regmock.Components;
+using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Maui.Services;
+using CommunityToolkit.Maui.Extensions;
 
 namespace regmock.ViewModels
 {
@@ -69,6 +76,7 @@ namespace regmock.ViewModels
 
         #region Commands
         public ICommand FavButtonCmd { get; set; }
+        public ICommand ContactCmd { get; set; }
         #endregion
 
         #region Constructor
@@ -96,10 +104,23 @@ namespace regmock.ViewModels
             FavButtonIcon = FavFalseIcon;
             IsFav = false;
             FavButtonCmd = new Command(FavButtonClick);
+            ContactCmd = new Command(async (object obj) =>
+            {
+                if (obj is Ticket)
+                {
+                    Ticket ticket = (Ticket)obj;
+                    await ShowContactInfo(ticket);
+                }
+            });
         }
         #endregion
 
         #region Functions
+        private async Task ShowContactInfo(Ticket ticket)
+        {
+            await Application.Current.MainPage.ShowPopupAsync(new ContactPopup(ticket));
+        }
+
         public void FavButtonClick()
         {
             IsFav = !IsFav;

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup
+    x:Class="regmock.Components.ContactPopup"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helper="clr-namespace:regmock.Helper"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+
+    <VerticalStackLayout Margin="0" Padding="0">
+        <Border
+            Grid.Row="0"
+            HorizontalOptions="End"
+            Stroke="{StaticResource CriticalGradient}"
+            Style="{StaticResource RoundedBorder}">
+            <Button
+                Padding="0"
+                Background="{StaticResource ElementGradient}"
+                Command="{Binding CloseCmd}"
+                FontFamily="MaterialIcons"
+                FontSize="32"
+                Text="{x:Static helper:IconFont.Close}"
+                TextColor="{StaticResource CriticalHalfDark}" />
+        </Border>
+
+        <Label Text="{Binding Name}" />
+        <Label FontAttributes="Bold" Text="{Binding Subject}" />
+        <Label Text="{Binding Topic}" TextColor="{AppThemeBinding Light={StaticResource TertiaryText}, Dark={StaticResource TertiaryDarkText}}" />
+        <Label Text="{Binding PhoneNumber}" />
+    </VerticalStackLayout>
+</toolkit:Popup>

@@ -99,6 +99,8 @@
                                                 <Button
                                                     Padding="0"
                                                     Background="{StaticResource ElementGradient}"
+                                                    Command="{Binding BindingContext.ContactCmd, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                                    CommandParameter="{Binding .}"
                                                     FontFamily="MaterialIcons"
                                                     FontSize="20"
                                                     HorizontalOptions="Center"
