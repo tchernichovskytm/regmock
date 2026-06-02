@@ -63,10 +63,14 @@
                                 <HorizontalStackLayout Grid.Column="1" HorizontalOptions="End">
                                     <Label
                                         Margin="0,0,6,0"
-                                        FontSize="22"
+                                        FontSize="16"
                                         Text="{Binding ServerActiveTime}"
                                         VerticalOptions="Center" />
-                                    <Border Stroke="{StaticResource HelpingGradient}" Style="{StaticResource RoundedBorder}">
+                                    <Border
+                                        HeightRequest="40"
+                                        Stroke="{StaticResource HelpingGradient}"
+                                        Style="{StaticResource RoundedBorder}"
+                                        WidthRequest="80">
                                         <Border.StrokeShape>
                                             <RoundRectangle CornerRadius="25" />
                                         </Border.StrokeShape>
@@ -74,8 +78,7 @@
                                             IsToggled="{Binding IsActive}"
                                             OffBackground="{StaticResource GrayGradient}"
                                             OnBackground="{StaticResource PrimaryGradient}"
-                                            RectRadius="25"
-                                            WidthRequest="100" />
+                                            RectRadius="25" />
                                     </Border>
                                     <Border
                                         IsVisible="{Binding BindingContext.IsEditing, Source={RelativeSource AncestorType={x:Type ContentPage}}}"

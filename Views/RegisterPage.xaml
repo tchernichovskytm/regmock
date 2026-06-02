@@ -11,13 +11,14 @@
             Grid.Row="0"
             HorizontalOptions="End"
             Stroke="{StaticResource CriticalGradient}"
-            Style="{StaticResource RoundedBorder}">
+            Style="{StaticResource RoundedCard}">
             <Button
                 Padding="0"
                 Background="{StaticResource ElementGradient}"
                 Command="{Binding CloseCmd}"
                 FontFamily="MaterialIcons"
                 FontSize="46"
+                Style="{StaticResource IconButton}"
                 Text="{x:Static helper:IconFont.Close}"
                 TextColor="{StaticResource CriticalHalfDark}" />
         </Border>
@@ -25,105 +26,113 @@
         <ScrollView Grid.Row="1">
 
             <VerticalStackLayout Spacing="16">
-                <VerticalStackLayout>
-                    <Label Text="Full Name:" />
-                    <Grid>
-                        <Entry Text="{Binding FullnameEntry}" />
+                <Border Style="{StaticResource RoundedCard}">
+                    <VerticalStackLayout>
+                        <Label Text="Full Name:" />
+                        <Border Style="{StaticResource InputBorder}">
+                            <Grid>
+                                <Entry BackgroundColor="Transparent" Text="{Binding FullnameEntry}" />
+                                <Button
+                                    Padding="0"
+                                    Command="{Binding FullnameReset_Cmd}"
+                                    FontFamily="MaterialIcons"
+                                    FontSize="20"
+                                    HorizontalOptions="End"
+                                    MaximumWidthRequest="64"
+                                    Style="{StaticResource IconButton}"
+                                    Text="{x:Static helper:IconFont.Close}"
+                                    TextColor="{StaticResource Critical}" />
+                            </Grid>
+                        </Border>
+                        <Label Text="{Binding FullnameErr}" TextColor="{StaticResource Critical}" />
+                    </VerticalStackLayout>
+                </Border>
 
-                        <Button
-                            Padding="0"
-                            Background="Transparent"
-                            Command="{Binding FullnameReset_Cmd}"
-                            FontFamily="MaterialIcons"
-                            FontSize="20"
-                            HorizontalOptions="End"
-                            MaximumWidthRequest="64"
-                            Text="{x:Static helper:IconFont.Close}"
-                            TextColor="{StaticResource Critical}" />
-                    </Grid>
+                <Border Style="{StaticResource RoundedCard}">
+                    <VerticalStackLayout>
+                        <Label Text="Phone Number:" />
+                        <Border Style="{StaticResource InputBorder}">
+                            <Grid>
+                                <Entry
+                                    BackgroundColor="Transparent"
+                                    Placeholder="+972"
+                                    Text="{Binding PhonenumberEntry}" />
+                                <Button
+                                    Padding="0"
+                                    Command="{Binding PhoneReset_Cmd}"
+                                    FontFamily="MaterialIcons"
+                                    FontSize="20"
+                                    HorizontalOptions="End"
+                                    MaximumWidthRequest="64"
+                                    Style="{StaticResource IconButton}"
+                                    Text="{x:Static helper:IconFont.Close}"
+                                    TextColor="{StaticResource Critical}" />
+                            </Grid>
+                        </Border>
+                        <Label Text="{Binding PhonenumberErr}" TextColor="{StaticResource Critical}" />
+                    </VerticalStackLayout>
+                </Border>
 
-                    <Label Text="{Binding FullnameErr}" TextColor="{StaticResource Critical}" />
-                </VerticalStackLayout>
+                <Border Style="{StaticResource RoundedCard}">
+                    <VerticalStackLayout>
+                        <Label Text="Email:" />
+                        <Border Style="{StaticResource InputBorder}">
+                            <Grid>
+                                <Entry BackgroundColor="Transparent" Text="{Binding EmailEntry}" />
+                                <Button
+                                    Padding="0"
+                                    Command="{Binding EmailReset_Cmd}"
+                                    FontFamily="MaterialIcons"
+                                    FontSize="20"
+                                    HorizontalOptions="End"
+                                    MaximumWidthRequest="64"
+                                    Style="{StaticResource IconButton}"
+                                    Text="{x:Static helper:IconFont.Close}"
+                                    TextColor="{StaticResource Critical}" />
+                            </Grid>
+                        </Border>
+                        <Label Text="{Binding EmailErr}" TextColor="{StaticResource Critical}" />
+                    </VerticalStackLayout>
+                </Border>
 
-                <VerticalStackLayout>
-                    <Label Text="Phone Number:" />
+                <Border Style="{StaticResource RoundedCard}">
+                    <VerticalStackLayout>
+                        <Label Text="Password:" />
+                        <Border Style="{StaticResource InputBorder}">
+                            <Grid ColumnDefinitions="*, Auto, Auto">
+                                <Entry
+                                    Grid.ColumnSpan="3"
+                                    BackgroundColor="Transparent"
+                                    IsPassword="{Binding IsPassVisible}"
+                                    Text="{Binding PasswordEntry}" />
 
-                    <Grid>
-                        <Entry Placeholder="+972" Text="{Binding PhonenumberEntry}" />
+                                <Button
+                                    Grid.Column="1"
+                                    Command="{Binding ShowPass_Cmd}"
+                                    FontFamily="MaterialIcons"
+                                    FontSize="20"
+                                    Style="{StaticResource IconButton}"
+                                    Text="{x:Static helper:IconFont.Remove_red_eye}"
+                                    TextColor="{StaticResource Helping}" />
+                                <Button
+                                    Grid.Column="2"
+                                    Command="{Binding PassReset_Cmd}"
+                                    FontFamily="MaterialIcons"
+                                    FontSize="20"
+                                    Style="{StaticResource IconButton}"
+                                    Text="{x:Static helper:IconFont.Close}"
+                                    TextColor="{StaticResource Critical}" />
+                            </Grid>
+                        </Border>
 
-                        <Button
-                            Padding="0"
-                            Background="Transparent"
-                            Command="{Binding PhoneReset_Cmd}"
-                            FontFamily="MaterialIcons"
-                            FontSize="20"
-                            HorizontalOptions="End"
-                            MaximumWidthRequest="64"
-                            Text="{x:Static helper:IconFont.Close}"
-                            TextColor="{StaticResource Critical}" />
-                    </Grid>
-
-                    <Label Text="{Binding PhonenumberErr}" TextColor="{StaticResource Critical}" />
-                </VerticalStackLayout>
-
-                <VerticalStackLayout>
-                    <Label Text="Email:" />
-                    <Grid>
-                        <Entry Text="{Binding EmailEntry}" />
-
-                        <Button
-                            Padding="0"
-                            Background="Transparent"
-                            Command="{Binding EmailReset_Cmd}"
-                            FontFamily="MaterialIcons"
-                            FontSize="20"
-                            HorizontalOptions="End"
-                            MaximumWidthRequest="64"
-                            Text="{x:Static helper:IconFont.Close}"
-                            TextColor="{StaticResource Critical}" />
-                    </Grid>
-                    <Label Text="{Binding EmailErr}" TextColor="{StaticResource Critical}" />
-                </VerticalStackLayout>
-
-                <VerticalStackLayout>
-                    <Label Text="Password:" />
-                    <Grid ColumnDefinitions="*, Auto, Auto">
-                        <Entry
-                            Grid.ColumnSpan="3"
-                            IsPassword="{Binding IsPassVisible}"
-                            Text="{Binding PasswordEntry}" />
-
-                        <Button
-                            Grid.Column="1"
-                            Padding="0"
-                            Background="Transparent"
-                            Command="{Binding ShowPass_Cmd}"
-                            FontFamily="MaterialIcons"
-                            FontSize="20"
-                            HorizontalOptions="End"
-                            MaximumWidthRequest="20"
-                            Text="{x:Static helper:IconFont.Remove_red_eye}"
-                            TextColor="{StaticResource Helping}" />
-                        <Button
-                            Grid.Column="2"
-                            Padding="0"
-                            Background="Transparent"
-                            Command="{Binding PassReset_Cmd}"
-                            FontFamily="MaterialIcons"
-                            FontSize="20"
-                            HorizontalOptions="End"
-                            MaximumWidthRequest="64"
-                            Text="{x:Static helper:IconFont.Close}"
-                            TextColor="{StaticResource Critical}" />
-                    </Grid>
-
-                    <Label Text="{Binding PasswordErr}" TextColor="{StaticResource Critical}" />
-                </VerticalStackLayout>
+                        <Label Text="{Binding PasswordErr}" TextColor="{StaticResource Critical}" />
+                    </VerticalStackLayout>
+                </Border>
 
             </VerticalStackLayout>
         </ScrollView>
 
-        <VerticalStackLayout Grid.Row="2">
+        <VerticalStackLayout Grid.Row="2" Padding="12">
             <Label
                 HorizontalOptions="Center"
                 Text="{Binding RegisterErr}"

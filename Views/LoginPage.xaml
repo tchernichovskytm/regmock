@@ -8,72 +8,71 @@
 
     <Grid Style="{StaticResource MainGridStyle}">
         <ScrollView Grid.Row="1">
-            <VerticalStackLayout Style="{StaticResource MainStack}">
+            <VerticalStackLayout Spacing="12" Style="{StaticResource MainStack}">
 
-                <VerticalStackLayout>
-                    <Label Text="Email:" />
-                    <Grid ColumnDefinitions="*,Auto">
-                        <Entry Grid.ColumnSpan="2" Text="{Binding EmailEntry}" />
+                <Border Style="{StaticResource RoundedCard}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Email:" />
+                        <Border Style="{StaticResource InputBorder}">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Entry
+                                    Grid.ColumnSpan="2"
+                                    BackgroundColor="Transparent"
+                                    Text="{Binding EmailEntry}" />
+                                <Button
+                                    Grid.Column="1"
+                                    Command="{Binding EmailReset_Cmd}"
+                                    FontFamily="MaterialIcons"
+                                    FontSize="20"
+                                    Style="{StaticResource IconButton}"
+                                    Text="{x:Static helper:IconFont.Close}"
+                                    TextColor="{StaticResource Critical}" />
+                            </Grid>
+                        </Border>
 
-                        <Button
-                            Grid.Column="1"
-                            Padding="0"
-                            Background="Transparent"
-                            BorderColor="Transparent"
-                            Command="{Binding EmailReset_Cmd}"
-                            FontFamily="MaterialIcons"
-                            FontSize="20"
-                            HorizontalOptions="End"
-                            MaximumWidthRequest="64"
-                            Text="{x:Static helper:IconFont.Close}"
-                            TextColor="{StaticResource Critical}" />
-                    </Grid>
+                        <Label Text="{Binding EmailErr}" TextColor="{StaticResource Critical}" />
+                    </VerticalStackLayout>
+                </Border>
 
-                    <Label Text="{Binding EmailErr}" TextColor="{StaticResource Critical}" />
-                </VerticalStackLayout>
+                <Border Style="{StaticResource RoundedCard}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Password:" />
 
-                <VerticalStackLayout>
-                    <Label Text="Password:" />
+                        <Border Style="{StaticResource InputBorder}">
+                            <Grid ColumnDefinitions="*,Auto,Auto">
+                                <Entry
+                                    Grid.ColumnSpan="3"
+                                    BackgroundColor="Transparent"
+                                    IsPassword="{Binding IsPassVisible}"
+                                    Text="{Binding PasswordEntry}" />
 
-                    <Grid ColumnDefinitions="*,Auto,Auto">
-                        <Entry
-                            Grid.ColumnSpan="3"
-                            IsPassword="{Binding IsPassVisible}"
-                            Text="{Binding PasswordEntry}" />
+                                <Button
+                                    Grid.Column="1"
+                                    Command="{Binding ShowPass_Cmd}"
+                                    FontFamily="MaterialIcons"
+                                    FontSize="20"
+                                    Style="{StaticResource IconButton}"
+                                    Text="{x:Static helper:IconFont.Remove_red_eye}"
+                                    TextColor="{StaticResource Helping}" />
+                                <Button
+                                    Grid.Column="2"
+                                    Command="{Binding PassReset_Cmd}"
+                                    FontFamily="MaterialIcons"
+                                    FontSize="20"
+                                    Style="{StaticResource IconButton}"
+                                    Text="{x:Static helper:IconFont.Close}"
+                                    TextColor="{StaticResource Critical}" />
+                            </Grid>
+                        </Border>
 
-                        <Button
-                            Grid.Column="1"
-                            Padding="0"
-                            Background="Transparent"
-                            Command="{Binding ShowPass_Cmd}"
-                            FontFamily="MaterialIcons"
-                            FontSize="20"
-                            HorizontalOptions="End"
-                            MaximumWidthRequest="20"
-                            Text="{x:Static helper:IconFont.Remove_red_eye}"
-                            TextColor="{StaticResource Helping}" />
-                        <Button
-                            Grid.Column="2"
-                            Padding="0"
-                            Background="Transparent"
-                            Command="{Binding PassReset_Cmd}"
-                            FontFamily="MaterialIcons"
-                            FontSize="20"
-                            HorizontalOptions="End"
-                            MaximumWidthRequest="64"
-                            Text="{x:Static helper:IconFont.Close}"
-                            TextColor="{StaticResource Critical}" />
-                    </Grid>
-
-                    <Label Text="{Binding PasswordErr}" TextColor="{StaticResource Critical}" />
-                </VerticalStackLayout>
-
-                <VerticalStackLayout />
+                        <Label Text="{Binding PasswordErr}" TextColor="{StaticResource Critical}" />
+                    </VerticalStackLayout>
+                </Border>
 
             </VerticalStackLayout>
         </ScrollView>
 
-        <VerticalStackLayout Grid.Row="2">
+        <VerticalStackLayout Grid.Row="2" Padding="12">
             <Label
                 FontSize="18"
                 HorizontalOptions="Center"

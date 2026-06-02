@@ -97,7 +97,7 @@
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="FontFamily" Value="OpenSansRegular" />
         <Setter Property="FontSize" Value="14" />
-        <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray500}}" />
+        <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray500}}" />
         <Setter Property="MinimumHeightRequest" Value="44" />
         <Setter Property="MinimumWidthRequest" Value="44" />
         <Setter Property="VisualStateManager.VisualStateGroups">
@@ -426,6 +426,78 @@
         <Setter Property="BarTextColor" Value="{AppThemeBinding Light={StaticResource Magenta}, Dark={StaticResource White}}" />
         <Setter Property="UnselectedTabColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray950}}" />
         <Setter Property="SelectedTabColor" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray200}}" />
+    </Style>
+
+    <!--  New design tokens / reusable styles for rounded cards, inputs, shadows and buttons  -->
+
+    <!--  reusable Shadow resource  -->
+    <Shadow
+        x:Key="DefaultShadow"
+        Brush="{StaticResource Gray900Brush}"
+        Opacity="0.12"
+        Radius="12"
+        Offset="0,6" />
+
+    <!--  Rounded card container (reduced padding/margin for denser layout)  -->
+    <Style x:Key="RoundedCard" TargetType="Border">
+        <Setter Property="Background" Value="{AppThemeBinding Light={StaticResource WhiteBrush}, Dark={StaticResource Gray800Brush}}" />
+        <Setter Property="Stroke" Value="Transparent" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="12" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Padding" Value="8" />
+        <Setter Property="Margin" Value="6,6" />
+        <Setter Property="Shadow" Value="{StaticResource DefaultShadow}" />
+    </Style>
+
+    <!--  Input border wrapper to provide rounded input background and subtle border (tighter)  -->
+    <Style x:Key="InputBorder" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource ElementGradient}" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="10" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="Margin" Value="0,2" />
+        <Setter Property="Shadow" Value="{StaticResource DefaultShadow}" />
+    </Style>
+
+    <!--  Confirm button with rounded corners, gradient, and shadow  -->
+    <Style x:Key="ConfirmButton" TargetType="Button">
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Padding" Value="12,10" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="Background" Value="{StaticResource PrimaryGradient}" />
+        <Setter Property="Shadow" Value="{StaticResource DefaultShadow}" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+    </Style>
+
+    <!--  Icon button for small icon-only buttons (transparent background, compact)  -->
+    <Style x:Key="IconButton" TargetType="Button">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderColor" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="MinimumHeightRequest" Value="28" />
+        <Setter Property="MinimumWidthRequest" Value="28" />
+        <Setter Property="HorizontalOptions" Value="End" />
+    </Style>
+
+    <Style x:Key="RoundedBorder" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="2" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="16" />
+            </Setter.Value>
+        </Setter>
     </Style>
 
 </ResourceDictionary>

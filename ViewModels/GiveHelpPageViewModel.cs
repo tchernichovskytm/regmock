@@ -72,11 +72,34 @@ namespace regmock.ViewModels
         }
 
         private List<Favorite> HelperFavorites;
+
+        private Ticket selectedTicket;
+        public Ticket SelectedTicket
+        {
+            get => selectedTicket;
+            set
+            {
+                selectedTicket = value;
+                OnPropertyChanged(nameof(SelectedTicket));
+            }
+        }
+
+        private bool isContactPopupVisible;
+        public bool IsContactPopupVisible
+        {
+            get => isContactPopupVisible;
+            set
+            {
+                isContactPopupVisible = value;
+                OnPropertyChanged(nameof(IsContactPopupVisible));
+            }
+        }
         #endregion
 
         #region Commands
         public ICommand FavButtonCmd { get; set; }
         public ICommand ContactCmd { get; set; }
+        public ICommand CloseContactCmd { get; set; }
         #endregion
 
         #region Constructor
@@ -104,23 +127,23 @@ namespace regmock.ViewModels
             FavButtonIcon = FavFalseIcon;
             IsFav = false;
             FavButtonCmd = new Command(FavButtonClick);
-            ContactCmd = new Command(async (object obj) =>
+            ContactCmd = new Command((object obj) =>
             {
-                if (obj is Ticket)
+                if (obj is Ticket ticket)
                 {
-                    Ticket ticket = (Ticket)obj;
-                    await ShowContactInfo(ticket);
+                    SelectedTicket = ticket;
+                    IsContactPopupVisible = true;
                 }
+            });
+            CloseContactCmd = new Command(() =>
+            {
+                IsContactPopupVisible = false;
+                SelectedTicket = null;
             });
         }
         #endregion
 
         #region Functions
-        private async Task ShowContactInfo(Ticket ticket)
-        {
-            await Application.Current.MainPage.ShowPopupAsync(new ContactPopup(ticket));
-        }
-
         public void FavButtonClick()
         {
             IsFav = !IsFav;
@@ -183,7 +206,7 @@ namespace regmock.ViewModels
             foreach (Ticket ticket in tickets)
             {
                 bool passes = PassesFilter(ticket, HelperFavorites);
-                ticket.IsFavoriteIcon = passes ? FavTrueIcon : "";// FavFalseIcon;
+                ticket.IsFavoriteIcon = passes ? FavTrueIcon : "";
                 if (passes) passesFilterCount++;
 
             }

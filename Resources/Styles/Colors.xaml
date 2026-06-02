@@ -94,12 +94,13 @@
 
     <LinearGradientBrush x:Key="BackgroundGradient" StartPoint="0.5,0" EndPoint="0.5,1">
         <GradientStop Offset="0.0" Color="{AppThemeBinding Light=#FFFFFF, Dark=#303030}" />
+        <GradientStop Offset="0.5" Color="{AppThemeBinding Light=#F8F8F8, Dark=#282828}" />
         <GradientStop Offset="1.0" Color="{AppThemeBinding Light=#EFEFEF, Dark=#202020}" />
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="ElementGradient" StartPoint="0.5,0" EndPoint="0.5,1">
-        <GradientStop Offset="0.0" Color="{AppThemeBinding Light=#F0F0F0, Dark=#383838}" />
-        <GradientStop Offset="1.0" Color="{AppThemeBinding Light=#E0E0E0, Dark=#282828}" />
+        <GradientStop Offset="0.0" Color="{AppThemeBinding Light=#F7F7F7, Dark=#3A3A3A}" />
+        <GradientStop Offset="1.0" Color="{AppThemeBinding Light=#EBEBEB, Dark=#2C2C2C}" />
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="PrimaryGradient" StartPoint="0.5,0" EndPoint="0.5,1">
@@ -164,13 +165,4 @@
         <GradientStop Offset="1.0" Color="{StaticResource FavoriteDark}" />
     </LinearGradientBrush>
 
-    <!--  TODO: move this to styles.xaml  -->
-    <Style x:Key="RoundedBorder" TargetType="Border">
-        <Setter Property="StrokeShape">
-            <Setter.Value>
-                <RoundRectangle CornerRadius="8" />
-            </Setter.Value>
-        </Setter>
-        <Setter Property="StrokeThickness" Value="2" />
-    </Style>
 </ResourceDictionary>

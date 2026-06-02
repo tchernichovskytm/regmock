@@ -6,137 +6,223 @@
     xmlns:helper="clr-namespace:regmock.Helper"
     Background="{StaticResource BackgroundGradient}">
 
-    <Grid
-        Margin="18"
-        RowDefinitions="Auto,*"
-        RowSpacing="8">
-        <Border
-            Grid.Row="0"
-            HorizontalOptions="End"
-            IsVisible="{Binding IsFavButtonVisible}"
-            Stroke="{StaticResource FavoriteGradient}"
-            Style="{StaticResource RoundedBorder}">
-            <Button
-                Padding="0"
-                Background="{StaticResource ElementGradient}"
-                Command="{Binding FavButtonCmd}"
-                FontFamily="MaterialIcons"
-                FontSize="20"
+    <Grid>
+        <Grid
+            Margin="18"
+            RowDefinitions="Auto,*"
+            RowSpacing="8">
+            <Border
+                Grid.Row="0"
+                HorizontalOptions="End"
                 IsVisible="{Binding IsFavButtonVisible}"
-                Text="{Binding FavButtonIcon}"
-                TextColor="{StaticResource FavoriteHalfDark}" />
-        </Border>
+                Stroke="{StaticResource FavoriteGradient}"
+                Style="{StaticResource RoundedBorder}">
+                <Button
+                    Padding="0"
+                    Background="{StaticResource ElementGradient}"
+                    Command="{Binding FavButtonCmd}"
+                    FontFamily="MaterialIcons"
+                    FontSize="20"
+                    IsVisible="{Binding IsFavButtonVisible}"
+                    Text="{Binding FavButtonIcon}"
+                    TextColor="{StaticResource FavoriteHalfDark}" />
+            </Border>
 
-        <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
-            <VerticalStackLayout>
-                <CollectionView ItemsSource="{Binding DisplayTickets}">
-                    <CollectionView.ItemsLayout>
-                        <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" />
-                    </CollectionView.ItemsLayout>
+            <VerticalStackLayout Grid.Row="1" Style="{StaticResource MainStack}">
+                <VerticalStackLayout>
+                    <CollectionView ItemsSource="{Binding DisplayTickets}">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" />
+                        </CollectionView.ItemsLayout>
 
-                    <CollectionView.EmptyView>
-                        <VerticalStackLayout>
-                            <Border
-                                Background="{StaticResource GrayGradient}"
-                                HorizontalOptions="Center"
-                                Stroke="Transparent"
-                                Style="{StaticResource RoundedBorder}">
-                                <Label
-                                    Padding="8"
-                                    FontSize="28"
-                                    HorizontalOptions="Center"
-                                    Text="No tickets yet"
-                                    TextColor="{AppThemeBinding Light={StaticResource SecondaryText},
-                                                                Dark={StaticResource SecondaryDarkText}}" />
-                            </Border>
-                        </VerticalStackLayout>
-                    </CollectionView.EmptyView>
-
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
+                        <CollectionView.EmptyView>
                             <VerticalStackLayout>
-                                <Border Stroke="{StaticResource PrimaryGradient}" Style="{StaticResource RoundedBorder}">
-                                    <Grid
-                                        Padding="6"
-                                        Background="{StaticResource ElementGradient}"
-                                        ColumnDefinitions="*,Auto"
-                                        RowDefinitions="*,*">
-                                        <HorizontalStackLayout
-                                            Grid.Row="0"
-                                            Grid.Column="0"
-                                            Padding="8,2,0,0"
-                                            Spacing="8"
-                                            VerticalOptions="Center">
-                                            <Label
-                                                FontAttributes="Bold"
-                                                HorizontalOptions="Center"
-                                                Text="{Binding Subject.Name}"
-                                                VerticalOptions="Center" />
-                                            <Label
-                                                HorizontalOptions="Center"
-                                                Text="{Binding Topics[0]}"
-                                                TextColor="{AppThemeBinding Light={StaticResource TertiaryText},
-                                                                            Dark={StaticResource TertiaryDarkText}}"
-                                                VerticalOptions="Center" />
-                                        </HorizontalStackLayout>
-
-                                        <HorizontalStackLayout
-                                            Grid.Row="1"
-                                            Grid.Column="0"
-                                            Padding="8,0,0,2"
-                                            Spacing="8"
-                                            VerticalOptions="Center">
-                                            <Label
-                                                HorizontalOptions="Center"
-                                                Text="{Binding Sender.Fullname}"
-                                                VerticalOptions="Center" />
-
-                                            <Border
-                                                Grid.Row="0"
-                                                HorizontalOptions="End"
-                                                Stroke="{StaticResource HelpingGradient}"
-                                                Style="{StaticResource RoundedBorder}">
-                                                <Button
-                                                    Padding="0"
-                                                    Background="{StaticResource ElementGradient}"
-                                                    Command="{Binding BindingContext.ContactCmd, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                                    CommandParameter="{Binding .}"
-                                                    FontFamily="MaterialIcons"
-                                                    FontSize="20"
-                                                    HorizontalOptions="Center"
-                                                    MinimumHeightRequest="28"
-                                                    MinimumWidthRequest="28"
-                                                    Text="{x:Static helper:IconFont.Messenger}"
-                                                    TextColor="{StaticResource HelpingHalfDark}"
-                                                    VerticalOptions="Center" />
-                                            </Border>
-                                        </HorizontalStackLayout>
-                                        <Label
-                                            Grid.Row="0"
-                                            Grid.Column="1"
-                                            Padding="0,0,13,0"
-                                            FontFamily="MaterialIcons"
-                                            FontSize="20"
-                                            HorizontalOptions="Center"
-                                            IsVisible="{Binding BindingContext.IsFavButtonVisible, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                            Text="{Binding IsFavoriteIcon}"
-                                            TextColor="{StaticResource FavoriteHalfDark}"
-                                            VerticalOptions="Center" />
-                                        <Label
-                                            Grid.Row="1"
-                                            Grid.Column="1"
-                                            Padding="0,0,13,0"
-                                            FontSize="16"
-                                            HorizontalOptions="Center"
-                                            Text="{Binding Sender.Grade.Name}"
-                                            VerticalOptions="Center" />
-                                    </Grid>
+                                <Border
+                                    Background="{StaticResource GrayGradient}"
+                                    HorizontalOptions="Center"
+                                    Stroke="Transparent"
+                                    Style="{StaticResource RoundedBorder}">
+                                    <Label
+                                        Padding="8"
+                                        FontSize="28"
+                                        HorizontalOptions="Center"
+                                        Text="No tickets yet"
+                                        TextColor="{AppThemeBinding Light={StaticResource SecondaryText},
+                                                                    Dark={StaticResource SecondaryDarkText}}" />
                                 </Border>
                             </VerticalStackLayout>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+                        </CollectionView.EmptyView>
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <VerticalStackLayout>
+                                    <Border Stroke="{StaticResource PrimaryGradient}" Style="{StaticResource RoundedBorder}">
+                                        <Grid
+                                            Padding="6"
+                                            Background="{StaticResource ElementGradient}"
+                                            ColumnDefinitions="*,Auto"
+                                            RowDefinitions="*,*">
+                                            <HorizontalStackLayout
+                                                Grid.Row="0"
+                                                Grid.Column="0"
+                                                Padding="8,2,0,0"
+                                                Spacing="8"
+                                                VerticalOptions="Center">
+                                                <Label
+                                                    FontAttributes="Bold"
+                                                    HorizontalOptions="Center"
+                                                    Text="{Binding Subject.Name}"
+                                                    VerticalOptions="Center" />
+                                                <Label
+                                                    HorizontalOptions="Center"
+                                                    Text="{Binding Topics[0]}"
+                                                    TextColor="{AppThemeBinding Light={StaticResource TertiaryText},
+                                                                                Dark={StaticResource TertiaryDarkText}}"
+                                                    VerticalOptions="Center" />
+                                            </HorizontalStackLayout>
+
+                                            <HorizontalStackLayout
+                                                Grid.Row="1"
+                                                Grid.Column="0"
+                                                Padding="8,0,0,2"
+                                                Spacing="8"
+                                                VerticalOptions="Center">
+                                                <Label
+                                                    HorizontalOptions="Center"
+                                                    Text="{Binding Sender.Fullname}"
+                                                    VerticalOptions="Center" />
+
+                                                <Border
+                                                    Grid.Row="0"
+                                                    HorizontalOptions="End"
+                                                    Stroke="{StaticResource HelpingGradient}"
+                                                    Style="{StaticResource RoundedBorder}">
+                                                    <Button
+                                                        Padding="0"
+                                                        Background="{StaticResource ElementGradient}"
+                                                        Command="{Binding BindingContext.ContactCmd, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                                        CommandParameter="{Binding .}"
+                                                        FontFamily="MaterialIcons"
+                                                        FontSize="20"
+                                                        HorizontalOptions="Center"
+                                                        MinimumHeightRequest="28"
+                                                        MinimumWidthRequest="28"
+                                                        Text="{x:Static helper:IconFont.Messenger}"
+                                                        TextColor="{StaticResource HelpingHalfDark}"
+                                                        VerticalOptions="Center" />
+                                                </Border>
+                                            </HorizontalStackLayout>
+                                            <Label
+                                                Grid.Row="0"
+                                                Grid.Column="1"
+                                                Padding="0,0,13,0"
+                                                FontFamily="MaterialIcons"
+                                                FontSize="20"
+                                                HorizontalOptions="Center"
+                                                IsVisible="{Binding BindingContext.IsFavButtonVisible, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                                Text="{Binding IsFavoriteIcon}"
+                                                TextColor="{StaticResource FavoriteHalfDark}"
+                                                VerticalOptions="Center" />
+                                            <Label
+                                                Grid.Row="1"
+                                                Grid.Column="1"
+                                                Padding="0,0,13,0"
+                                                FontSize="16"
+                                                HorizontalOptions="Center"
+                                                Text="{Binding Sender.Grade.Name}"
+                                                VerticalOptions="Center" />
+                                        </Grid>
+                                    </Border>
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
             </VerticalStackLayout>
-        </VerticalStackLayout>
+
+        </Grid>
+
+        <Grid BackgroundColor="#80000000" IsVisible="{Binding IsContactPopupVisible}">
+            <Border
+                Padding="12"
+                Background="{StaticResource ElementGradient}"
+                HorizontalOptions="Center"
+                Stroke="{StaticResource PrimaryGradient}"
+                StrokeThickness="2"
+                Style="{StaticResource RoundedCard}"
+                VerticalOptions="Center"
+                WidthRequest="340">
+
+                <VerticalStackLayout Spacing="10">
+                    <Border
+                        HorizontalOptions="End"
+                        Stroke="{StaticResource FavoriteGradient}"
+                        Style="{StaticResource RoundedBorder}">
+                        <Button
+                            Padding="0"
+                            Background="{StaticResource ElementGradient}"
+                            Command="{Binding CloseContactCmd}"
+                            FontFamily="MaterialIcons"
+                            FontSize="38"
+                            Style="{StaticResource IconButton}"
+                            Text="{x:Static helper:IconFont.Close}"
+                            TextColor="{StaticResource FavoriteHalfDark}" />
+                    </Border>
+
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="20"
+                        Text="{Binding SelectedTicket.Sender.Fullname}"
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryText},
+                                                    Dark={StaticResource PrimaryDarkText}}"
+                        VerticalOptions="Center" />
+
+                    <Label
+                        FontAttributes="Bold"
+                        Text="{Binding SelectedTicket.Subject.Name}"
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryText},
+                                                    Dark={StaticResource PrimaryDarkText}}" />
+
+                    <Label
+                        FontSize="14"
+                        Text="{Binding SelectedTicket.Topics[0]}"
+                        TextColor="{AppThemeBinding Light={StaticResource TertiaryText},
+                                                    Dark={StaticResource TertiaryDarkText}}" />
+
+                    <Grid
+                        ColumnDefinitions="Auto,*,Auto"
+                        ColumnSpacing="8"
+                        VerticalOptions="Center">
+                        <Label
+                            Grid.Column="0"
+                            FontFamily="MaterialIcons"
+                            FontSize="18"
+                            Text="{x:Static helper:IconFont.Phone}"
+                            TextColor="{StaticResource HelpingHalfDark}"
+                            VerticalOptions="Center" />
+
+                        <Label
+                            Grid.Column="1"
+                            Text="{Binding SelectedTicket.Sender.PhoneNumber}"
+                            TextColor="{AppThemeBinding Light={StaticResource PrimaryText},
+                                                        Dark={StaticResource PrimaryDarkText}}"
+                            VerticalOptions="Center" />
+
+                        <HorizontalStackLayout
+                            Grid.Column="2"
+                            Spacing="6"
+                            VerticalOptions="Center">
+                            <Button
+                                FontFamily="MaterialIcons"
+                                FontSize="20"
+                                Style="{StaticResource IconButton}"
+                                Text="{x:Static helper:IconFont.Content_copy}"
+                                TextColor="{StaticResource TertiaryText}" />
+                        </HorizontalStackLayout>
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
     </Grid>
 </ContentPage>

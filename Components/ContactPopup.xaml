@@ -4,27 +4,96 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:helper="clr-namespace:regmock.Helper"
-    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    BackgroundColor="Transparent">
 
-    <VerticalStackLayout Margin="0" Padding="0">
+    <!--
+        Full-screen AbsoluteLayout ensures the popup content is measured to the full window.
+        BoxView provides the dim overlay; the Border card is centered with proportional size to avoid clipping.
+    -->
+    <AbsoluteLayout HorizontalOptions="Fill" VerticalOptions="Fill">
+
+        <!--  dim overlay  -->
+        <BoxView
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            Color="#80000000" />
+
+        <!--  centered card: 90% width, up to 70% height of the screen  -->
         <Border
-            Grid.Row="0"
-            HorizontalOptions="End"
-            Stroke="{StaticResource CriticalGradient}"
-            Style="{StaticResource RoundedBorder}">
-            <Button
-                Padding="0"
-                Background="{StaticResource ElementGradient}"
-                Command="{Binding CloseCmd}"
-                FontFamily="MaterialIcons"
-                FontSize="32"
-                Text="{x:Static helper:IconFont.Close}"
-                TextColor="{StaticResource CriticalHalfDark}" />
-        </Border>
+            AbsoluteLayout.LayoutBounds="0.5,0.5,0.9,0.7"
+            AbsoluteLayout.LayoutFlags="All"
+            Style="{StaticResource RoundedCard}">
 
-        <Label Text="{Binding Name}" />
-        <Label FontAttributes="Bold" Text="{Binding Subject}" />
-        <Label Text="{Binding Topic}" TextColor="{AppThemeBinding Light={StaticResource TertiaryText}, Dark={StaticResource TertiaryDarkText}}" />
-        <Label Text="{Binding PhoneNumber}" />
-    </VerticalStackLayout>
+            <!--  scrollable content to avoid clipping on very small screens  -->
+            <ScrollView>
+                <VerticalStackLayout Padding="8" Spacing="10">
+
+                    <!--  Header: title + close  -->
+                    <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="20"
+                            Text="{Binding Name}"
+                            TextColor="{StaticResource PrimaryText}"
+                            VerticalOptions="Center" />
+                        <Button
+                            Grid.Column="1"
+                            Command="{Binding CloseCmd}"
+                            FontFamily="MaterialIcons"
+                            FontSize="22"
+                            Style="{StaticResource IconButton}"
+                            Text="{x:Static helper:IconFont.Close}"
+                            TextColor="{StaticResource CriticalHalfDark}" />
+                    </Grid>
+
+                    <!--  Subject and topic  -->
+                    <Label
+                        FontAttributes="Bold"
+                        Text="{Binding Subject}"
+                        TextColor="{StaticResource PrimaryText}" />
+
+                    <Label
+                        FontSize="14"
+                        Text="{Binding Topic}"
+                        TextColor="{AppThemeBinding Light={StaticResource TertiaryText},
+                                                    Dark={StaticResource TertiaryDarkText}}" />
+
+                    <!--  Phone row  -->
+                    <Grid
+                        ColumnDefinitions="Auto,*,Auto"
+                        ColumnSpacing="8"
+                        VerticalOptions="Center">
+                        <Label
+                            Grid.Column="0"
+                            FontFamily="MaterialIcons"
+                            FontSize="18"
+                            Text="{x:Static helper:IconFont.Phone}"
+                            TextColor="{StaticResource HelpingHalfDark}"
+                            VerticalOptions="Center" />
+
+                        <Label
+                            Grid.Column="1"
+                            Text="{Binding PhoneNumber}"
+                            TextColor="{StaticResource PrimaryText}"
+                            VerticalOptions="Center" />
+
+                        <!--  Actions: copy / call (visual only; wire commands in VM if desired)  -->
+                        <HorizontalStackLayout
+                            Grid.Column="2"
+                            Spacing="6"
+                            VerticalOptions="Center">
+                            <Button
+                                FontFamily="MaterialIcons"
+                                FontSize="20"
+                                Style="{StaticResource IconButton}"
+                                Text="{x:Static helper:IconFont.Content_copy}"
+                                TextColor="{StaticResource SecondaryText}" />
+                        </HorizontalStackLayout>
+                    </Grid>
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </Border>
+    </AbsoluteLayout>
 </toolkit:Popup>
