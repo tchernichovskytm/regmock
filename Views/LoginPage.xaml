@@ -72,17 +72,23 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <VerticalStackLayout Grid.Row="2" Padding="12">
+        <VerticalStackLayout
+            Grid.Row="2"
+            Padding="12"
+            Spacing="8">
             <Label
                 FontSize="18"
                 HorizontalOptions="Center"
                 Text="{Binding LoginErr}"
                 TextColor="{Binding LoginErrColor}" />
-            <Button
-                Command="{Binding Login_Cmd}"
-                IsEnabled="{Binding CanLogin}"
-                Style="{StaticResource ConfirmButton}"
-                Text="Login" />
+
+            <Border Stroke="{StaticResource PrimaryText}" Style="{StaticResource RoundedBorder}">
+                <Button
+                    Command="{Binding Login_Cmd}"
+                    IsEnabled="{Binding CanLogin}"
+                    Text="Login"
+                    TextColor="{StaticResource PrimaryText}" />
+            </Border>
         </VerticalStackLayout>
     </Grid>
 </ContentPage>

@@ -19,7 +19,7 @@
 
             <Border
                 Grid.Row="0"
-                Background="{StaticResource GrayGradient}"
+                Stroke="{StaticResource PrimaryText}"
                 StrokeThickness="3">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="25" />
@@ -46,7 +46,7 @@
 
             <Border
                 Grid.Row="1"
-                Background="{StaticResource GrayGradient}"
+                Stroke="{StaticResource PrimaryText}"
                 StrokeThickness="3">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="25" />
@@ -73,7 +73,7 @@
 
             <Border
                 Grid.Row="2"
-                Background="{StaticResource GrayGradient}"
+                Stroke="{StaticResource PrimaryText}"
                 StrokeThickness="3">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="25" />

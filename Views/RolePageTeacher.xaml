@@ -36,12 +36,16 @@
 
             </VerticalStackLayout>
 
-            <Button
+            <Border
                 Grid.Row="2"
-                Command="{Binding AssignClickCmd}"
-                IsEnabled="{Binding CanAssign}"
-                Style="{StaticResource ConfirmButton}"
-                Text="Assign School" />
+                Stroke="{StaticResource PrimaryText}"
+                Style="{StaticResource RoundedBorder}">
+                <Button
+                    Command="{Binding AssignClickCmd}"
+                    IsEnabled="{Binding CanAssign}"
+                    Text="Continue"
+                    TextColor="{StaticResource PrimaryText}" />
+            </Border>
         </Grid>
     </ScrollView>
 </ContentPage>

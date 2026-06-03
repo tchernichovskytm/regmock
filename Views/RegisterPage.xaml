@@ -11,7 +11,7 @@
             Grid.Row="0"
             HorizontalOptions="End"
             Stroke="{StaticResource CriticalGradient}"
-            Style="{StaticResource RoundedCard}">
+            Style="{StaticResource RoundedBorder}">
             <Button
                 Padding="0"
                 Background="{StaticResource ElementGradient}"
@@ -132,16 +132,23 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <VerticalStackLayout Grid.Row="2" Padding="12">
+        <VerticalStackLayout
+            Grid.Row="2"
+            Padding="12"
+            Spacing="8">
             <Label
+                FontSize="18"
                 HorizontalOptions="Center"
                 Text="{Binding RegisterErr}"
                 TextColor="{StaticResource Critical}" />
-            <Button
-                Command="{Binding Register_Cmd}"
-                IsEnabled="{Binding CanRegister}"
-                Style="{StaticResource ConfirmButton}"
-                Text="Register" />
+
+            <Border Stroke="{StaticResource PrimaryText}" Style="{StaticResource RoundedBorder}">
+                <Button
+                    Command="{Binding Register_Cmd}"
+                    IsEnabled="{Binding CanRegister}"
+                    Text="Register"
+                    TextColor="{StaticResource PrimaryText}" />
+            </Border>
         </VerticalStackLayout>
     </Grid>
 

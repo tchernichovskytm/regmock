@@ -215,6 +215,7 @@
                             <Button
                                 FontFamily="MaterialIcons"
                                 FontSize="20"
+                                Command="{Binding CopyPhoneNumberCmd}"
                                 Style="{StaticResource IconButton}"
                                 Text="{x:Static helper:IconFont.Content_copy}"
                                 TextColor="{StaticResource TertiaryText}" />

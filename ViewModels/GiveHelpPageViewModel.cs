@@ -100,6 +100,7 @@ namespace regmock.ViewModels
         public ICommand FavButtonCmd { get; set; }
         public ICommand ContactCmd { get; set; }
         public ICommand CloseContactCmd { get; set; }
+        public ICommand CopyPhoneNumberCmd { get; set; }
         #endregion
 
         #region Constructor
@@ -139,6 +140,11 @@ namespace regmock.ViewModels
             {
                 IsContactPopupVisible = false;
                 SelectedTicket = null;
+            });
+
+            CopyPhoneNumberCmd = new Command(async () =>
+            {
+                await Clipboard.Default.SetTextAsync(SelectedTicket.Sender.PhoneNumber);
             });
         }
         #endregion
